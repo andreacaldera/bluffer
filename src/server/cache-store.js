@@ -1,6 +1,5 @@
 import _ from 'lodash';
 
-
 export default () => {
   const cache = {
     '/some-url': { cachedResponse: '{ "1": "one"}' },
@@ -9,7 +8,10 @@ export default () => {
 
   const setCachedResponse = (url, cachedResponse) => {
     const response = cache[url];
-    cache[url] = Object.assign({}, response, { cachedResponse });
+    cache[url] = Object.assign({}, response, {
+      cachedResponse,
+      timestamp: new Date(),
+    });
   };
 
   const setSavedResponse = (url, savedResponse) => {

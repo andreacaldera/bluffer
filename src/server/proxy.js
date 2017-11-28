@@ -4,11 +4,11 @@ import winston from 'winston';
 
 const proxy = httpProxy.createProxyServer({});
 
-export default (cacheStore) => {
+export default (cacheStore, proxyConfig) => {
   const router = express.Router();
 
   proxy.on('proxyRes', (proxyRes, req, res) => {
-    res.setHeader('X-Monty-Proxy', 'monty-proxy');
+    res.setHeader('X-Bluffer-Proxy', 'bluffer-proxy');
     let responseBody = '';
     proxyRes.on('data', (data) => {
       responseBody += data.toString('utf-8');
@@ -21,7 +21,7 @@ export default (cacheStore) => {
 
   proxy.on('proxyReq', (proxyReq, req, /* res, options */) => {
     winston.debug(`Processing request ${req.originalUrl}`);
-    proxyReq.setHeader('Host', 'ebt.api.arcadiagroup.co.uk');
+    proxyReq.setHeader('Host', proxyConfig.host);
     winston.debug(`Original request headers ${req.headers}`);
   });
 
@@ -29,7 +29,7 @@ export default (cacheStore) => {
     const url = req.originalUrl;
     if (!cacheStore.getSavedResponse(url)) {
       winston.debug(`Proxying request for url ${url}`);
-      return proxy.web(req, res, { target: 'http://ebt.api.arcadiagroup.co.uk/api' });
+      return proxy.web(req, res, { target: proxyConfig.target });
     }
     winston.debug(`Using saved response for url ${url}`);
     const responseBody = cacheStore.getSavedResponse(url);

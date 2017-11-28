@@ -1,9 +1,8 @@
 body {
   padding-top: 5rem;
-  height: 10000px;
+  // height: 10000px;
 }
 .starter-template {
-  padding: 3rem 1.5rem;
 }
 
 .home__bottom {
@@ -16,4 +15,15 @@ body {
   position: fixed;
   left: 0;
   bottom: 100px;
+}
+
+.Response-url {
+  width: 45%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.Response-dateTime {
+  padding-left: 10px;
 }

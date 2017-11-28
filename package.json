@@ -4,7 +4,7 @@
   "description": "A redux template",
   "scripts": {
     "start": "node dist/server/index.js",
-    "dev": "nodemon src/server/index.js --exec babel-node",
+    "dev": "NODE_ENV=private nodemon src/server/index.js --exec babel-node",
     "lint": "eslint .",
     "test": "mocha test/unit && jest test/component",
     "jest": "jest test/component",
@@ -36,6 +36,7 @@
     "express": "^4.15.4",
     "http-proxy": "^1.16.2",
     "lodash": "^4.17.4",
+    "moment": "^2.19.2",
     "prop-types": "^15.5.6",
     "qs": "^6.5.1",
     "react": "^15.6.1",
