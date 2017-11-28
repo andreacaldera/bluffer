@@ -1,22 +1,24 @@
 import express from 'express';
 import httpProxy from 'http-proxy';
 import winston from 'winston';
+import transformerProxy from 'transformer-proxy';
 
-const proxy = httpProxy.createProxyServer({});
+const proxy = httpProxy.createProxyServer({ secure: false });
 
 export default (cacheStore, proxyConfig) => {
   const router = express.Router();
 
+  router.use('*', transformerProxy((data, req) => {
+    cacheStore.setCachedResponse(req.originalUrl, String(data));
+    return data;
+  }));
+
   proxy.on('proxyRes', (proxyRes, req, res) => {
     res.setHeader('X-Bluffer-Proxy', 'bluffer-proxy');
-    let responseBody = '';
-    proxyRes.on('data', (data) => {
-      responseBody += data.toString('utf-8');
-    });
+  });
 
-    proxyRes.on('end', () => {
-      cacheStore.setCachedResponse(req.originalUrl, responseBody);
-    });
+  proxy.on('error', (err) => {
+    winston.error('Proxy Error', err);
   });
 
   proxy.on('proxyReq', (proxyReq, req, /* res, options */) => {

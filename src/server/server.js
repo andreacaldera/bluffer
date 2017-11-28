@@ -3,7 +3,6 @@ import cookieParser from 'cookie-parser';
 import path from 'path';
 import winston from 'winston';
 import bodyParser from 'body-parser';
-
 import config from './config';
 import ui from './ui';
 import proxy from './proxy';

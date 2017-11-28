@@ -49,6 +49,7 @@
     "redux-saga": "^0.15.6",
     "reselect": "^3.0.0",
     "superagent": "^3.6.0",
+    "transformer-proxy": "^0.3.4",
     "url-pattern": "^1.0.3",
     "winston": "^2.4.0"
   },
