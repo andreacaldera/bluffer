@@ -2,6 +2,7 @@ import { takeEvery, put, call } from 'redux-saga/effects';
 import superagent from 'superagent';
 
 import { SET_PROXY_RESPONSE, SELECT_PROXY_RESPONSE_URL, DELETE_PROXY_RESPONSE, PROXY_RESPONSE_DELETED } from './constants';
+import { DISPLAY_INFO, DISPLAY_ERROR } from '../meta/constants';
 
 const callApi = (path, payload) => () =>
   superagent.post(`/api/bluffer/${path}`)
@@ -15,7 +16,7 @@ function* setResponse({ payload }) {
     yield call(callApi('set-proxy-response', payload));
     yield put({ type: SELECT_PROXY_RESPONSE_URL, payload: null });
   } catch (err) {
-    // TODO display error to user
+    yield put({ type: DISPLAY_ERROR, payload: `Unable to save response: ${err.message}` });
   }
 }
 
@@ -23,8 +24,9 @@ function* deleteResponse({ payload }) {
   try {
     yield call(callApi('delete-proxy-response', { url: payload }));
     yield put({ type: PROXY_RESPONSE_DELETED, payload });
+    yield put({ type: DISPLAY_INFO, payload: 'Response deleted successfully' });
   } catch (err) {
-    // TODO display error to user
+    yield put({ type: DISPLAY_ERROR, payload: `Unable to delete response: ${err.message}` });
   }
 }
 

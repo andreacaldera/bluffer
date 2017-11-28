@@ -6,7 +6,7 @@ import { Link } from 'react-router';
 import meta from '../modules/meta';
 import { SET_ACTIVE_PAGE } from '../modules/meta/constants';
 
-const App = ({ children, activePage, setActivePage }) => (
+const App = ({ children, activePage, setActivePage, info, error }) => (
   <div>
     <nav className="navbar navbar-toggleable-md navbar-inverse bg-inverse fixed-top">
       <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,6 +31,8 @@ const App = ({ children, activePage, setActivePage }) => (
     </nav>
     <div className="container">
       <div className="starter-template">
+        {info && <div className="alert alert-info">{info}</div>}
+        {error && <div className="alert alert-danger">{error}</div>}
         {children}
       </div>
     </div>
@@ -41,10 +43,14 @@ App.propTypes = {
   children: PropTypes.shape().isRequired,
   activePage: PropTypes.string.isRequired,
   setActivePage: PropTypes.func.isRequired,
+  info: PropTypes.string,
+  error: PropTypes.string,
 };
 
 const mapStateToProps = (state) => ({
   activePage: meta.getActivePage(state),
+  info: meta.getInfo(state),
+  error: meta.getError(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
