@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-import { ADD_PROXY_RESPONSE, SELECT_PROXY_RESPONSE_URL } from './constants';
+import { ADD_PROXY_RESPONSE, SELECT_PROXY_RESPONSE_URL, PROXY_RESPONSE_DELETED } from './constants';
 
 const all = (state = {}, action) => {
   switch (action.type) {
@@ -9,6 +9,13 @@ const all = (state = {}, action) => {
         ...state,
         [action.payload.path]: action.payload.response,
       };
+
+    case PROXY_RESPONSE_DELETED: {
+      const newState = Object.assign({}, state);
+      delete newState[action.payload]; // TODO make better
+      return newState;
+    }
+
     default: return state;
   }
 };

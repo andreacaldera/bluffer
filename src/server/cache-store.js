@@ -14,6 +14,10 @@ export default () => {
     });
   };
 
+  const deleteResponse = (url) => {
+    delete cache[url];
+  };
+
   const setSavedResponse = (url, savedResponse) => {
     const response = cache[url];
     cache[url] = Object.assign({}, response, { savedResponse });
@@ -34,5 +38,6 @@ export default () => {
     all,
     getSavedResponse,
     getCachedResponse,
+    deleteResponse,
   });
 };

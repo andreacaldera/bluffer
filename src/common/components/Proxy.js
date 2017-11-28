@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 
 import proxyModule from '../modules/proxy';
-import { SET_PROXY_RESPONSE, SELECT_PROXY_RESPONSE_URL } from '../modules/proxy/constants';
+import { SET_PROXY_RESPONSE, SELECT_PROXY_RESPONSE_URL, DELETE_PROXY_RESPONSE } from '../modules/proxy/constants';
 
 class Proxy extends Component {
   static propTypes = {
@@ -14,6 +14,7 @@ class Proxy extends Component {
     setResponse: PropTypes.func.isRequired,
     selectResponse: PropTypes.func.isRequired,
     cancelEditing: PropTypes.func.isRequired,
+    deleteResponse: PropTypes.func.isRequired,
   };
   static defaultProps = {
     selectedResponse: null,
@@ -33,7 +34,7 @@ class Proxy extends Component {
   }
 
   render() {
-    const { setResponse, responses, selectResponse, selectedResponse, cancelEditing, selectedUrl } = this.props;
+    const { setResponse, responses, selectResponse, selectedUrl, selectedResponse, cancelEditing, deleteResponse } = this.props;
     const { currentResponse } = this.state;
     const saveResponse = (e, url) => {
       setResponse(e, url, currentResponse);
@@ -60,7 +61,8 @@ class Proxy extends Component {
                 <div className="Response-dateTime">{dateTime}</div>
                 <div className={`ml-auto badge ${statusClass}`}>{status}</div>
                 <button className="btn btn-primary" onClick={(e) => setResponse(e, url)}>Use this response</button>
-                {!currentResponse && (<button className="btn btn-primary" onClick={(e) => selectResponse(e, url)}>Edit</button>)}
+                <button className="btn btn-primary" onClick={(e) => selectResponse(e, url)}>Edit</button>
+                <button className="btn btn-primary" onClick={(e) => deleteResponse(e, url)}>Delete</button>
               </li>
             );
           }
@@ -105,6 +107,13 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch({
       type: SELECT_PROXY_RESPONSE_URL,
       payload: null,
+    });
+  },
+  deleteResponse: (e, url) => {
+    e.preventDefault();
+    dispatch({
+      type: DELETE_PROXY_RESPONSE,
+      payload: url,
     });
   },
 });
