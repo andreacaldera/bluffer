@@ -9,17 +9,20 @@ export default (cacheStore) => {
 
   proxy.on('proxyRes', (proxyRes, req, res) => {
     res.setHeader('X-Monty-Proxy', 'monty-proxy');
-    cacheStore.setCachedResponse(req.originalUrl, '');
+    let responseBody = '';
     proxyRes.on('data', (data) => {
-      // winston.debug(`processing data ${data}`);
-      cacheStore.setCachedResponse(req.originalUrl, `${cacheStore.getCachedResponse(req.originalUrl)}${data.toString('utf-8')}`);
+      responseBody += data.toString('utf-8');
+    });
+
+    proxyRes.on('end', () => {
+      cacheStore.setCachedResponse(req.originalUrl, responseBody);
     });
   });
 
   proxy.on('proxyReq', (proxyReq, req, /* res, options */) => {
     winston.debug(`Processing request ${req.originalUrl}`);
     proxyReq.setHeader('Host', 'ebt.api.arcadiagroup.co.uk');
-    winston.debug(`original request headers ${req.headers}`);
+    winston.debug(`Original request headers ${req.headers}`);
   });
 
   router.get('*', (req, res) => {
@@ -31,13 +34,6 @@ export default (cacheStore) => {
     winston.debug(`Using saved response for url ${url}`);
     const responseBody = cacheStore.getSavedResponse(url);
     res.json(JSON.parse(responseBody));
-  });
-
-  router.post('/proxy-response', (req, res) => {
-    const { url, response } = req.body;
-
-    cacheStore.setSavedResponse(url, response);
-    res.sendStatus(202);
   });
 
   return router;

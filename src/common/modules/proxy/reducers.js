@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-import { ADD_PROXY_RESPONSE } from './constants';
+import { ADD_PROXY_RESPONSE, SELECT_PROXY_RESPONSE_URL } from './constants';
 
 const all = (state = {}, action) => {
   switch (action.type) {
@@ -13,6 +13,15 @@ const all = (state = {}, action) => {
   }
 };
 
+const selectedUrl = (state = null, action) => {
+  switch (action.type) {
+    case SELECT_PROXY_RESPONSE_URL:
+      return action.payload;
+    default: return state;
+  }
+};
+
 module.exports = combineReducers({
   all,
+  selectedUrl,
 });
