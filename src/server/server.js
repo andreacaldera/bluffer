@@ -1,12 +1,16 @@
 import Express from 'express';
 import cookieParser from 'cookie-parser';
 import path from 'path';
+import http from 'http';
 import winston from 'winston';
-import bodyParser from 'body-parser';
+
+import socketIo from 'socket.io';
+
 import config from './config';
-import ui from './ui';
-import proxy from './proxy';
-import api from './api';
+import ui from './routes/ui';
+import proxy from './routes/proxy';
+import api from './routes/api';
+import targetApi from './routes/target-api';
 import cacheStoreFactory from './cache-store';
 
 const cacheStore = cacheStoreFactory();
@@ -15,18 +19,18 @@ const { port } = config;
 
 winston.level = 'debug';
 
+const server = http.createServer(app);
+
+const io = new socketIo(server, { path: '/api/bluffer-socket' });
+
 app.use(cookieParser());
-
 app.use('/dist', Express.static(path.join(__dirname, '../../dist')));
-
-app.use('/api/bluffer*', bodyParser.json());
 app.use('/api/bluffer', api(cacheStore));
-
-app.use('/api', proxy(cacheStore, config.proxy));
-
+app.use('/target', targetApi(cacheStore, config.proxy));
+app.use('/api', proxy(cacheStore, config.proxy, io));
 app.use(ui(port, cacheStore));
 
-app.listen(port, (error) => {
+server.listen(port, (error) => {
   if (error) {
     winston.error(error);
   } else {

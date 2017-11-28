@@ -4,7 +4,7 @@
   "description": "A redux template",
   "scripts": {
     "start": "node dist/server/index.js",
-    "dev": "NODE_ENV=private nodemon src/server/index.js --exec babel-node",
+    "dev": "NODE_ENV=local nodemon src/server/index.js --exec babel-node",
     "lint": "eslint .",
     "test": "mocha test/unit && jest test/component",
     "jest": "jest test/component",
@@ -48,6 +48,8 @@
     "redux-logger": "^3.0.1",
     "redux-saga": "^0.15.6",
     "reselect": "^3.0.0",
+    "socket.io": "^2.0.4",
+    "socket.io-client": "^2.0.4",
     "superagent": "^3.6.0",
     "transformer-proxy": "^0.3.4",
     "url-pattern": "^1.0.3",

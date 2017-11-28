@@ -5,11 +5,12 @@ import transformerProxy from 'transformer-proxy';
 
 const proxy = httpProxy.createProxyServer({ secure: false });
 
-export default (cacheStore, proxyConfig) => {
+export default (cacheStore, proxyConfig, io) => {
   const router = express.Router();
 
   router.use('*', transformerProxy((data, req) => {
-    cacheStore.setCachedResponse(req.originalUrl, String(data));
+    const response = cacheStore.setCachedResponse(req.originalUrl, String(data));
+    io.emit('request-proxied', { url: req.originalUrl, response });
     return data;
   }));
 

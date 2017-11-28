@@ -7,9 +7,9 @@ import UrlPatter from 'url-pattern';
 import _ from 'lodash';
 import qs from 'qs';
 
-import configureStore from '../common/store/configure-store';
-import routes from '../common/routes';
-import { NAMESPACE } from '../common/modules/constants';
+import configureStore from '../../common/store/configure-store';
+import routes from '../../common/routes';
+import { NAMESPACE } from '../../common/modules/constants';
 
 const urlPattern = new UrlPatter('/:activePage');
 

@@ -12,7 +12,7 @@ const App = ({ children, activePage, setActivePage, info, error }) => (
       <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span className="navbar-toggler-icon" />
       </button>
-      <Link className="navbar-brand" to="/">Redux template</Link>
+      <Link className="navbar-brand" to="/">Bluffer</Link>
 
       <div className="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul className="navbar-nav mr-auto">
@@ -21,6 +21,9 @@ const App = ({ children, activePage, setActivePage, info, error }) => (
           </li>
           <li className={`nav-item ${activePage === 'timer' ? 'active' : ''}`}>
             <Link className="nav-link" to="/proxy" onClick={() => setActivePage('timer')}>Proxy</Link>
+          </li>
+          <li className={`nav-item ${activePage === 'timer' ? 'active' : ''}`}>
+            <Link className="nav-link" to="/about" onClick={() => setActivePage('about')}>About</Link>
           </li>
         </ul>
         <form className="form-inline my-2 my-lg-0">

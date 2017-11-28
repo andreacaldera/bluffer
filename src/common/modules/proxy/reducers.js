@@ -7,7 +7,7 @@ const all = (state = {}, action) => {
     case ADD_PROXY_RESPONSE:
       return {
         ...state,
-        [action.payload.path]: action.payload.response,
+        [action.payload.url]: action.payload.response,
       };
 
     case PROXY_RESPONSE_DELETED: {

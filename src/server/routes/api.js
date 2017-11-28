@@ -1,8 +1,11 @@
 import express from 'express';
 import winston from 'winston';
+import bodyParser from 'body-parser';
 
 export default (cacheStore) => {
   const router = express.Router();
+
+  router.use('*', bodyParser.json());
 
   router.post('/set-proxy-response', (req, res) => {
     const { url, response } = req.body;

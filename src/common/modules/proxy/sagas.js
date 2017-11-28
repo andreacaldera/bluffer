@@ -1,8 +1,41 @@
-import { takeEvery, put, call } from 'redux-saga/effects';
+import { takeEvery, put, call, cancelled, take } from 'redux-saga/effects';
+import { eventChannel } from 'redux-saga';
 import superagent from 'superagent';
+import io from 'socket.io-client';
 
-import { SET_PROXY_RESPONSE, SELECT_PROXY_RESPONSE_URL, DELETE_PROXY_RESPONSE, PROXY_RESPONSE_DELETED } from './constants';
+import { ADD_PROXY_RESPONSE, SET_PROXY_RESPONSE, SELECT_PROXY_RESPONSE_URL, DELETE_PROXY_RESPONSE, PROXY_RESPONSE_DELETED } from './constants';
 import { DISPLAY_INFO, DISPLAY_ERROR } from '../meta/constants';
+
+const socket = io('', { path: '/api/bluffer-socket' });
+socket.emit('new channel', 'AHHH');
+
+function registerSocket() {
+  return eventChannel((emitter) => {
+    socket.on('request-proxied', (data) => {
+      emitter(data);
+    });
+    const unsubscribe = () => {
+    };
+    return unsubscribe;
+  });
+}
+
+function* watchSocketEvents() {
+  const socketEventHandler = yield call(registerSocket);
+  const forever = true;
+  try {
+    while (forever) {
+      const socketEventData = yield take(socketEventHandler);
+      yield put({ type: ADD_PROXY_RESPONSE, payload: socketEventData });
+    }
+  } catch (err) {
+    if (yield cancelled()) {
+      socketEventHandler.close();
+    } else {
+      yield put({ type: DISPLAY_ERROR, payload: `Unable to live stream proxied requests: ${err.message}` });
+    }
+  }
+}
 
 const callApi = (path, payload) => () =>
   superagent.post(`/api/bluffer/${path}`)
@@ -38,4 +71,4 @@ function* watchDeleteResponse() {
   yield takeEvery(DELETE_PROXY_RESPONSE, deleteResponse);
 }
 
-export default [watchSetResponse, watchDeleteResponse];
+export default [watchSetResponse, watchDeleteResponse, watchSocketEvents];
