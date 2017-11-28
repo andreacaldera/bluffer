@@ -15,7 +15,6 @@ function* setResponse({ payload }) {
     yield call(callSetResponseApi(payload));
     yield put({ type: SELECT_PROXY_RESPONSE_URL, payload: null });
   } catch (err) {
-    console.error(err);
     // TODO display error to user
   }
 }

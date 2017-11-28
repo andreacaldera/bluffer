@@ -27,14 +27,14 @@ export default (port, cacheStore) => {
       <!doctype html>
       <html>
         <head>
-          <link rel="stylesheet" type="text/css" href="http://localhost:3001/dist/reduxTemplate.css" />
+          <link rel="stylesheet" type="text/css" href="/dist/reduxTemplate.css" />
           <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
         <title>Redux Template</title>
         </head>
         <body>
           <div id="app">${content}</div>
           <script>window.__initialState__ = ${JSON.stringify(store.getState()).replace(/</g, '\\x3c')}</script>
-          <script src="http://localhost:${port}/dist/reduxTemplate.js"></script>
+          <script src="/dist/reduxTemplate.js"></script>
         </body>
       </html>
       `;

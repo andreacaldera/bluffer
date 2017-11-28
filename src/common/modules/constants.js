@@ -1,1 +1,1 @@
-export const NAMESPACE = 'MONTY_MASQUERADE';
+export const NAMESPACE = 'BLUFFER';

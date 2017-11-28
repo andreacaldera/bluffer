@@ -4,14 +4,9 @@ import PropTypes from 'prop-types';
 
 import uiModule from '../modules/ui';
 
-import FeatureTogglesComponent from './FeatureToggles';
-
-const FeatureToggles = React.createFactory(FeatureTogglesComponent);
-
 const Home = ({ hasReachedPageBottom, hasPassedHeightThreshold }) =>
 (<div>
   <h1>Home</h1>
-  {FeatureToggles()}
   {hasReachedPageBottom && (<div className="home__bottom">You have reached the abyss of this page</div>)}
   {hasPassedHeightThreshold && (<div className="home__page-height-threshold">You passed the page threashold</div>)}
 </div>);
