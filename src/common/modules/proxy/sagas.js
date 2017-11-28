@@ -21,7 +21,6 @@ function* setResponse({ payload }) {
 
 function* deleteResponse({ payload }) {
   try {
-    console.log(payload);
     yield call(callApi('delete-proxy-response', { url: payload }));
     yield put({ type: PROXY_RESPONSE_DELETED, payload });
   } catch (err) {
