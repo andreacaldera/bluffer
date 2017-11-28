@@ -1,0 +1,39 @@
+{
+  "parser": "babel-eslint",
+  "extends": "airbnb",
+  "plugins": [
+    "flowtype"
+  ],
+  "env": {
+    "node": true,
+  },
+  "globals": {
+    "window": true,
+    "document": true,
+    "fetch": true,
+  },
+  "rules": {
+    "id-length": 0,
+    "max-len": 0,
+    "react/jsx-filename-extension": 0,
+    "no-param-reassign": [2, { "props": false }],
+    "consistent-return": 0,
+    "no-underscore-dangle": 0,
+    "new-cap": 0,
+    "arrow-parens": ["error", "always"],
+    "comma-dangle": ["error", {
+      "arrays": "always-multiline",
+      "objects": "always-multiline",
+      "imports": "always-multiline",
+      "exports": "always-multiline",
+      "functions": "ignore",
+    }],
+    "no-confusing-arrow": 0,
+    "react/prefer-es6-class": 0,
+    "react/jsx-sort-props": 0,
+    "react/no-unused-prop-types": 0,
+    "import/prefer-default-export": 0,
+    "react/require-default-props": 0,
+    "react/prefer-stateless-function": [0, { "ignorePureComponents": true }]
+  }
+}
