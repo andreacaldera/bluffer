@@ -5,7 +5,7 @@ import bodyParser from 'body-parser';
 export default (cacheStore) => {
   const router = express.Router();
 
-  router.use('*', bodyParser.json());
+  router.use('*', bodyParser.json({ limit: '5mb' }));
 
   router.post('/set-proxy-response', (req, res) => {
     const { url, response } = req.body;
