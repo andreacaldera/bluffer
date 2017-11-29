@@ -31,11 +31,16 @@ export default () => {
 
   const all = () => cache;
 
+  const list = () => Object.keys(cache).map((url) =>
+    Object.assign({}, cache[url], { url })
+  );
+
   return Object.freeze({
     getResponse,
     setCachedResponse,
     setSavedResponse,
     all,
+    list,
     getSavedResponse,
     getCachedResponse,
     deleteResponse,

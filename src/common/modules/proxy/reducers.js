@@ -20,6 +20,19 @@ const all = (state = {}, action) => {
   }
 };
 
+const list = (state = [], action) => {
+  switch (action.type) {
+    case ADD_PROXY_RESPONSE:
+      return [Object.assign({}, action.payload.response, { url: action.payload.url })].concat(state);
+    case PROXY_RESPONSE_DELETED: {
+      const newState = state.filter(({ url }) => action.payload !== url);
+      return newState;
+    }
+
+    default: return state;
+  }
+};
+
 const selectedUrl = (state = null, action) => {
   switch (action.type) {
     case SELECT_PROXY_RESPONSE_URL:
@@ -33,4 +46,5 @@ const selectedUrl = (state = null, action) => {
 module.exports = combineReducers({
   all,
   selectedUrl,
+  list,
 });

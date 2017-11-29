@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import { isEmpty } from 'lodash';
 
 import proxyModule from '../modules/proxy';
 import { SET_PROXY_RESPONSE, SELECT_PROXY_RESPONSE_URL, DELETE_PROXY_RESPONSE } from '../modules/proxy/constants';
@@ -10,7 +11,7 @@ class Proxy extends Component {
   static propTypes = {
     selectedResponse: PropTypes.shape(),
     selectedUrl: PropTypes.string,
-    responses: PropTypes.shape().isRequired,
+    responses: PropTypes.arrayOf(PropTypes.shape().isRequired).isRequired,
     setResponse: PropTypes.func.isRequired,
     selectResponse: PropTypes.func.isRequired,
     cancelEditing: PropTypes.func.isRequired,
@@ -45,24 +46,25 @@ class Proxy extends Component {
       <div>
         <h1>Proxy</h1>
 
+        { isEmpty(responses) && <p>No responses caugh yet.</p>}
+
         <ul className="list-group form-group row">
-          {Object.keys(responses).map((url) => {
-            if (selectedUrl && selectedUrl !== url) {
+          {responses.map((response) => {
+            if (selectedUrl && selectedUrl !== response.url) {
               return null;
             }
-            const response = responses[url];
             const status = response.savedResponse ? 'Overwritten' : 'Normal';
             const statusClass = response.savedResponse ? 'badge-warning' : 'badge-success';
             const dateTime = response.timestamp ? moment(response.timestamp).format('MMM Do YYYY, HH:mm:ss') : null;
 
             return (
-              <li className="list-group-item Response" key={url}>
-                <div className="col-5" title={url}>{url}</div>
+              <li className="list-group-item Response" key={response.url}>
+                <div className="col-5" title={response.url}>{response.url}</div>
                 <div className="col-3">{dateTime}</div>
                 <div className={`col badge ${statusClass}`}>{status}</div>
                 <div className="col-2">
-                  <button className="float-right btn btn-primary ml-1" onClick={(e) => deleteResponse(e, url)}>Delete</button>
-                  <button className="float-right btn btn-primary" onClick={(e) => selectResponse(e, url)}>Edit</button>
+                  <button className="float-right btn btn-primary ml-1" onClick={(e) => deleteResponse(e, response.url)}>Delete</button>
+                  <button className="float-right btn btn-primary" onClick={(e) => selectResponse(e, response.url)}>Edit</button>
                 </div>
               </li>
             );
@@ -89,7 +91,7 @@ class Proxy extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  responses: proxyModule.getAll(state),
+  responses: proxyModule.getList(state),
   selectedResponse: proxyModule.getSelected(state),
   selectedUrl: proxyModule.getSelectedUrl(state),
 });

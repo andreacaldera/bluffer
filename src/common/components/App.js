@@ -4,9 +4,9 @@ import PropTypes from 'prop-types';
 import { Link } from 'react-router';
 
 import meta from '../modules/meta';
-import { SET_ACTIVE_PAGE } from '../modules/meta/constants';
+import { SET_ACTIVE_PAGE, DISPLAY_INFO, DISPLAY_ERROR } from '../modules/meta/constants';
 
-const App = ({ children, activePage, setActivePage, info, error }) => (
+const App = ({ children, activePage, setActivePage, info, error, closeInfo, closeError }) => (
   <div>
     <nav className="navbar navbar-toggleable-md navbar-inverse bg-inverse fixed-top">
       <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,8 +33,14 @@ const App = ({ children, activePage, setActivePage, info, error }) => (
       </div>
     </nav>
     <div className="container">
-      {info && <div className="alert alert-info">{info}</div>}
-      {error && <div className="alert alert-danger">{error}</div>}
+      {info && (<div className="alert alert-info">
+        {info}
+        <a role="link" onClick={closeInfo} className="float-right"><i className="fa fa-close fa-lg" /></a>
+      </div>)}
+      {error && (<div className="alert alert-danger">
+        {error}
+        <a role="link" onClick={closeError} className="float-right"><i className="fa fa-close fa-lg" /></a>
+      </div>)}
       {children}
     </div>
   </div>
@@ -44,6 +50,8 @@ App.propTypes = {
   children: PropTypes.shape().isRequired,
   activePage: PropTypes.string.isRequired,
   setActivePage: PropTypes.func.isRequired,
+  closeInfo: PropTypes.func.isRequired,
+  closeError: PropTypes.func.isRequired,
   info: PropTypes.string,
   error: PropTypes.string,
 };
@@ -57,6 +65,20 @@ const mapStateToProps = (state) => ({
 const mapDispatchToProps = (dispatch) => ({
   setActivePage(activePage) {
     dispatch({ type: SET_ACTIVE_PAGE, activePage });
+  },
+  closeInfo: (e) => {
+    e.preventDefault();
+    dispatch({
+      type: DISPLAY_INFO,
+      payload: null,
+    });
+  },
+  closeError: (e) => {
+    e.preventDefault();
+    dispatch({
+      type: DISPLAY_ERROR,
+      payload: null,
+    });
   },
 });
 

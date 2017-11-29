@@ -28,7 +28,8 @@ export default (port, cacheStore) => {
       <html>
         <head>
           <link rel="stylesheet" type="text/css" href="/dist/reduxTemplate.css" />
-          <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+          <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous" />
+          <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
         <title>Bluffer</title>
         </head>
         <body>
@@ -46,7 +47,10 @@ export default (port, cacheStore) => {
     res.cookie('featureToggles', activeFeatureToggles);
     const preloadedState = { [NAMESPACE]: {
       meta: { activePage, featureToggles: activeFeatureToggles },
-      proxy: { all: cacheStore.all() },
+      proxy: {
+        all: cacheStore.all(),
+        list: cacheStore.list(),
+      },
     } };
     const memoryHistory = createMemoryHistory(req.url);
     const store = configureStore(memoryHistory, preloadedState);

@@ -7,6 +7,11 @@ const getAll = createSelector(
   ({ all }) => all
 );
 
+const getList = createSelector(
+  getProxySelector,
+  ({ list }) => list
+);
+
 const getSelectedUrl = createSelector(
   getProxySelector,
   ({ selectedUrl }) => selectedUrl
@@ -30,6 +35,7 @@ const getSelected = createSelector(
 
 module.exports = {
   getAll,
+  getList,
   getSelectedUrl,
   getSelected,
 };
