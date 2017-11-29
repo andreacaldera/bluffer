@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-import { ADD_PROXY_RESPONSE, SELECT_PROXY_RESPONSE_URL, PROXY_RESPONSE_DELETED } from './constants';
+import { ADD_PROXY_RESPONSE, FLASH_RESPONSE, SELECT_PROXY_RESPONSE_URL, PROXY_RESPONSE_DELETED } from './constants';
 
 const all = (state = {}, action) => {
   switch (action.type) {
@@ -9,7 +9,11 @@ const all = (state = {}, action) => {
         ...state,
         [action.payload.url]: action.payload.response,
       };
-
+    case FLASH_RESPONSE:
+      return {
+        ...state,
+        [action.payload.url]: action.payload.response,
+      };
     case PROXY_RESPONSE_DELETED: {
       const newState = Object.assign({}, state);
       delete newState[action.payload]; // TODO make better
@@ -23,6 +27,8 @@ const all = (state = {}, action) => {
 const list = (state = [], action) => {
   switch (action.type) {
     case ADD_PROXY_RESPONSE:
+      return [Object.assign({}, action.payload.response, { url: action.payload.url })].concat(state);
+    case FLASH_RESPONSE:
       return [Object.assign({}, action.payload.response, { url: action.payload.url })].concat(state);
     case PROXY_RESPONSE_DELETED: {
       const newState = state.filter(({ url }) => action.payload !== url);

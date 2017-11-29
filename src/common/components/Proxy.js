@@ -46,7 +46,7 @@ class Proxy extends Component {
       <div>
         <h1>Proxy</h1>
 
-        { isEmpty(responses) && <p>No responses caugh yet.</p>}
+        { isEmpty(responses) && <p>No responses caught yet.</p>}
 
         <ul className="list-group form-group row">
           {responses.map((response) => {
@@ -56,9 +56,13 @@ class Proxy extends Component {
             const status = response.savedResponse ? 'Overwritten' : 'Normal';
             const statusClass = response.savedResponse ? 'badge-warning' : 'badge-success';
             const dateTime = response.timestamp ? moment(response.timestamp).format('MMM Do YYYY, HH:mm:ss') : null;
+            const recentLimit = moment().subtract(20, 'minutes');
+            const isRecentlyServed = response.lastServedCached && moment(response.lastServedCached).isAfter(recentLimit);
+            console.log({ response, recentLimit, isRecentlyServed });
+            const flashClass = isRecentlyServed ? 'flashing' : '';
 
             return (
-              <li className="list-group-item Response" key={response.url}>
+              <li className={`list-group-item Response ${flashClass}`} key={response.url}>
                 <div className="col-5" title={response.url}>{response.url}</div>
                 <div className="col-3">{dateTime}</div>
                 <div className={`col badge ${statusClass}`}>{status}</div>
