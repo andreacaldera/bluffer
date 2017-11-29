@@ -1,26 +1,30 @@
 import React, { Component } from 'react';
-// import moment from 'moment';
+import moment from 'moment';
 import { string } from 'prop-types';
 
 export default class Log extends Component {
   static propTypes = {
     url: string.isRequired,
+    timestamp: string.isRequired,
+    savedResponse: string.isRequired
   }
 
   render() {
-    const { url } = this.props;
+    const { url, timestamp, savedResponse } = this.props;
+
+    const dateTime = timestamp ? moment(timestamp).format('MMM Do YYYY, HH:mm:ss') : null;
+    const statusClass = savedResponse ? 'badge-warning' : 'badge-success';
+    const status = savedResponse ? 'Overwritten' : 'Normal'
 
     return (
       <li className="list-group-item Response" key={url}>
         <div className="col-5" title={url}>{url}</div>
-        { /*
         <div className="col-3">{dateTime}</div>
         <div className={`col badge ${statusClass}`}>{status}</div>
         <div className="col-2">
-          <button className="float-right btn btn-primary ml-1" onClick={(e) => deleteResponse(e, response.url)}>Delete</button>
-          <button className="float-right btn btn-primary" onClick={(e) => selectResponse(e, response.url)}>Edit</button>
+          <button className="float-right btn btn-primary ml-1" onClick={(e) => deleteResponse(e, url)}>Delete</button>
+          <button className="float-right btn btn-primary" onClick={(e) => selectResponse(e, url)}>Edit</button>
         </div>
-        */ }
       </li>
     );
 
