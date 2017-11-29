@@ -11,8 +11,8 @@ export default (cacheStore) => {
     const { url, response } = req.body;
     winston.debug(`Setting proxy response ${url}`);
 
-    cacheStore.setSavedResponse(url, response);
-    res.sendStatus(202);
+    const savedResponse = cacheStore.setSavedResponse(url, response);
+    res.json({ url, response: savedResponse });
   });
 
   router.post('/delete-proxy-response', (req, res) => {

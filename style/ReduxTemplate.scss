@@ -1,29 +1,9 @@
 body {
   padding-top: 5rem;
-  // height: 10000px;
-}
-.starter-template {
-}
-
-.home__bottom {
-  position: fixed;
-  right: 0;
-  bottom: 0;
-}
-
-.home__page-height-threshold {
-  position: fixed;
-  left: 0;
-  bottom: 100px;
 }
 
 .Response-url {
-  width: 40%;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.Response-dateTime {
-  padding-left: 10px;
 }

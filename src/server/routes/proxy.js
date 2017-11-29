@@ -1,21 +1,26 @@
 import express from 'express';
 import httpProxy from 'http-proxy';
 import winston from 'winston';
-import transformerProxy from 'transformer-proxy';
 
 const proxy = httpProxy.createProxyServer({ secure: false });
 
 export default (cacheStore, proxyConfig, io) => {
   const router = express.Router();
 
-  router.use('*', transformerProxy((data, req) => {
-    const response = cacheStore.setCachedResponse(req.originalUrl, String(data));
-    io.emit('request-proxied', { url: req.originalUrl, response });
-    return data;
-  }));
-
   proxy.on('proxyRes', (proxyRes, req, res) => {
     res.setHeader('X-Bluffer-Proxy', 'bluffer-proxy');
+
+    res.setHeader('X-Bluffer-Proxy', 'bluffer-proxy');
+    res.setHeader('X-Bluffer-Proxy', 'bluffer-proxy');
+    let responseBody = '';
+    proxyRes.on('data', (data) => {
+      responseBody += data.toString('utf-8');
+    });
+
+    proxyRes.on('end', () => {
+      const response = cacheStore.setCachedResponse(req.originalUrl, String(responseBody));
+      io.emit('request-proxied', { url: req.originalUrl, response });
+    });
   });
 
   proxy.on('error', (err) => {
@@ -25,7 +30,6 @@ export default (cacheStore, proxyConfig, io) => {
   proxy.on('proxyReq', (proxyReq, req, /* res, options */) => {
     winston.debug(`Processing request ${req.originalUrl}`);
     proxyReq.setHeader('Host', proxyConfig.host);
-    winston.debug(`Original request headers ${req.headers}`);
   });
 
   router.get('*', (req, res) => {
@@ -36,6 +40,7 @@ export default (cacheStore, proxyConfig, io) => {
     }
     winston.debug(`Using saved response for url ${url}`);
     const responseBody = cacheStore.getSavedResponse(url);
+    res.locals.skipTransform = true;
     res.json(JSON.parse(responseBody));
   });
 

@@ -24,6 +24,8 @@ const selectedUrl = (state = null, action) => {
   switch (action.type) {
     case SELECT_PROXY_RESPONSE_URL:
       return action.payload;
+    case PROXY_RESPONSE_DELETED:
+      return action.payload === state ? null : state;
     default: return state;
   }
 };

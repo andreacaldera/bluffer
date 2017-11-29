@@ -18,8 +18,9 @@ export default () => {
   };
 
   const setSavedResponse = (url, savedResponse) => {
-    const response = cache[url];
-    cache[url] = Object.assign({}, response, { savedResponse });
+    const response = Object.assign({}, cache[url], { savedResponse });
+    cache[url] = response;
+    return response;
   };
 
   const getSavedResponse = (url) => _.get(cache, [url, 'savedResponse']);

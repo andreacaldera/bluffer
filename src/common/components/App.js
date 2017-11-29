@@ -33,11 +33,9 @@ const App = ({ children, activePage, setActivePage, info, error }) => (
       </div>
     </nav>
     <div className="container">
-      <div className="starter-template">
-        {info && <div className="alert alert-info">{info}</div>}
-        {error && <div className="alert alert-danger">{error}</div>}
-        {children}
-      </div>
+      {info && <div className="alert alert-info">{info}</div>}
+      {error && <div className="alert alert-danger">{error}</div>}
+      {children}
     </div>
   </div>
 );
