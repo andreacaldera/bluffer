@@ -1,6 +1,5 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import winston from 'winston';
 
 const quotes = [
   'Progress is man\'s ability to complicate simplicity.',
@@ -11,10 +10,7 @@ const quotes = [
 ];
 
 const randomQuote = () => {
-  const randomId = Math.round(Math.random() * (quotes.length - 0));
-  if (!quotes[randomId]) {
-    winston.warn(`Unable to get random quote ${randomId}`);
-  }
+  const randomId = Math.round(Math.random() * (quotes.length - 1));
   return quotes[randomId];
 };
 

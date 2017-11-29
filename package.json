@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "description": "A redux template",
   "scripts": {
-    "start": "node dist/server/index.js",
+    "start": "NODE_ENV=production node dist/server/index.js",
     "dev": "NODE_ENV=local nodemon src/server/index.js --exec babel-node",
     "lint": "eslint .",
     "test": "mocha test/unit && jest test/component",
@@ -56,6 +56,7 @@
   },
   "devDependencies": {
     "arrow-mocha": "^1.0.1",
+    "babel-cli": "^6.26.0",
     "babel-eslint": "^7.1.1",
     "babel-jest": "^21.0.2",
     "babel-plugin-add-module-exports": "^0.2.1",

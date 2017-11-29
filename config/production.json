@@ -1,0 +1,7 @@
+{
+  "port": 5001,
+  "proxy": {
+    "target": "http://localhost:5001/target",
+    "host": "localhost"
+  }
+}
