@@ -1,56 +1,80 @@
 import React, { Component } from 'react';
 import moment from 'moment';
-import { string } from 'prop-types';
+import { string, func } from 'prop-types';
 
 export default class Log extends Component {
   static propTypes = {
     url: string.isRequired,
     timestamp: string.isRequired,
-    savedResponse: string.isRequired
+    savedResponse: string.isRequired,
+    saveResponse: func.isRequired
+  };
+
+  state = {
+    isEditMode: false
+  };
+
+  toggleMockForm = () => {
+    this.setState({ isEditMode: !this.state.isEditMode });
+  }
+
+  saveMock = () => {
+    throw new Error('WTF')
+    // e => saveResponse(e, selectedUrl, currentResponse)
   }
 
   render() {
-    const { url, timestamp, savedResponse } = this.props;
-
-    const dateTime = timestamp ? moment(timestamp).format('MMM Do YYYY, HH:mm:ss') : null;
+    const { url, timestamp, cachedResponse, savedResponse, saveResponse } = this.props;
+    const { isEditMode } = this.state;
+    const dateTime = timestamp
+      ? moment(timestamp).format('MMM Do YYYY, HH:mm:ss')
+      : null;
     const statusClass = savedResponse ? 'badge-warning' : 'badge-success';
-    const status = savedResponse ? 'Overwritten' : 'Normal'
+    const status = savedResponse ? 'Overwritten' : 'Normal';
 
     return (
       <li className="list-group-item Response" key={url}>
-        <div className="col-5" title={url}>{url}</div>
+        <div className="col-5" title={url}>
+          {url}
+        </div>
         <div className="col-3">{dateTime}</div>
         <div className={`col badge ${statusClass}`}>{status}</div>
         <div className="col-2">
-          <button className="float-right btn btn-primary ml-1" onClick={(e) => deleteResponse(e, url)}>Delete</button>
-          <button className="float-right btn btn-primary" onClick={(e) => selectResponse(e, url)}>Edit</button>
+          <button
+            className="float-right btn btn-primary"
+            onClick={this.toggleMockForm}
+          >
+            {isEditMode ? 'Cancel' : 'Edit'}
+          </button>
         </div>
+        {isEditMode && (
+          <div className="form-group mt-1">
+            <div className="row">
+              <textarea
+                ref={r => {
+                  this.textarea = r;
+                }}
+                rows="10"
+                className="col form-control"
+                value={cachedResponse}
+              />
+            </div>
+            <div className="row mt-1">
+              <div className="col">
+                <button
+                  className="btn btn-primary"
+                  onClick={this.saveMock}
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </li>
     );
-
-    // {selectedResponse && (
-    //   <div className="form-group mt-1">
-    //     <div className="row">
-    //       <textarea rows="10" className="col form-control" onChange={(e) => this.setState({ currentResponse: e.target.value })} value={currentResponse} />
-    //     </div>
-    //     <div className="row mt-1">
-    //       <div className="col">
-    //         <button className="btn btn-primary" onClick={(e) => saveResponse(e, selectedUrl, currentResponse)}>Save</button>
-    //         <button className="btn btn-primary ml-1" onClick={(e) => cancelEditing(e)}>Cancel</button>
-    //       </div>
-    //     </div>
-    //   </div>
-    // )}
-    //
-    //   if (selectedUrl && selectedUrl !== response.url) {
-    //     return null;
-    //   }
-    //   const status = response.savedResponse ? 'Overwritten' : 'Normal';
-    //   const statusClass = response.savedResponse ? 'badge-warning' : 'badge-success';
-    //   const dateTime = response.timestamp ? moment(response.timestamp).format('MMM Do YYYY, HH:mm:ss') : null;
   }
 }
-
 
 // #2
 //   if (selectedUrl && selectedUrl !== response.url) {
@@ -74,17 +98,16 @@ export default class Log extends Component {
 // }
 // )}
 
-
-        // {selectedResponse && (
-        //   <div className="form-group mt-1">
-        //     <div className="row">
-        //       <textarea rows="10" className="col form-control" onChange={(e) => this.setState({ currentResponse: e.target.value })} value={currentResponse} />
-        //     </div>
-        //     <div className="row mt-1">
-        //       <div className="col">
-        //         <button className="btn btn-primary" onClick={(e) => saveResponse(e, selectedUrl, currentResponse)}>Save</button>
-        //         <button className="btn btn-primary ml-1" onClick={(e) => cancelEditing(e)}>Cancel</button>
-        //       </div>
-        //     </div>
-        //   </div>
-        // )}
+// {selectedResponse && (
+//   <div className="form-group mt-1">
+//     <div className="row">
+//       <textarea rows="10" className="col form-control" onChange={(e) => this.setState({ currentResponse: e.target.value })} value={currentResponse} />
+//     </div>
+//     <div className="row mt-1">
+//       <div className="col">
+//         <button className="btn btn-primary" onClick={(e) => saveResponse(e, selectedUrl, currentResponse)}>Save</button>
+//         <button className="btn btn-primary ml-1" onClick={(e) => cancelEditing(e)}>Cancel</button>
+//       </div>
+//     </div>
+//   </div>
+// )}
