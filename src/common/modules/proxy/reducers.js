@@ -23,7 +23,13 @@ const all = (state = {}, action) => {
 const list = (state = [], action) => {
   switch (action.type) {
     case ADD_PROXY_RESPONSE:
-      return [Object.assign({}, action.payload.response, { url: action.payload.url })].concat(state);
+      return [
+        {
+          ...action.payload.response,
+          url: action.payload.url,
+        },
+        ...state
+      ]
     case PROXY_RESPONSE_DELETED: {
       const newState = state.filter(({ url }) => action.payload !== url);
       return newState;
