@@ -2,11 +2,6 @@ import { createSelector } from 'reselect';
 
 import { getMetaSelector } from '../selectors';
 
-const getFeatureToggles = createSelector(
-  getMetaSelector,
-  ({ featureToggles }) => featureToggles
-);
-
 const getActivePage = createSelector(
   getMetaSelector,
   ({ activePage }) => activePage
@@ -24,7 +19,6 @@ const getError = createSelector(
 
 module.exports = {
   getActivePage,
-  getFeatureToggles,
   getInfo,
   getError,
 };
