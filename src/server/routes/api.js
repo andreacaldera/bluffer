@@ -23,6 +23,5 @@ export default (cacheStore) => {
     res.sendStatus(202);
   });
 
-
   return router;
 };

@@ -42,6 +42,8 @@ export default (cacheStore, proxyConfig, io) => {
     const responseBody = cacheStore.getSavedResponse(url);
     res.locals.skipTransform = true;
     res.json(JSON.parse(responseBody));
+    const response = cacheStore.setServedSavedResponseTimestamp(req.originalUrl);
+    io.emit('response-from-cache', { url: req.originalUrl, response });
   });
 
   return router;

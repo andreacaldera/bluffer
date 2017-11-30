@@ -23,6 +23,14 @@ export default () => {
     return response;
   };
 
+  const setServedSavedResponseTimestamp = (url) => {
+    const response = Object.assign({}, cache[url], {
+      lastServedCached: new Date(),
+    });
+    cache[url] = response;
+    return response;
+  };
+
   const getSavedResponse = (url) => _.get(cache, [url, 'savedResponse']);
 
   const getCachedResponse = (url) => _.get(cache, [url, 'cachedResponse']);
@@ -44,5 +52,6 @@ export default () => {
     getSavedResponse,
     getCachedResponse,
     deleteResponse,
+    setServedSavedResponseTimestamp,
   });
 };

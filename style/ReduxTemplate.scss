@@ -7,3 +7,12 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.flashing {
+  outline: 1px solid orange;
+  animation: flashing 2s linear 4s;
+}
+
+@keyframes flashing {
+  50% { opacity: 0; }
+}

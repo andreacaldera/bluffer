@@ -47,7 +47,7 @@ class Proxy extends Component {
       <div>
         <h1>Proxy</h1>
 
-        { isEmpty(responses) && <p>No responses caugh yet.</p>}
+        { isEmpty(responses) && <p>No responses caught yet.</p>}
 
         <ul className="list-group form-group">
           {responses.map((response) => (<Log key={response.url} {...response} />))}

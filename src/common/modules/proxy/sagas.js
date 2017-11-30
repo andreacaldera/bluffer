@@ -3,7 +3,7 @@ import { eventChannel } from 'redux-saga';
 import superagent from 'superagent';
 import io from 'socket.io-client';
 
-import { ADD_PROXY_RESPONSE, SET_PROXY_RESPONSE, SELECT_PROXY_RESPONSE_URL, DELETE_PROXY_RESPONSE, PROXY_RESPONSE_DELETED } from './constants';
+import { ADD_PROXY_RESPONSE, SET_PROXY_RESPONSE, FLASH_RESPONSE, SELECT_PROXY_RESPONSE_URL, DELETE_PROXY_RESPONSE, PROXY_RESPONSE_DELETED } from './constants';
 import { DISPLAY_INFO, DISPLAY_ERROR } from '../meta/constants';
 
 const socket = io('', { path: '/api/bluffer-socket' });
@@ -12,6 +12,9 @@ socket.emit('new channel', 'AHHH');
 function registerSocket() {
   return eventChannel((emitter) => {
     socket.on('request-proxied', (data) => {
+      emitter(data);
+    });
+    socket.on('response-from-cache', (data) => {
       emitter(data);
     });
     const unsubscribe = () => {
@@ -26,7 +29,12 @@ function* watchSocketEvents() {
   try {
     while (forever) {
       const socketEventData = yield take(socketEventHandler);
-      yield put({ type: ADD_PROXY_RESPONSE, payload: socketEventData });
+      //todo - Make not ugly
+      if (socketEventData.response && socketEventData.response.lastServedCached) {
+        yield put({ type: FLASH_RESPONSE, payload: socketEventData });
+      } else {
+        yield put({ type: ADD_PROXY_RESPONSE, payload: socketEventData });
+      }
     }
   } catch (err) {
     if (yield cancelled()) {
