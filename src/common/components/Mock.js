@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { string, func, instanceOf } from 'prop-types';
+import { string, func, instanceOf, bool } from 'prop-types';
 
 import { MOCK_RESPONSE } from '../modules/proxy/constants';
 
@@ -12,6 +12,7 @@ class Mock extends Component {
     timestamp: instanceOf(Date).isRequired,
     lastServed: instanceOf(Date),
     saveMockResponse: func.isRequired,
+    mockHasBeenServedRecently: bool.isRequired,
   };
 
   static defaultProps
@@ -33,12 +34,13 @@ class Mock extends Component {
   }
 
   render() {
-    const { url, timestamp, responseBody } = this.props;
+    const { url, timestamp, responseBody, mockHasBeenServedRecently } = this.props;
     const { isEditMode } = this.state;
     const dateTime = moment(timestamp).format('MMM Do YYYY, HH:mm:ss');
+    const recentlyServedClass = mockHasBeenServedRecently ? 'recentlyServed' : '';
 
     return (
-      <li className="list-group-item" key={url}>
+      <li className={`list-group-item ${recentlyServedClass}`} key={url}>
         <div className="row w-100">
           <div className="col-5" title={url}>{url}</div>
           <div className="col-3">{dateTime}</div>

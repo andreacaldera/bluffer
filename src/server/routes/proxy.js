@@ -39,12 +39,11 @@ export default (dataStore, proxyConfig, io) => {
       winston.debug(`Proxying request for url ${url}`);
       return proxy.web(req, res, { target: proxyConfig.target });
     }
+
     winston.debug(`Using mock response for url ${url}`);
-
-
     res.locals.skipTransform = true;
     res.json(JSON.parse(mock.responseBody));
-    io.emit('response-from-cache', { url, response: mock });
+    io.emit('mock_served', { url });
   });
 
   return router;

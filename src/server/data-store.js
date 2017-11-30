@@ -5,9 +5,9 @@ export default () => {
 
   const logResponse = (url, responseBody) => {
     const loggedResponse = Object.assign({}, logStore[url], {
+      url,
       responseBody,
       timestamp: new Date(),
-      url,
     });
     logStore.unshift(loggedResponse);
     return loggedResponse;
@@ -22,20 +22,11 @@ export default () => {
       url,
       responseBody,
       timestamp: new Date(),
+      mockHasBeenServedRecently: false,
     };
     mockStore[url] = mockedResponse;
     return mockedResponse;
   };
-
-  const setMockResponseLastServed = (url) => {
-    const mockedResponse = Object.assign({}, mockStore[url], {
-      lastServed: new Date(),
-    });
-    mockedResponse[url] = mockedResponse;
-    return mockedResponse;
-  };
-
-  // const getLog = (url) => logStore[url];
 
   const getMock = (url) => mockStore[url];
 
@@ -47,7 +38,6 @@ export default () => {
     logResponse,
     deleteMock,
     mockResponse,
-    setMockResponseLastServed,
     getLogList,
     getMockList,
     getMock,

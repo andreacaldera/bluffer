@@ -1,8 +1,8 @@
-import { eventChannel } from 'redux-saga';
+import { eventChannel, delay } from 'redux-saga';
 import { put, call, cancelled, take } from 'redux-saga/effects';
 import io from 'socket.io-client';
 
-import { RESPONSE_LOGGED } from '../common/modules/proxy/constants';
+import { RESPONSE_LOGGED, MOCK_SERVED_RECENTLY, MOCK_SERVED_RECENTLY_CANCEL } from '../common/modules/proxy/constants';
 import { DISPLAY_ERROR } from '../common/modules/meta/constants';
 
 const socket = io('', { path: '/api/bluffer-socket' });
@@ -12,8 +12,8 @@ function registerSocket() {
     socket.on('request-proxied', (data) => {
       emitter({ loggedResponse: data });
     });
-    socket.on('response-from-cache', (data) => {
-      emitter(data);
+    socket.on('mock_served', (data) => {
+      emitter({ mock_served_recently: data });
     });
     const unsubscribe = () => {
     };
@@ -31,10 +31,11 @@ function* watchSocketEvents() {
       if (socketEventData.loggedResponse) {
         yield put({ type: RESPONSE_LOGGED, payload: socketEventData.loggedResponse });
       }
-      // if (socketEventData.response && socketEventData.response.lastServedCached) {
-      //   yield put({ type: FLASH_RESPONSE, payload: socketEventData });
-      // } else {
-      // }
+      if (socketEventData.mock_served_recently) {
+        yield put({ type: MOCK_SERVED_RECENTLY, payload: socketEventData.mock_served_recently });
+        yield delay(4000);
+        yield put({ type: MOCK_SERVED_RECENTLY_CANCEL, payload: socketEventData.mock_served_recently });
+      }
     }
   } catch (err) {
     if (yield cancelled()) {
