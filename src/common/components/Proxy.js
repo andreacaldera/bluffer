@@ -43,7 +43,7 @@ class Proxy extends Component {
 
         {!isEmpty(mockList) && [
           <h2 key="mockTitle">Mocks</h2>,
-          <ul key="mockList" className="list-group form-group">
+          <ul key="mockList" className="list-group">
             {mockList.map((mock) => (<Mock key={`${mock.url}-${mock.timestamp}`} {...mock} />))}
           </ul>,
         ]}

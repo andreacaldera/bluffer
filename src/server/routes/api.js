@@ -2,7 +2,7 @@ import express from 'express';
 import winston from 'winston';
 import bodyParser from 'body-parser';
 
-export default (cacheStore) => {
+export default (dataStore) => {
   const router = express.Router();
 
   router.use('*', bodyParser.json({ limit: '5mb' }));
@@ -11,7 +11,7 @@ export default (cacheStore) => {
     const { url, responseBody } = req.body;
     winston.debug(`Setting proxy response ${url}`);
 
-    const mockedResponse = cacheStore.mockResponse(url, responseBody);
+    const mockedResponse = dataStore.mockResponse(url, responseBody);
     res.json(mockedResponse);
   });
 
@@ -19,7 +19,7 @@ export default (cacheStore) => {
     const { url } = req.body;
     winston.debug(`Deleting proxy response ${url}`);
 
-    cacheStore.deleteResponse(url);
+    dataStore.deleteMock(url);
     res.sendStatus(202);
   });
 
