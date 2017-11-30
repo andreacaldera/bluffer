@@ -16,6 +16,9 @@
     "precommit": "npm run lint",
     "prepush": "npm run test"
   },
+  "nodemonConfig": {
+    "ignore": ["test/*", "data/*", "style/*", "src/client/*"]
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/andreacaldera/template/redux-template"
@@ -35,6 +38,7 @@
     "cookie-parser": "^1.4.3",
     "es6-promise": "^4.1.1",
     "express": "^4.15.4",
+    "fs-store": "^0.3.1",
     "http-proxy": "^1.16.2",
     "lodash": "^4.17.4",
     "moment": "^2.19.2",

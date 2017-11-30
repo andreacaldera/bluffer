@@ -1,6 +1,7 @@
+import { FileStore } from 'fs-store';
 
 export default () => {
-  const mockStore = {};
+  const mockStore = new FileStore('data/mock-store.json');
   const logStore = [];
 
   const logResponse = (url, responseBody) => {
@@ -14,7 +15,9 @@ export default () => {
   };
 
   const deleteMock = (url) => {
-    delete mockStore[url];
+    const store = mockStore.getStore();
+    delete store[url];
+    mockStore.save();
   };
 
   const mockResponse = (url, responseBody) => {
@@ -24,15 +27,15 @@ export default () => {
       timestamp: new Date(),
       mockHasBeenServedRecently: false,
     };
-    mockStore[url] = mockedResponse;
+    mockStore.set(url, mockedResponse);
     return mockedResponse;
   };
 
-  const getMock = (url) => mockStore[url];
+  const getMock = (url) => mockStore.get(url);
 
   const getLogList = () => logStore;
 
-  const getMockList = () => Object.values(mockStore);
+  const getMockList = () => Object.values(mockStore.getStore());
 
   return Object.freeze({
     logResponse,

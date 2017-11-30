@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { string, func, instanceOf, bool } from 'prop-types';
+import { string, func, instanceOf, oneOfType, bool } from 'prop-types';
 
 import { MOCK_RESPONSE, DELETE_MOCK } from '../modules/proxy/constants';
 
@@ -9,8 +9,8 @@ class Mock extends Component {
   static propTypes = {
     url: string.isRequired,
     responseBody: string.isRequired,
-    timestamp: instanceOf(Date).isRequired,
-    lastServed: instanceOf(Date),
+    timestamp: oneOfType([string, instanceOf(Date)]).isRequired,
+    lastServed: oneOfType([string, instanceOf(Date)]),
     saveMockResponse: func.isRequired,
     mockHasBeenServedRecently: bool.isRequired,
     deleteMock: func.isRequired,

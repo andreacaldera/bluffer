@@ -3,4 +3,6 @@ dist/
 npm-debug.log*
 config/private.json
 
+data/**
+
 yarn.lock
