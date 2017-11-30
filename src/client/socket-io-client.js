@@ -2,7 +2,7 @@ import { eventChannel } from 'redux-saga';
 import { put, call, cancelled, take } from 'redux-saga/effects';
 import io from 'socket.io-client';
 
-import { RESPONSE_LOGGED, FLASH_RESPONSE } from '../common/modules/proxy/constants';
+import { RESPONSE_LOGGED } from '../common/modules/proxy/constants';
 import { DISPLAY_ERROR } from '../common/modules/meta/constants';
 
 const socket = io('', { path: '/api/bluffer-socket' });

@@ -8,11 +8,11 @@ export default (cacheStore) => {
   router.use('*', bodyParser.json({ limit: '5mb' }));
 
   router.post('/set-proxy-response', (req, res) => {
-    const { url, response } = req.body;
+    const { url, responseBody } = req.body;
     winston.debug(`Setting proxy response ${url}`);
 
-    const savedResponse = cacheStore.setSavedResponse(url, response);
-    res.json({ url, response: savedResponse });
+    const mockedResponse = cacheStore.mockResponse(url, responseBody);
+    res.json(mockedResponse);
   });
 
   router.post('/delete-proxy-response', (req, res) => {

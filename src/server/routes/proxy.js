@@ -43,7 +43,7 @@ export default (dataStore, proxyConfig, io) => {
 
 
     res.locals.skipTransform = true;
-    res.json(JSON.parse(mock.response));
+    res.json(JSON.parse(mock.responseBody));
     io.emit('response-from-cache', { url, response: mock });
   });
 

@@ -2,7 +2,7 @@ import { put, call, takeEvery } from 'redux-saga/effects';
 
 import superagent from 'superagent';
 
-import { ADD_PROXY_RESPONSE, DELETE_PROXY_RESPONSE, SET_PROXY_RESPONSE, PROXY_RESPONSE_DELETED } from '../common/modules/proxy/constants';
+import { RESPONSE_MOCKED, DELETE_PROXY_RESPONSE, MOCK_RESPONSE, PROXY_RESPONSE_DELETED } from '../common/modules/proxy/constants';
 import { DISPLAY_ERROR, DISPLAY_INFO } from '../common/modules/meta/constants';
 
 const callApi = (path, payload) => () =>
@@ -12,12 +12,12 @@ const callApi = (path, payload) => () =>
     .timeout({ response: 9000, deadline: 10000 })
     .then(({ body }) => body);
 
-function* setResponse({ payload }) {
+function* mockResponse({ payload }) {
   try {
-    const response = yield call(callApi('set-proxy-response', payload));
-    yield put({ type: ADD_PROXY_RESPONSE, payload: response }); // TODO
+    const mockedResponse = yield call(callApi('set-proxy-response', payload));
+    yield put({ type: RESPONSE_MOCKED, payload: mockedResponse });
   } catch (err) {
-    yield put({ type: DISPLAY_ERROR, payload: `Unable to save response: ${err.message}` });
+    yield put({ type: DISPLAY_ERROR, payload: `Unable to mock response: ${err.message}` });
   }
 }
 
@@ -32,7 +32,7 @@ function* deleteResponse({ payload }) {
 }
 
 function* watchSetResponse() {
-  yield takeEvery(SET_PROXY_RESPONSE, setResponse);
+  yield takeEvery(MOCK_RESPONSE, mockResponse);
 }
 
 function* watchDeleteResponse() {

@@ -17,10 +17,10 @@ export default () => {
     delete mockStore[url];
   };
 
-  const mockResponse = (url, response) => {
+  const mockResponse = (url, responseBody) => {
     const mockedResponse = {
       url,
-      response,
+      responseBody,
       timestamp: new Date(),
     };
     mockStore[url] = mockedResponse;

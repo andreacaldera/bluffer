@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
 import Log from './Log';
+import Mock from './Mock';
 
 import proxyModule from '../modules/proxy';
 import { SET_PROXY_RESPONSE, SELECT_PROXY_RESPONSE_URL, DELETE_PROXY_RESPONSE } from '../modules/proxy/constants';
@@ -10,6 +11,7 @@ import { SET_PROXY_RESPONSE, SELECT_PROXY_RESPONSE_URL, DELETE_PROXY_RESPONSE } 
 class Proxy extends Component {
   static propTypes = {
     logList: PropTypes.arrayOf(PropTypes.shape().isRequired).isRequired,
+    mockList: PropTypes.arrayOf(PropTypes.shape().isRequired).isRequired,
     setResponse: PropTypes.func.isRequired,
     selectResponse: PropTypes.func.isRequired,
     cancelEditing: PropTypes.func.isRequired,
@@ -33,17 +35,27 @@ class Proxy extends Component {
   }
 
   render() {
-    const { logList } = this.props;
+    const { logList, mockList } = this.props;
 
     return (
       <div>
         <h1>Proxy</h1>
 
-        { isEmpty(logList) && <p>No responses caught yet.</p>}
+        {!isEmpty(mockList) && [
+          <h2>Mocks</h2>,
+          <ul className="list-group form-group">
+            {mockList.map((mock) => (<Mock key={`${mock.url}-${mock.timestamp}`} {...mock} />))}
+          </ul>,
+        ]}
 
-        <ul className="list-group form-group">
-          {logList.map((log) => (<Log key={`${log.url}-${log.timestamp}`} {...log} />))}
-        </ul>
+        {isEmpty(logList) && <p>No responses caught yet.</p>}
+
+        {!isEmpty(logList) && [
+          <h2>Response log</h2>,
+          <ul className="list-group form-group">
+            {logList.map((log) => (<Log key={`${log.url}-${log.timestamp}`} {...log} />))}
+          </ul>,
+        ]}
 
       </div>
     );
@@ -52,6 +64,7 @@ class Proxy extends Component {
 
 const mapStateToProps = (state) => ({
   logList: proxyModule.getLogList(state),
+  mockList: proxyModule.getMockList(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
