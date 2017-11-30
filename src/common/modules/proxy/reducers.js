@@ -1,6 +1,6 @@
 import { combineReducers } from 'redux';
 
-import { RESPONSE_LOGGED, MOCK_SERVED_RECENTLY, MOCK_SERVED_RECENTLY_CANCEL, PROXY_RESPONSE_DELETED, RESPONSE_MOCKED } from './constants';
+import { RESPONSE_LOGGED, MOCK_DELETED, MOCK_SERVED_RECENTLY, MOCK_SERVED_RECENTLY_CANCEL, PROXY_RESPONSE_DELETED, RESPONSE_MOCKED } from './constants';
 
 const logList = (state = [], action) => {
   switch (action.type) {
@@ -29,6 +29,9 @@ const mockList = (state = [], action) => {
     case PROXY_RESPONSE_DELETED: {
       // TODO
       return state;
+    }
+    case MOCK_DELETED: {
+      return state.filter(({ url }) => url !== action.payload);
     }
     default: return state;
   }
