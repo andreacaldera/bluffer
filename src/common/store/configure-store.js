@@ -6,16 +6,15 @@ import createSagaMiddleware from 'redux-saga';
 import reducer from '../modules';
 import sagas from '../modules/sagas';
 
-const isReduxDT = typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
-const composeEnhancers = isReduxDT ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : compose;
-
-const configureStore = (history, initialState, clientMiddleware, clientSagas) => {
+const configureStore = (history, initialState, isClient, socketIoClient, apiClient) => {
   const sagaMiddleware = createSagaMiddleware();
   const router = routerMiddleware(history);
 
   const commonMiddlewares = [router, sagaMiddleware];
 
-  const middlewares = clientMiddleware ? commonMiddlewares.concat(createLogger) : commonMiddlewares;
+  const middlewares = isClient ? commonMiddlewares.concat(createLogger) : commonMiddlewares;
+
+  const composeEnhancers = isClient && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : compose;
 
   const store = createStore(
     reducer,
@@ -24,8 +23,11 @@ const configureStore = (history, initialState, clientMiddleware, clientSagas) =>
   );
 
   sagaMiddleware.run(sagas);
-  if (clientSagas) {
-    sagaMiddleware.run(clientSagas);
+  if (socketIoClient) {
+    sagaMiddleware.run(socketIoClient);
+  }
+  if (apiClient) {
+    sagaMiddleware.run(apiClient);
   }
 
   return store;

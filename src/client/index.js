@@ -8,7 +8,10 @@ import { syncHistoryWithStore } from 'react-router-redux';
 import configureStore from '../common/store/configure-store';
 import routes from '../common/routes';
 
-const store = configureStore(browserHistory, window.__initialState__, true);
+import socketIoClient from './socket-io-client';
+import apiClient from './api-client';
+
+const store = configureStore(browserHistory, window.__initialState__, true, socketIoClient, apiClient);
 const history = syncHistoryWithStore(browserHistory, store);
 
 render(
