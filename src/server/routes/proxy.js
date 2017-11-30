@@ -4,7 +4,7 @@ import winston from 'winston';
 
 const proxy = httpProxy.createProxyServer({ secure: false });
 
-export default (cacheStore, proxyConfig, io) => {
+export default (dataStore, proxyConfig, io) => {
   const router = express.Router();
 
   proxy.on('proxyRes', (proxyRes, req, res) => {
@@ -18,7 +18,7 @@ export default (cacheStore, proxyConfig, io) => {
     });
 
     proxyRes.on('end', () => {
-      const response = cacheStore.setCachedResponse(req.originalUrl, String(responseBody));
+      const response = dataStore.logResponse(req.originalUrl, String(responseBody));
       io.emit('request-proxied', { url: req.originalUrl, response });
     });
   });
@@ -34,16 +34,17 @@ export default (cacheStore, proxyConfig, io) => {
 
   router.get('*', (req, res) => {
     const url = req.originalUrl;
-    if (!cacheStore.getSavedResponse(url)) {
+    const mock = dataStore.getMock(url);
+    if (!mock) {
       winston.debug(`Proxying request for url ${url}`);
       return proxy.web(req, res, { target: proxyConfig.target });
     }
-    winston.debug(`Using saved response for url ${url}`);
-    const responseBody = cacheStore.getSavedResponse(url);
+    winston.debug(`Using mock response for url ${url}`);
+
+
     res.locals.skipTransform = true;
-    res.json(JSON.parse(responseBody));
-    const response = cacheStore.setServedSavedResponseTimestamp(req.originalUrl);
-    io.emit('response-from-cache', { url: req.originalUrl, response });
+    res.json(JSON.parse(mock.response));
+    io.emit('response-from-cache', { url, response: mock });
   });
 
   return router;

@@ -21,7 +21,7 @@ const getActiveFeatureToggles = (req) => {
   return activeFeatureToggles || [];
 };
 
-export default (port, cacheStore) => {
+export default (port, dataStore) => {
   function renderFullPage(content, store) {
     return `
       <!doctype html>
@@ -48,8 +48,8 @@ export default (port, cacheStore) => {
     const preloadedState = { [NAMESPACE]: {
       meta: { activePage, featureToggles: activeFeatureToggles },
       proxy: {
-        all: cacheStore.all(),
-        list: cacheStore.list(),
+        logList: dataStore.getLogList(),
+        mockList: dataStore.getMockList(),
       },
     } };
     const memoryHistory = createMemoryHistory(req.url);

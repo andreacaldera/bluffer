@@ -9,9 +9,7 @@ import { SET_PROXY_RESPONSE, SELECT_PROXY_RESPONSE_URL, DELETE_PROXY_RESPONSE } 
 
 class Proxy extends Component {
   static propTypes = {
-    selectedResponse: PropTypes.shape(),
-    selectedUrl: PropTypes.string,
-    responses: PropTypes.arrayOf(PropTypes.shape().isRequired).isRequired,
+    logList: PropTypes.arrayOf(PropTypes.shape().isRequired).isRequired,
     setResponse: PropTypes.func.isRequired,
     selectResponse: PropTypes.func.isRequired,
     cancelEditing: PropTypes.func.isRequired,
@@ -35,22 +33,16 @@ class Proxy extends Component {
   }
 
   render() {
-    const { responses } = this.props;
-    // const { setResponse, responses, selectResponse, selectedUrl, selectedResponse, cancelEditing, deleteResponse } = this.props;
-    // const { currentResponse } = this.state;
-    // const saveResponse = (e, url) => {
-    //   setResponse(e, url, currentResponse);
-    //   this.setState({ currentResponse: null });
-    // };
+    const { logList } = this.props;
 
     return (
       <div>
         <h1>Proxy</h1>
 
-        { isEmpty(responses) && <p>No responses caught yet.</p>}
+        { isEmpty(logList) && <p>No responses caught yet.</p>}
 
         <ul className="list-group form-group">
-          {responses.map((response) => (<Log key={response.url} {...response} />))}
+          {logList.map((log) => (<Log key={log.url} {...log} />))}
         </ul>
 
       </div>
@@ -59,9 +51,7 @@ class Proxy extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  responses: proxyModule.getList(state),
-  selectedResponse: proxyModule.getSelected(state),
-  selectedUrl: proxyModule.getSelectedUrl(state),
+  logList: proxyModule.getLogList(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({

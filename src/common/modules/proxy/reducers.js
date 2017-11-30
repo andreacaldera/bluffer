@@ -1,30 +1,8 @@
 import { combineReducers } from 'redux';
 
-import { ADD_PROXY_RESPONSE, FLASH_RESPONSE, SELECT_PROXY_RESPONSE_URL, PROXY_RESPONSE_DELETED } from './constants';
+import { ADD_PROXY_RESPONSE, FLASH_RESPONSE, PROXY_RESPONSE_DELETED } from './constants';
 
-const all = (state = {}, action) => {
-  switch (action.type) {
-    case ADD_PROXY_RESPONSE:
-      return {
-        ...state,
-        [action.payload.url]: action.payload.response,
-      };
-    case FLASH_RESPONSE:
-      return {
-        ...state,
-        [action.payload.url]: action.payload.response,
-      };
-    case PROXY_RESPONSE_DELETED: {
-      const newState = Object.assign({}, state);
-      delete newState[action.payload]; // TODO make better
-      return newState;
-    }
-
-    default: return state;
-  }
-};
-
-const list = (state = [], action) => {
+const logList = (state = [], action) => {
   switch (action.type) {
     case ADD_PROXY_RESPONSE:
       return [
@@ -35,6 +13,7 @@ const list = (state = [], action) => {
         ...state,
       ];
     case FLASH_RESPONSE:
+      // TODO
       return [Object.assign({}, action.payload.response, { url: action.payload.url })].concat(state);
     case PROXY_RESPONSE_DELETED: {
       const newState = state.filter(({ url }) => action.payload !== url);
@@ -45,18 +24,9 @@ const list = (state = [], action) => {
   }
 };
 
-const selectedUrl = (state = null, action) => {
-  switch (action.type) {
-    case SELECT_PROXY_RESPONSE_URL:
-      return action.payload;
-    case PROXY_RESPONSE_DELETED:
-      return action.payload === state ? null : state;
-    default: return state;
-  }
-};
+const mockList = (state = []) => state;
 
 module.exports = combineReducers({
-  all,
-  selectedUrl,
-  list,
+  logList,
+  mockList,
 });

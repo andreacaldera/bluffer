@@ -11,9 +11,9 @@ import ui from './routes/ui';
 import proxy from './routes/proxy';
 import api from './routes/api';
 import targetApi from './routes/target-api';
-import cacheStoreFactory from './cache-store';
+import mockDataFactory from './data-store';
 
-const cacheStore = cacheStoreFactory();
+const dataStore = mockDataFactory();
 const app = Express();
 const { port } = config;
 
@@ -25,10 +25,10 @@ const io = new socketIo(server, { path: '/api/bluffer-socket' });
 
 app.use(cookieParser());
 app.use('/dist', Express.static(path.join(__dirname, '../../dist')));
-app.use('/api/bluffer', api(cacheStore));
-app.use('/target', targetApi(cacheStore, config.proxy));
-app.use('/api', proxy(cacheStore, config.proxy, io));
-app.use(ui(port, cacheStore));
+app.use('/api/bluffer', api(dataStore));
+app.use('/target', targetApi(dataStore, config.proxy));
+app.use('/api', proxy(dataStore, config.proxy, io));
+app.use(ui(port, dataStore));
 
 server.listen(port, (error) => {
   if (error) {
