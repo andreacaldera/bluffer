@@ -12,11 +12,13 @@ class Mock extends Component {
     timestamp: oneOfType([string, instanceOf(Date)]).isRequired,
     lastServed: oneOfType([string, instanceOf(Date)]),
     saveMockResponse: func.isRequired,
-    mockHasBeenServedRecently: bool.isRequired,
+    mockHasBeenServedRecently: bool,
     deleteMock: func.isRequired,
   };
 
-  static defaultProps
+  static defaultProps = {
+    mockHasBeenServedRecently: false,
+  };
 
   state = {
     isEditMode: false,

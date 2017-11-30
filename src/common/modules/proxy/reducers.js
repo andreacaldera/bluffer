@@ -15,16 +15,18 @@ const mockList = (state = [], action) => {
     case RESPONSE_MOCKED:
       return [action.payload].concat(state.filter(({ url }) => url !== action.payload.url));
     case MOCK_SERVED_RECENTLY: {
-      const response = Object.assign({}, action.payload, {
-        mockHasBeenServedRecently: true,
-      });
-      return [response].concat(state.filter(({ url }) => url !== action.payload.url));
+      return state.map((mock) =>
+        mock.url === action.payload.url ?
+          Object.assign({}, mock, { mockHasBeenServedRecently: true }) :
+          mock
+      );
     }
     case MOCK_SERVED_RECENTLY_CANCEL: {
-      const response = Object.assign({}, action.payload, {
-        mockHasBeenServedRecently: false,
-      });
-      return [response].concat(state.filter(({ url }) => url !== action.payload.url));
+      return state.map((mock) =>
+        mock.url === action.payload.url ?
+          Object.assign({}, mock, { mockHasBeenServedRecently: false }) :
+          mock
+      );
     }
     case PROXY_RESPONSE_DELETED: {
       // TODO

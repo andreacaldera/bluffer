@@ -1,5 +1,5 @@
 import { eventChannel, delay } from 'redux-saga';
-import { put, call, cancelled, take } from 'redux-saga/effects';
+import { put, call, cancelled, take, takeLatest } from 'redux-saga/effects';
 import io from 'socket.io-client';
 
 import { RESPONSE_LOGGED, MOCK_SERVED_RECENTLY, MOCK_SERVED_RECENTLY_CANCEL } from '../common/modules/proxy/constants';
@@ -13,7 +13,7 @@ function registerSocket() {
       emitter({ loggedResponse: data });
     });
     socket.on('mock_served', (data) => {
-      emitter({ mock_served_recently: data });
+      emitter({ recentlyServedMock: data });
     });
     const unsubscribe = () => {
     };
@@ -31,10 +31,8 @@ function* watchSocketEvents() {
       if (socketEventData.loggedResponse) {
         yield put({ type: RESPONSE_LOGGED, payload: socketEventData.loggedResponse });
       }
-      if (socketEventData.mock_served_recently) {
-        yield put({ type: MOCK_SERVED_RECENTLY, payload: socketEventData.mock_served_recently });
-        yield delay(4000);
-        yield put({ type: MOCK_SERVED_RECENTLY_CANCEL, payload: socketEventData.mock_served_recently });
+      if (socketEventData.recentlyServedMock) {
+        yield put({ type: MOCK_SERVED_RECENTLY, payload: socketEventData.recentlyServedMock });
       }
     }
   } catch (err) {
@@ -46,6 +44,15 @@ function* watchSocketEvents() {
   }
 }
 
+function* cancelRecentlyUsedMock({ payload }) {
+  yield call(delay, 1000);
+  yield put({ type: MOCK_SERVED_RECENTLY_CANCEL, payload });
+}
+
+function* watchRecentlyUsedMock() {
+  yield takeLatest(MOCK_SERVED_RECENTLY, cancelRecentlyUsedMock);
+}
+
 export default function* sagas() {
-  yield [watchSocketEvents()];
+  yield [watchSocketEvents(), watchRecentlyUsedMock()];
 }
