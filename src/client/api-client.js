@@ -15,7 +15,7 @@ const callApi = (path, payload) => () =>
 function* setResponse({ payload }) {
   try {
     const response = yield call(callApi('set-proxy-response', payload));
-    yield put({ type: ADD_PROXY_RESPONSE, payload: response });
+    yield put({ type: ADD_PROXY_RESPONSE, payload: response }); // TODO
   } catch (err) {
     yield put({ type: DISPLAY_ERROR, payload: `Unable to save response: ${err.message}` });
   }

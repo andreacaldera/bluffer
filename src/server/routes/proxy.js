@@ -18,8 +18,8 @@ export default (dataStore, proxyConfig, io) => {
     });
 
     proxyRes.on('end', () => {
-      const response = dataStore.logResponse(req.originalUrl, String(responseBody));
-      io.emit('request-proxied', { url: req.originalUrl, response });
+      const loggedResponse = dataStore.logResponse(req.originalUrl, String(responseBody));
+      io.emit('request-proxied', loggedResponse);
     });
   });
 

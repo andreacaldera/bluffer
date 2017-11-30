@@ -8,10 +8,9 @@ import { SET_PROXY_RESPONSE } from '../modules/proxy/constants';
 class Log extends Component {
   static propTypes = {
     url: string.isRequired,
+    response: string.isRequired,
     timestamp: instanceOf(Date).isRequired,
-    savedResponse: string,
-    cachedResponse: string.isRequired,
-    saveMockResponse: func.isRequired,
+    saveMockResponse: func.isRequired, // TODO remove
   };
 
   static defaultProps
@@ -33,18 +32,15 @@ class Log extends Component {
   }
 
   render() {
-    const { url, timestamp, cachedResponse, savedResponse } = this.props;
+    const { url, timestamp, responseBody } = this.props;
     const { isEditMode } = this.state;
     const dateTime = moment(timestamp).format('MMM Do YYYY, HH:mm:ss');
-    const statusClass = savedResponse ? 'badge-warning' : 'badge-success';
-    const status = savedResponse ? 'Overwritten' : 'Normal';
 
     return (
       <li className="list-group-item" key={url}>
         <div className="row w-100">
           <div className="col-5" title={url}>{url}</div>
           <div className="col-3">{dateTime}</div>
-          <div className={`col badge ${statusClass}`}>{status}</div>
           <div className="col-2">
             <button className="float-right btn btn-primary" onClick={this.toggleMockForm}>
               {isEditMode ? 'Cancel' : 'Edit'}
@@ -59,7 +55,7 @@ class Log extends Component {
               }}
               rows="10"
               className="col form-control"
-              defaultValue={cachedResponse}
+              defaultValue={responseBody}
             />
           </div>,
           <div className="row mt-1 w-100">

@@ -42,7 +42,7 @@ class Proxy extends Component {
         { isEmpty(logList) && <p>No responses caught yet.</p>}
 
         <ul className="list-group form-group">
-          {logList.map((log) => (<Log key={log.url} {...log} />))}
+          {logList.map((log) => (<Log key={`${log.url}-${log.timestamp}`} {...log} />))}
         </ul>
 
       </div>

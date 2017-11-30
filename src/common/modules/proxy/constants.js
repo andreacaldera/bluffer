@@ -1,6 +1,7 @@
 import { NAMESPACE } from '../constants';
 
-export const ADD_PROXY_RESPONSE = `${NAMESPACE}/proxy/ADD_PROXY_RESPONSE`;
+export const RESPONSE_LOGGED = `${NAMESPACE}/proxy/RESPONSE_LOGGED`;
+
 export const SET_PROXY_RESPONSE = `${NAMESPACE}/proxy/SET_PROXY_RESPONSE`;
 export const FLASH_RESPONSE = `${NAMESPACE}/proxy/FLASH_RESPONSE`;
 export const DELETE_PROXY_RESPONSE = `${NAMESPACE}/proxy/DELETE_PROXY_RESPONSE`;

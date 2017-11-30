@@ -1,16 +1,16 @@
 
 export default () => {
   const mockStore = {};
-  const logStore = {};
+  const logStore = [];
 
-  const logResponse = (url, response) => {
+  const logResponse = (url, responseBody) => {
     const loggedResponse = Object.assign({}, logStore[url], {
-      response,
+      responseBody,
       timestamp: new Date(),
+      url,
     });
-
-    logStore[url] = loggedResponse;
-    return response;
+    logStore.unshift(loggedResponse);
+    return loggedResponse;
   };
 
   const deleteMock = (url) => {
@@ -35,11 +35,11 @@ export default () => {
     return mockedResponse;
   };
 
-  const getLog = (url) => logStore[url];
+  // const getLog = (url) => logStore[url];
 
   const getMock = (url) => mockStore[url];
 
-  const getLogList = () => Object.values(logStore);
+  const getLogList = () => logStore;
 
   const getMockList = () => Object.values(mockStore);
 
@@ -50,7 +50,6 @@ export default () => {
     setMockResponseLastServed,
     getLogList,
     getMockList,
-    getLog,
     getMock,
   });
 };
