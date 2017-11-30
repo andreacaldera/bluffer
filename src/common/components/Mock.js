@@ -49,9 +49,9 @@ class Mock extends Component {
     const recentlyServedClass = mockHasBeenServedRecently ? 'recentlyServed' : '';
 
     return (
-      <li className={`list-group-item form-group  ${recentlyServedClass}`} key={url}>
+      <li className={`list-group-item form-group ${recentlyServedClass}`} key={url}>
         <div className="row w-100">
-          <div className="col-7" title={url}>{url}</div>
+          <div className="col-7 url" title={url}>{url}</div>
           <div className="col-3">{dateTime}</div>
           <div className="col-2">
             <button className="float-right btn btn-primary" onClick={this.toggleMockForm}>
