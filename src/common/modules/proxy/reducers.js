@@ -28,8 +28,8 @@ const list = (state = [], action) => {
           ...action.payload.response,
           url: action.payload.url,
         },
-        ...state
-      ]
+        ...state,
+      ];
     case PROXY_RESPONSE_DELETED: {
       const newState = state.filter(({ url }) => action.payload !== url);
       return newState;

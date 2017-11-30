@@ -6,7 +6,7 @@ import createSagaMiddleware from 'redux-saga';
 import reducer from '../modules';
 import sagas from '../modules/sagas';
 
-const isReduxDT = typeof window === "object" && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
+const isReduxDT = typeof window === 'object' && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__;
 const composeEnhancers = isReduxDT ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : compose;
 
 const configureStore = (history, initialState, clientMiddleware, clientSagas) => {

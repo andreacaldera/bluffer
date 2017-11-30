@@ -1,80 +1,92 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import moment from 'moment';
-import { string, func } from 'prop-types';
+import { string, func, instanceOf } from 'prop-types';
 
-export default class Log extends Component {
+import { SET_PROXY_RESPONSE } from '../modules/proxy/constants';
+
+class Log extends Component {
   static propTypes = {
     url: string.isRequired,
-    timestamp: string.isRequired,
-    savedResponse: string.isRequired,
-    saveResponse: func.isRequired
+    timestamp: instanceOf(Date).isRequired,
+    savedResponse: string,
+    cachedResponse: string.isRequired,
+    saveMockResponse: func.isRequired,
   };
+
+  static defaultProps
 
   state = {
-    isEditMode: false
+    isEditMode: false,
   };
 
-  toggleMockForm = () => {
+  toggleMockForm = (e) => {
+    e.preventDefault();
     this.setState({ isEditMode: !this.state.isEditMode });
   }
 
-  saveMock = () => {
-    throw new Error('WTF')
-    // e => saveResponse(e, selectedUrl, currentResponse)
+  saveMockResponse = (e) => {
+    e.preventDefault();
+    const { saveMockResponse, url } = this.props;
+    saveMockResponse(url, this.textarea.value);
+    this.setState({ isEditMode: false });
   }
 
   render() {
-    const { url, timestamp, cachedResponse, savedResponse, saveResponse } = this.props;
+    const { url, timestamp, cachedResponse, savedResponse } = this.props;
     const { isEditMode } = this.state;
-    const dateTime = timestamp
-      ? moment(timestamp).format('MMM Do YYYY, HH:mm:ss')
-      : null;
+    const dateTime = moment(timestamp).format('MMM Do YYYY, HH:mm:ss');
     const statusClass = savedResponse ? 'badge-warning' : 'badge-success';
     const status = savedResponse ? 'Overwritten' : 'Normal';
 
     return (
-      <li className="list-group-item Response" key={url}>
-        <div className="col-5" title={url}>
-          {url}
-        </div>
-        <div className="col-3">{dateTime}</div>
-        <div className={`col badge ${statusClass}`}>{status}</div>
-        <div className="col-2">
-          <button
-            className="float-right btn btn-primary"
-            onClick={this.toggleMockForm}
-          >
-            {isEditMode ? 'Cancel' : 'Edit'}
-          </button>
-        </div>
-        {isEditMode && (
-          <div className="form-group mt-1">
-            <div className="row">
-              <textarea
-                ref={r => {
-                  this.textarea = r;
-                }}
-                rows="10"
-                className="col form-control"
-                value={cachedResponse}
-              />
-            </div>
-            <div className="row mt-1">
-              <div className="col">
-                <button
-                  className="btn btn-primary"
-                  onClick={this.saveMock}
-                >
-                  Save
-                </button>
-              </div>
-            </div>
+      <li className="list-group-item" key={url}>
+        <div className="row w-100">
+          <div className="col-5" title={url}>{url}</div>
+          <div className="col-3">{dateTime}</div>
+          <div className={`col badge ${statusClass}`}>{status}</div>
+          <div className="col-2">
+            <button className="float-right btn btn-primary" onClick={this.toggleMockForm}>
+              {isEditMode ? 'Cancel' : 'Edit'}
+            </button>
           </div>
-        )}
+        </div>
+        {isEditMode && [
+          <div className="form-group mt-1 row w-100">
+            <textarea
+              ref={(r) => {
+                this.textarea = r;
+              }}
+              rows="10"
+              className="col form-control"
+              defaultValue={cachedResponse}
+            />
+          </div>,
+          <div className="row mt-1 w-100">
+            <div className="col">
+              <button
+                className="btn btn-primary"
+                onClick={this.saveMockResponse}
+              >
+                Save
+              </button>
+            </div>
+          </div>]}
       </li>
     );
   }
 }
+
+const mapDispatchToProps = (dispatch) => ({
+  saveMockResponse: (url, response) => {
+    dispatch({
+      type: SET_PROXY_RESPONSE,
+      payload: { url, response },
+    });
+  },
+});
+
+export default connect(null, mapDispatchToProps)(Log);
 
 // #2
 //   if (selectedUrl && selectedUrl !== response.url) {

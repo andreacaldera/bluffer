@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import { isEmpty } from 'lodash';
 import Log from './Log';
 
@@ -50,8 +49,8 @@ class Proxy extends Component {
 
         { isEmpty(responses) && <p>No responses caugh yet.</p>}
 
-        <ul className="list-group form-group row">
-          {responses.map((response) => (<Log {...response} />))}
+        <ul className="list-group form-group">
+          {responses.map((response) => (<Log key={response.url} {...response} />))}
         </ul>
 
       </div>
