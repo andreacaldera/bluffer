@@ -11,8 +11,6 @@ RUN ln -sf /bin/bash /bin/sh
 # Configure standard environment
 WORKDIR /root/app
 
-COPY ./docker/supervisor.conf /etc/supervisor/conf.d/
-
 COPY package.json /root/app/package.json
 RUN npm install
 
