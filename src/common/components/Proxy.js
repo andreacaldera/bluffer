@@ -42,8 +42,8 @@ class Proxy extends Component {
         <h1>Proxy</h1>
 
         {!isEmpty(mockList) && [
-          <h2>Mocks</h2>,
-          <ul className="list-group form-group">
+          <h2 key="mockTitle">Mocks</h2>,
+          <ul key="mockList" className="list-group form-group">
             {mockList.map((mock) => (<Mock key={`${mock.url}-${mock.timestamp}`} {...mock} />))}
           </ul>,
         ]}
@@ -51,8 +51,8 @@ class Proxy extends Component {
         {isEmpty(logList) && <p>No responses caught yet.</p>}
 
         {!isEmpty(logList) && [
-          <h2>Response log</h2>,
-          <ul className="list-group form-group">
+          <h2 key="logTitle">Response log</h2>,
+          <ul key="logList" className="list-group form-group">
             {logList.map((log) => (<Log key={`${log.url}-${log.timestamp}`} {...log} />))}
           </ul>,
         ]}

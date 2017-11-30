@@ -13,7 +13,7 @@ const logList = (state = [], action) => {
 const mockList = (state = [], action) => {
   switch (action.type) {
     case RESPONSE_MOCKED:
-      return [action.payload].concat(state);
+      return [action.payload].concat(state.filter(({ url }) => url !== action.payload.url));
     case FLASH_RESPONSE:
       // TODO
       return state;

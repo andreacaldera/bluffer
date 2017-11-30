@@ -40,9 +40,9 @@ class Mock extends Component {
     return (
       <li className="list-group-item" key={url}>
         <div className="row w-100">
-          <div className="col-5" title={url}>{url}</div>
+          <div className="col-8" title={url}>{url}</div>
           <div className="col-3">{dateTime}</div>
-          <div className="col-2">
+          <div className="col-1">
             <button className="float-right btn btn-primary" onClick={this.toggleMockForm}>
               {isEditMode ? 'Cancel' : 'Edit'}
             </button>
