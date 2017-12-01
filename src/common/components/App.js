@@ -19,10 +19,7 @@ const App = ({ children, activePage, setActivePage, info, error, closeInfo, clos
           <li className={`nav-item ${activePage === 'home' ? 'active' : ''}`}>
             <Link className="nav-link" to="/" onClick={() => setActivePage('home')}>Home</Link>
           </li>
-          <li className={`nav-item ${activePage === 'timer' ? 'active' : ''}`}>
-            <Link className="nav-link" to="/proxy" onClick={() => setActivePage('timer')}>Proxy</Link>
-          </li>
-          <li className={`nav-item ${activePage === 'timer' ? 'active' : ''}`}>
+          <li className={`nav-item ${activePage === 'about' ? 'active' : ''}`}>
             <Link className="nav-link" to="/about" onClick={() => setActivePage('about')}>About</Link>
           </li>
         </ul>
