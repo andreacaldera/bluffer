@@ -10,8 +10,6 @@ export default (dataStore, proxyConfig, io) => {
   proxy.on('proxyRes', (proxyRes, req, res) => {
     res.setHeader('X-Bluffer-Proxy', 'bluffer-proxy');
 
-    res.setHeader('X-Bluffer-Proxy', 'bluffer-proxy');
-    res.setHeader('X-Bluffer-Proxy', 'bluffer-proxy');
     let responseBody = '';
     proxyRes.on('data', (data) => {
       responseBody += data.toString('utf-8');
@@ -24,7 +22,7 @@ export default (dataStore, proxyConfig, io) => {
           return;
         }
 
-        const loggedResponse = dataStore.logResponse(req.originalUrl, String(responseBody));
+        const loggedResponse = dataStore.logResponse(req.originalUrl, String(responseBody), req.headers.host);
         io.emit('request_proxied', loggedResponse);
       }, 500);
     });

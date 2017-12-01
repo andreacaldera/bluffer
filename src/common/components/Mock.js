@@ -45,7 +45,7 @@ class Mock extends Component {
   render() {
     const { url, timestamp, responseBody, mockHasBeenServedRecently } = this.props;
     const { isEditMode } = this.state;
-    const dateTime = moment(timestamp).format('DD/MMM HH:mm:ss');
+    const dateTime = moment(timestamp).format('DD-MMM HH:mm:ss');
     const recentlyServedClass = mockHasBeenServedRecently ? 'recentlyServed' : '';
 
     return (

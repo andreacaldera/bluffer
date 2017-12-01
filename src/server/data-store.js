@@ -14,11 +14,12 @@ export default () => {
     }
   };
 
-  const logResponse = (url, responseBody) => {
+  const logResponse = (url, responseBody, client) => {
     const loggedResponse = Object.assign({}, logStore[url], {
       url,
       prettyResponseBody: prettyResponseBody(responseBody),
       responseBody,
+      client,
       timestamp: new Date(),
     });
     logStore.unshift(loggedResponse);

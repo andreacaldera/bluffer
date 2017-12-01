@@ -9,6 +9,7 @@ class Log extends Component {
   static propTypes = {
     url: string.isRequired,
     responseBody: string.isRequired,
+    client: string.isRequired,
     prettyResponseBody: string,
     timestamp: instanceOf(Date).isRequired,
     saveMockResponse: func.isRequired,
@@ -35,15 +36,16 @@ class Log extends Component {
   }
 
   render() {
-    const { url, timestamp, responseBody, prettyResponseBody } = this.props;
+    const { url, timestamp, responseBody, prettyResponseBody, client } = this.props;
     const { isEditMode } = this.state;
-    const dateTime = moment(timestamp).format('MMM Do YYYY, HH:mm:ss');
+    const dateTime = moment(timestamp).format('DD-MMM HH:mm:ss');
 
     return (
       <li className="list-group-item" key={url}>
         <div className="row w-100">
-          <div className="col-8 url" title={url}>{url}</div>
-          <div className="col-3">{dateTime}</div>
+          <div className="col-7 url" title={url}>{url}</div>
+          <div className="col-2">{client}</div>
+          <div className="col-2">{dateTime}</div>
           <div className="col-1">
             <button className="float-right btn btn-primary" onClick={this.toggleMockForm}>
               {isEditMode ? 'Cancel' : 'Edit'}
