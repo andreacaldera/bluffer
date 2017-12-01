@@ -29,6 +29,12 @@ class Mock extends Component {
     this.setState({ isEditMode: !this.state.isEditMode });
   }
 
+  cancelEdit = (e) => {
+    e.preventDefault();
+    this.setState({ isEditMode: false });
+    this.textarea.value = this.props.responseBody;
+  }
+
   mockResponse = (e) => {
     e.preventDefault();
     const { saveMockResponse, url } = this.props;
@@ -50,37 +56,37 @@ class Mock extends Component {
 
     return (
       <li className={`list-group-item form-group ${recentlyServedClass}`} key={url}>
-        <div className="row w-100">
-          <div className="col-7 url" title={url}>{url}</div>
-          <div className="col-3">{dateTime}</div>
-          <div className="col-2">
-            <button className="float-right btn btn-primary" onClick={this.toggleMockForm}>
-              {isEditMode ? 'Cancel' : 'Edit'}
-            </button>
-            <button onClick={this.deleteMock} className="btn btn-primary btn-danger" alt="delete"><i className="fa fa-trash-o" aria-hidden="true" /></button>
-          </div>
+        <div className="row w-100" onClick={this.toggleMockForm}>
+          <div className="col-9 url" title={url}>{url}</div>
+          <div className="col-3"><div className="float-right">{dateTime}</div></div>
         </div>
-        {isEditMode && [
-          <div className="mt-1 row w-100">
-            <textarea
-              ref={(r) => {
-                this.textarea = r;
-              }}
-              rows="10"
-              className="col form-control"
-              defaultValue={responseBody}
-            />
-          </div>,
-          <div className="row mt-1 w-100">
-            <div className="col">
-              <button
-                className="btn btn-primary"
-                onClick={this.mockResponse}
-              >
-                Save
-              </button>
+        {isEditMode && (
+          <div className="mock-panel--details w-100">
+            <div className="row"><div className="col">URL: {url}</div></div>
+            <div className="row">
+              <div className="col">
+                <textarea
+                  ref={(r) => { this.textarea = r; }}
+                  rows="10"
+                  className="col form-control"
+                  defaultValue={responseBody}
+                />
+              </div>
             </div>
-          </div>]}
+            <div className="row mt-1">
+              <div className="col">
+                <button
+                  className="btn btn-primary"
+                  onClick={this.mockResponse}
+                >
+                  Save
+                </button>
+                <button onClick={this.cancelEdit} className="ml-1 btn btn-primary" alt="cancel">Cancel</button>
+                <button onClick={this.deleteMock} className="btn btn-primary btn-danger float-right" alt="delete">Remove</button>
+              </div>
+            </div>
+          </div>
+          )}
       </li>
     );
   }
