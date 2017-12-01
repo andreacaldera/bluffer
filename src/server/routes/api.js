@@ -23,5 +23,12 @@ export default (dataStore) => {
     res.sendStatus(202);
   });
 
+  router.post('/delete-all-logs', (req, res) => {
+    winston.debug('Deleting all logged responses');
+
+    dataStore.deleteAllLogs();
+    res.sendStatus(202);
+  });
+
   return router;
 };

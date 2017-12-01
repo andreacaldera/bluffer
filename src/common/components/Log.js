@@ -28,6 +28,12 @@ class Log extends Component {
     this.setState({ isEditMode: !this.state.isEditMode });
   }
 
+  cancelEdit = (e) => {
+    e.preventDefault();
+    this.setState({ isEditMode: false });
+    this.textarea.value = this.props.prettyResponseBody || this.props.responseBody;
+  }
+
   mockResponse = (e) => {
     e.preventDefault();
     const { saveMockResponse, url } = this.props;
@@ -40,40 +46,40 @@ class Log extends Component {
     const { isEditMode } = this.state;
     const dateTime = moment(timestamp).format('DD-MMM HH:mm:ss');
 
-    return (
-      <li className="list-group-item" key={url}>
-        <div className="row w-100">
-          <div className="col-7 url" title={url}>{url}</div>
-          <div className="col-2">{client}</div>
-          <div className="col-2">{dateTime}</div>
-          <div className="col-1">
-            <button className="float-right btn btn-primary" onClick={this.toggleMockForm}>
-              {isEditMode ? 'Cancel' : 'Edit'}
-            </button>
-          </div>
+    const detailsPanel = isEditMode && (
+      <li className="list-group-item response-details" key={`${url}-details`}>
+        <div className="w-100 form-group">
+          <label className="response-details--label" htmlFor="url">URL:</label>
+          <div id="url">{url}</div>
         </div>
-        {isEditMode && [
-          <div className="form-group mt-1 row w-100">
-            <textarea
-              ref={(r) => {
-                this.textarea = r;
-              }}
-              rows="10"
-              className="col form-control"
-              defaultValue={prettyResponseBody || responseBody}
-            />
-          </div>,
-          <div className="row mt-1 w-100">
-            <div className="col">
-              <button
-                className="btn btn-primary"
-                onClick={this.mockResponse}
-              >
-                Save
-              </button>
-            </div>
-          </div>]}
+        <div className="w-100 form-group">
+          <label className="response-details--label" htmlFor="responseBody">Response body:</label>
+          <textarea
+            id="responseBody"
+            ref={(r) => { this.textarea = r; }}
+            rows="10"
+            className="col form-control"
+            defaultValue={prettyResponseBody || responseBody}
+          />
+        </div>
+        <div className="w-100">
+          <button className="btn btn-primary" onClick={this.mockResponse}>Mock</button>
+          <button onClick={this.cancelEdit} className="ml-1 btn btn-primary" alt="cancel">Cancel</button>
+        </div>
       </li>
+    );
+
+    return (
+      <div className="mt-1">
+        <li className="list-group-item response-header" key={`${url}-header`} onClick={this.toggleMockForm}>
+          <div className="row w-100">
+            <div className="col-8 url" title={url}>{url}</div>
+            <div className="col-2">{client}</div>
+            <div className="col-2">{dateTime}</div>
+          </div>
+        </li>
+        {detailsPanel}
+      </div>
     );
   }
 }

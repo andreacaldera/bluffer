@@ -54,40 +54,40 @@ class Mock extends Component {
     const dateTime = moment(timestamp).format('DD-MMM HH:mm:ss');
     const recentlyServedClass = mockHasBeenServedRecently ? 'recentlyServed' : '';
 
-    return (
-      <li className={`list-group-item form-group ${recentlyServedClass}`} key={url}>
-        <div className="row w-100" onClick={this.toggleMockForm}>
-          <div className="col-9 url" title={url}>{url}</div>
-          <div className="col-3"><div className="float-right">{dateTime}</div></div>
+    const detailsPanel = isEditMode && (
+      <li className="list-group-item" key={`${url}-details`}>
+        <div className="w-100 form-group">
+          <label className="response-details--label" htmlFor="url">URL:</label>
+          <div id="url">{url}</div>
         </div>
-        {isEditMode && (
-          <div className="mock-panel--details w-100">
-            <div className="row"><div className="col">URL: {url}</div></div>
-            <div className="row">
-              <div className="col">
-                <textarea
-                  ref={(r) => { this.textarea = r; }}
-                  rows="10"
-                  className="col form-control"
-                  defaultValue={responseBody}
-                />
-              </div>
-            </div>
-            <div className="row mt-1">
-              <div className="col">
-                <button
-                  className="btn btn-primary"
-                  onClick={this.mockResponse}
-                >
-                  Save
-                </button>
-                <button onClick={this.cancelEdit} className="ml-1 btn btn-primary" alt="cancel">Cancel</button>
-                <button onClick={this.deleteMock} className="btn btn-primary btn-danger float-right" alt="delete">Remove</button>
-              </div>
-            </div>
-          </div>
-          )}
+        <div className="w-100  form-group">
+          <label className="response-details--label" htmlFor="responseBody">Response body:</label>
+          <textarea
+            id="responseBody"
+            ref={(r) => { this.textarea = r; }}
+            rows="10"
+            className="col form-control"
+            defaultValue={responseBody}
+          />
+        </div>
+        <div className="w-100">
+          <button className="btn btn-primary" onClick={this.mockResponse}>Save</button>
+          <button onClick={this.cancelEdit} className="ml-1 btn btn-primary" alt="cancel">Cancel</button>
+          <button onClick={this.deleteMock} className="btn btn-primary btn-danger float-right" alt="delete">Remove</button>
+        </div>
       </li>
+    );
+
+    return (
+      <div className="mt-1">
+        <li className={`list-group-item ${recentlyServedClass}`} key={`${url}-header`} onClick={this.toggleMockForm}>
+          <div className="row w-100">
+            <div className="col-9 url" title={url}>{url}</div>
+            <div className="col-3"><div className="float-right">{dateTime}</div></div>
+          </div>
+        </li>
+        {detailsPanel}
+      </div>
     );
   }
 }
@@ -108,39 +108,3 @@ const mapDispatchToProps = (dispatch) => ({
 });
 
 export default connect(null, mapDispatchToProps)(Mock);
-
-// #2
-//   if (selectedUrl && selectedUrl !== response.url) {
-//     return null;
-//   }
-//   const status = response.savedResponse ? 'Overwritten' : 'Normal';
-//   const statusClass = response.savedResponse ? 'badge-warning' : 'badge-success';
-//   const dateTime = response.timestamp ? moment(response.timestamp).format('MMM Do YYYY, HH:mm:ss') : null;
-//
-//   return (
-//     <li className="list-group-item Response" key={response.url}>
-//       <div className="col-5" title={response.url}>{response.url}</div>
-//       <div className="col-3">{dateTime}</div>
-//       <div className={`col badge ${statusClass}`}>{status}</div>
-//       <div className="col-2">
-//         <button className="float-right btn btn-primary ml-1" onClick={(e) => deleteResponse(e, response.url)}>Delete</button>
-//         <button className="float-right btn btn-primary" onClick={(e) => selectResponse(e, response.url)}>Edit</button>
-//       </div>
-//     </li>
-//   );
-// }
-// )}
-
-// {selectedResponse && (
-//   <div className="form-group mt-1">
-//     <div className="row">
-//       <textarea rows="10" className="col form-control" onChange={(e) => this.setState({ currentResponse: e.target.value })} value={currentResponse} />
-//     </div>
-//     <div className="row mt-1">
-//       <div className="col">
-//         <button className="btn btn-primary" onClick={(e) => saveResponse(e, selectedUrl, currentResponse)}>Save</button>
-//         <button className="btn btn-primary ml-1" onClick={(e) => cancelEditing(e)}>Cancel</button>
-//       </div>
-//     </div>
-//   </div>
-// )}

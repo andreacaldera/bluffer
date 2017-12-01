@@ -3,7 +3,7 @@ import winston from 'winston';
 
 export default () => {
   const mockStore = new FileStore('data/mock-store.json');
-  const logStore = [];
+  let logStore = [];
 
   const prettyResponseBody = (responseBody) => {
     try {
@@ -45,6 +45,10 @@ export default () => {
 
   const getMock = (url) => mockStore.get(url);
 
+  const deleteAllLogs = () => {
+    logStore = [];
+  };
+
   const getLogList = () => logStore;
 
   const getMockList = () => Object.values(mockStore.getStore());
@@ -56,5 +60,6 @@ export default () => {
     getLogList,
     getMockList,
     getMock,
+    deleteAllLogs,
   });
 };

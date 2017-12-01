@@ -2,7 +2,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
   entry: {
-    reduxTemplate: ['./src/client/index.js', './style/ReduxTemplate.scss'],
+    bluffer: ['./src/client/index.js', './style/bluffer.scss'],
   },
   output: {
     filename: 'dist/[name].js',
@@ -14,6 +14,6 @@ module.exports = {
     ],
   },
   plugins: [
-    new ExtractTextPlugin({ filename: 'dist/reduxTemplate.css', allChunks: true }),
+    new ExtractTextPlugin({ filename: 'dist/bluffer.css', allChunks: true }),
   ],
 };

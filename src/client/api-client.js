@@ -1,8 +1,8 @@
-import { put, call, takeEvery } from 'redux-saga/effects';
+import { put, call, takeEvery, takeLatest } from 'redux-saga/effects';
 
 import superagent from 'superagent';
 
-import { RESPONSE_MOCKED, DELETE_MOCK, MOCK_RESPONSE, MOCK_DELETED } from '../common/modules/proxy/constants';
+import { RESPONSE_MOCKED, DELETE_MOCK, MOCK_RESPONSE, MOCK_DELETED, DELETE_ALL_LOGS, ALL_LOGS_DELETED } from '../common/modules/proxy/constants';
 import { DISPLAY_ERROR, DISPLAY_INFO } from '../common/modules/meta/constants';
 
 const callApi = (path, payload) => () =>
@@ -31,6 +31,16 @@ function* deleteResponse({ payload }) {
   }
 }
 
+function* deleteAllLogs() {
+  try {
+    yield call(callApi('delete-all-logs'));
+    yield put({ type: ALL_LOGS_DELETED });
+    yield put({ type: DISPLAY_INFO, payload: 'All logs cleared' });
+  } catch (err) {
+    yield put({ type: DISPLAY_ERROR, payload: `Unable to clear logs: ${err.message}` });
+  }
+}
+
 function* watchSetResponse() {
   yield takeEvery(MOCK_RESPONSE, mockResponse);
 }
@@ -39,6 +49,10 @@ function* watchDeleteResponse() {
   yield takeEvery(DELETE_MOCK, deleteResponse);
 }
 
+function* watchDeleteAllLogs() {
+  yield takeLatest(DELETE_ALL_LOGS, deleteAllLogs);
+}
+
 export default function* sagas() {
-  yield [watchSetResponse(), watchDeleteResponse()];
+  yield [watchSetResponse(), watchDeleteResponse(), watchDeleteAllLogs()];
 }

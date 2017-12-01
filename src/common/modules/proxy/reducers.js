@@ -1,11 +1,14 @@
 import { combineReducers } from 'redux';
 
-import { RESPONSE_LOGGED, MOCK_DELETED, MOCK_SERVED_RECENTLY, MOCK_SERVED_RECENTLY_CANCEL, PROXY_RESPONSE_DELETED, RESPONSE_MOCKED } from './constants';
+import { RESPONSE_LOGGED, MOCK_DELETED, MOCK_SERVED_RECENTLY, MOCK_SERVED_RECENTLY_CANCEL, PROXY_RESPONSE_DELETED, RESPONSE_MOCKED, ALL_LOGS_DELETED } from './constants';
 
 const logList = (state = [], action) => {
   switch (action.type) {
     case RESPONSE_LOGGED: {
       return [action.payload].concat(state);
+    }
+    case ALL_LOGS_DELETED: {
+      return [];
     }
     default: return state;
   }

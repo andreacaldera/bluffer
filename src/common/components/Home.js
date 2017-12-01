@@ -7,41 +7,23 @@ import Log from './Log';
 import Mock from './Mock';
 
 import proxyModule from '../modules/proxy';
-import { SET_PROXY_RESPONSE, SELECT_PROXY_RESPONSE_URL, DELETE_PROXY_RESPONSE } from '../modules/proxy/constants';
+import { DELETE_ALL_LOGS } from '../modules/proxy/constants';
 
 class Home extends Component {
   static propTypes = {
     logList: PropTypes.arrayOf(PropTypes.shape().isRequired).isRequired,
     mockList: PropTypes.arrayOf(PropTypes.shape().isRequired).isRequired,
-    setResponse: PropTypes.func.isRequired,
-    selectResponse: PropTypes.func.isRequired,
-    cancelEditing: PropTypes.func.isRequired,
-    deleteResponse: PropTypes.func.isRequired,
+    deleteAllLogs: PropTypes.func.isRequired,
   };
-  static defaultProps = {
-    selectedResponse: null,
-    selectedUrl: null,
-  };
-
-  state = {
-    currentResponse: null,
-  }
-
-  componentWillReceiveProps({ selectedUrl, selectedResponse }) {
-    if (!selectedUrl) {
-      this.setState({ currentResponse: null });
-    } else {
-      this.setState({ currentResponse: selectedResponse.prettyResponse || selectedResponse.savedResponse || selectedResponse.cachedResponse });
-    }
-  }
 
   render() {
     const { logList, mockList } = this.props;
 
+    const deleteAllLogsButton = !isEmpty(logList) &&
+      <button onClick={this.props.deleteAllLogs} className="btn btn-primary btn-danger float-right" alt="delete">Clear log</button>;
+
     return (
       <div>
-        <h1>Home</h1>
-
         {!isEmpty(mockList) && [
           <h2 key="mockTitle">Mocks</h2>,
           <ul key="mockList" className="list-group">
@@ -49,13 +31,17 @@ class Home extends Component {
           </ul>,
         ]}
 
-        <h2 className="mt-2">Response log</h2>
+        <h2 className="mt-2">Response log
+          {deleteAllLogsButton}
+        </h2>
         {isEmpty(logList) && <p>No responses caught yet.</p>}
 
         {!isEmpty(logList) && (
-          <ul className="list-group form-group">
-            {logList.map((log) => (<Log key={`${log.url}-${moment(log.timestamp).valueOf()}`} {...log} />))}
-          </ul>
+          <div>
+            <ul className="list-group form-group">
+              {logList.map((log) => (<Log key={`${log.url}-${moment(log.timestamp).valueOf()}`} {...log} />))}
+            </ul>
+          </div>
         )}
 
       </div>
@@ -69,32 +55,10 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  setResponse: (e, url, response) => {
+  deleteAllLogs: (e) => {
     e.preventDefault();
     dispatch({
-      type: SET_PROXY_RESPONSE,
-      payload: { url, response },
-    });
-  },
-  selectResponse: (e, url) => {
-    e.preventDefault();
-    dispatch({
-      type: SELECT_PROXY_RESPONSE_URL,
-      payload: url,
-    });
-  },
-  cancelEditing: (e) => {
-    e.preventDefault();
-    dispatch({
-      type: SELECT_PROXY_RESPONSE_URL,
-      payload: null,
-    });
-  },
-  deleteResponse: (e, url) => {
-    e.preventDefault();
-    dispatch({
-      type: DELETE_PROXY_RESPONSE,
-      payload: url,
+      type: DELETE_ALL_LOGS,
     });
   },
 });

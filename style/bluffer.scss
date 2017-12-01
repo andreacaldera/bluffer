@@ -2,14 +2,29 @@ body {
   padding-top: 5rem;
 }
 
+.response-header {
+  &.list-group-item {
+    background: #33A5FF;
+  }
+  color: white;
+}
+
+.response-details {
+  &.list-group-item {
+    border: 1px solid #33A5FF;
+  }
+}
+
+.response-details--label {
+  color: #0275d8;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
 .url {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-
-.mock-panel--details {
-  padding-top: 20px;
 }
 
 @keyframes shake {

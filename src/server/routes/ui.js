@@ -27,7 +27,7 @@ export default (port, dataStore) => {
       <!doctype html>
       <html>
         <head>
-          <link rel="stylesheet" type="text/css" href="/dist/reduxTemplate.css" />
+          <link rel="stylesheet" type="text/css" href="/dist/bluffer.css" />
           <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous" />
           <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
         <title>Bluffer</title>
@@ -35,7 +35,7 @@ export default (port, dataStore) => {
         <body>
           <div id="app">${content}</div>
           <script>window.__initialState__ = ${JSON.stringify(store.getState()).replace(/</g, '\\x3c')}</script>
-          <script src="/dist/reduxTemplate.js"></script>
+          <script src="/dist/bluffer.js"></script>
         </body>
       </html>
       `;
