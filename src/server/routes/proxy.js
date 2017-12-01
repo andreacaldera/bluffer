@@ -19,12 +19,13 @@ export default (dataStore, proxyConfig, io) => {
 
     proxyRes.on('end', () => {
       setTimeout(() => {
-        const loggedResponse = dataStore.logResponse(req.originalUrl, String(responseBody));
         if (proxyRes.statusCode > 200) {
-          winston.warn(`Error received from target API: ${proxyRes.statusCode}`);
+          winston.warn(`Error received from target API: ${proxyRes.statusCode} ${String(responseBody)}`);
+          return;
         }
-        // winston.debug('Proxied response', loggedResponse);
-        io.emit('request-proxied', loggedResponse);
+
+        const loggedResponse = dataStore.logResponse(req.originalUrl, String(responseBody));
+        io.emit('request_proxied', loggedResponse);
       }, 500);
     });
   });
@@ -48,7 +49,12 @@ export default (dataStore, proxyConfig, io) => {
 
     winston.debug(`Using mock response for url ${url}`);
     res.locals.skipTransform = true;
-    res.json(JSON.parse(mock.responseBody));
+    try {
+      res.json(JSON.parse(mock.responseBody));
+    } catch (err) {
+      winston.warn(`Unable to server response for URL ${url}`, err);
+      res.json({});
+    }
     io.emit('mock_served', { url });
   });
 

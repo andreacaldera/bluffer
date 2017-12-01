@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { isEmpty } from 'lodash';
+import moment from 'moment';
 import Log from './Log';
 import Mock from './Mock';
 
@@ -44,7 +45,7 @@ class Home extends Component {
         {!isEmpty(mockList) && [
           <h2 key="mockTitle">Mocks</h2>,
           <ul key="mockList" className="list-group">
-            {mockList.map((mock) => (<Mock key={`${mock.url}-${mock.timestamp}`} {...mock} />))}
+            {mockList.map((mock) => (<Mock key={`${mock.url}-${moment(mock.timestamp).valueOf()}`} {...mock} />))}
           </ul>,
         ]}
 
@@ -53,7 +54,7 @@ class Home extends Component {
 
         {!isEmpty(logList) && (
           <ul className="list-group form-group">
-            {logList.map((log) => (<Log key={`${log.url}-${log.timestamp}`} {...log} />))}
+            {logList.map((log) => (<Log key={`${log.url}-${moment(log.timestamp).valueOf()}`} {...log} />))}
           </ul>
         )}
 

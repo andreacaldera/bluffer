@@ -1,12 +1,23 @@
 import { FileStore } from 'fs-store';
+import winston from 'winston';
 
 export default () => {
   const mockStore = new FileStore('data/mock-store.json');
   const logStore = [];
 
+  const prettyResponseBody = (responseBody) => {
+    try {
+      return JSON.stringify(JSON.parse(responseBody), null, 2);
+    } catch (err) {
+      winston.warn('Unable to parse response body');
+      return responseBody;
+    }
+  };
+
   const logResponse = (url, responseBody) => {
     const loggedResponse = Object.assign({}, logStore[url], {
       url,
+      prettyResponseBody: prettyResponseBody(responseBody),
       responseBody,
       timestamp: new Date(),
     });
