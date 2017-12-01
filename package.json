@@ -4,7 +4,7 @@
   "description": "A redux template",
   "scripts": {
     "start": "NODE_ENV=production node dist/server/index.js",
-    "dev": "NODE_ENV=private nodemon src/server/index.js --exec babel-node",
+    "dev": "NODE_ENV=local nodemon src/server/index.js --exec babel-node",
     "lint": "eslint .",
     "test": "mocha test/unit && jest test/component",
     "jest": "jest test/component",

@@ -6,7 +6,7 @@ npm i
 # Running locally
 
 ## Development
-```npm run dev```
+```BLUFFER_CONFIG=<YOUR_CONFIG> npm run dev```
 
 ```npm run watch```
 

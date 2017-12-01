@@ -1,6 +1,11 @@
 import fs from 'fs';
+import winston from 'winston';
 
-const env = process.env.NODE_ENV;
-const config = JSON.parse(fs.readFileSync(`./config/${env}.json`, 'utf8'));
+const blufferConfig = process.env.BLUFFER_CONFIG;
+if (!blufferConfig) {
+  winston.warn('You forgot to set BLUFFER_CONFIG, defaulting to local');
+}
 
-export default Object.assign({}, config, { env });
+const config = JSON.parse(fs.readFileSync(`./config/${blufferConfig || 'local'}.json`, 'utf8'));
+
+export default config;
