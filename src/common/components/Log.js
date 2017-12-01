@@ -9,9 +9,14 @@ class Log extends Component {
   static propTypes = {
     url: string.isRequired,
     responseBody: string.isRequired,
+    prettyResponseBody: string,
     timestamp: instanceOf(Date).isRequired,
     saveMockResponse: func.isRequired,
   };
+
+  defaultProps = {
+    prettyResponseBody: null,
+  }
 
   state = {
     isEditMode: false,
@@ -30,7 +35,7 @@ class Log extends Component {
   }
 
   render() {
-    const { url, timestamp, responseBody } = this.props;
+    const { url, timestamp, responseBody, prettyResponseBody } = this.props;
     const { isEditMode } = this.state;
     const dateTime = moment(timestamp).format('MMM Do YYYY, HH:mm:ss');
 
@@ -53,7 +58,7 @@ class Log extends Component {
               }}
               rows="10"
               className="col form-control"
-              defaultValue={responseBody}
+              defaultValue={prettyResponseBody || responseBody}
             />
           </div>,
           <div className="row mt-1 w-100">

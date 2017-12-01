@@ -2,10 +2,20 @@ import { combineReducers } from 'redux';
 
 import { RESPONSE_LOGGED, MOCK_DELETED, MOCK_SERVED_RECENTLY, MOCK_SERVED_RECENTLY_CANCEL, PROXY_RESPONSE_DELETED, RESPONSE_MOCKED } from './constants';
 
+const prettyResponseBody = (responseBody) => {
+  try {
+    return JSON.stringify(JSON.parse(responseBody), null, 2);
+  } catch (err) {
+    return responseBody;
+  }
+};
+
 const logList = (state = [], action) => {
   switch (action.type) {
-    case RESPONSE_LOGGED:
-      return [action.payload].concat(state);
+    case RESPONSE_LOGGED: {
+      const loggedResponse = Object.assign({}, action.payload, { prettyResponseBody: prettyResponseBody(action.payload.responseBody) });
+      return [loggedResponse].concat(state);
+    }
     default: return state;
   }
 };

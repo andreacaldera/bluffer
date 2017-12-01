@@ -18,8 +18,14 @@ export default (dataStore, proxyConfig, io) => {
     });
 
     proxyRes.on('end', () => {
-      const loggedResponse = dataStore.logResponse(req.originalUrl, String(responseBody));
-      io.emit('request-proxied', loggedResponse);
+      setTimeout(() => {
+        const loggedResponse = dataStore.logResponse(req.originalUrl, String(responseBody));
+        if (proxyRes.statusCode > 200) {
+          winston.warn(`Error received from target API: ${proxyRes.statusCode}`);
+        }
+        // winston.debug('Proxied response', loggedResponse);
+        io.emit('request-proxied', loggedResponse);
+      }, 500);
     });
   });
 
