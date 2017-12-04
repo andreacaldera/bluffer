@@ -80,7 +80,7 @@ class Mock extends Component {
 
     return (
       <div className="mt-1">
-        <li className={`list-group-item ${recentlyServedClass}`} key={`${url}-header`} onClick={this.toggleMockForm}>
+        <li className={`list-group-item response-header ${recentlyServedClass}`} key={`${url}-header`} onClick={this.toggleMockForm}>
           <div className="row w-100">
             <div className="col-9 url" title={url}>{url}</div>
             <div className="col-3"><div className="float-right">{dateTime}</div></div>

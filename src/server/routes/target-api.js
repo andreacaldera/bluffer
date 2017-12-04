@@ -1,5 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
+import superagent from 'superagent';
 
 const quotes = [
   'Progress is man\'s ability to complicate simplicity.',
@@ -18,6 +19,13 @@ export default () => {
   const router = express.Router();
 
   router.use('*', bodyParser.json());
+
+  router.get('/google', (req, res) => {
+    superagent('http://google.com')
+      .then(({ text }) => {
+        res.send(text);
+      });
+  });
 
   router.post('*', (req, res) => {
     setTimeout(() => res.json({ message: randomQuote() }), 200);
