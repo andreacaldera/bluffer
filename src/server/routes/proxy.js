@@ -50,8 +50,7 @@ export default (dataStore, proxyConfig, io) => {
     try {
       res.json(JSON.parse(mock.responseBody));
     } catch (err) {
-      winston.warn(`Unable to server response for URL ${url}`, err);
-      res.json({});
+      res.send(mock.responseBody);
     }
     io.emit('mock_served', { url });
   });

@@ -1,10 +1,11 @@
 {
   "port": 5001,
   "proxy": {
-    "target": "https://requestb.in/q1bh54q1",
+    "target": "http://localhost:5001/target",
     "host": "localhost"
   },
   "agent": {
     "target": "http://google.com"
-  }
+  },
+  "logLevel": "debug"
 }

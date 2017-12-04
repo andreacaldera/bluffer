@@ -6,7 +6,7 @@ import winston from 'winston';
 
 import socketIo from 'socket.io';
 
-// import 'bluffer-agent';
+import 'bluffer-agent';
 
 import config from './config';
 import ui from './routes/ui';
@@ -20,7 +20,7 @@ const dataStore = mockDataFactory();
 const app = Express();
 const { port } = config;
 
-winston.level = 'debug';
+winston.level = config.logLevel;
 
 const server = http.createServer(app);
 
@@ -29,7 +29,7 @@ const io = new socketIo(server, { path: '/api/bluffer-socket' });
 app.use(cookieParser());
 app.use('/dist', Express.static(path.join(__dirname, '../../dist')));
 app.use('/public', Express.static(path.join(__dirname, '../../public')));
-app.use('/api/bluffer', api(dataStore));
+app.use('/api/bluffer', api(dataStore, io));
 app.use('/target', targetApi(dataStore, config.proxy));
 app.use('/api', proxy(dataStore, config.proxy, io));
 app.use(ui(port, dataStore));

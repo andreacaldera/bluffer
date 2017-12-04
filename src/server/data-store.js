@@ -1,8 +1,15 @@
 import { FileStore } from 'fs-store';
 import winston from 'winston';
+import fs from 'fs';
+
+const dataDir = 'data';
 
 export default () => {
-  const mockStore = new FileStore('data/mock-store.json');
+  if (!fs.existsSync(dataDir)) {
+    fs.mkdirSync(dataDir);
+  }
+
+  const mockStore = new FileStore(`${dataDir}/mock-store.json`);
   let logStore = [];
 
   const prettyResponseBody = (responseBody) => {
