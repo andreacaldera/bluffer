@@ -46,7 +46,6 @@ export default (dataStore, proxyConfig, io) => {
     }
 
     winston.debug(`Using mock response for url ${url}`);
-    res.locals.skipTransform = true;
     try {
       res.json(JSON.parse(mock.responseBody));
     } catch (err) {
