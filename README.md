@@ -13,8 +13,7 @@ npm i
 ## Production
 ```npm run build```
 
-```
-BLUFFER_CONFIG=<YOUR_CONFIG> npm start```
+```BLUFFER_CONFIG=<YOUR_CONFIG> npm start```
 
 ## Docker
 
