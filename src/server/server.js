@@ -25,6 +25,7 @@ const io = new socketIo(server, { path: '/api/bluffer-socket' });
 
 app.use(cookieParser());
 app.use('/dist', Express.static(path.join(__dirname, '../../dist')));
+app.use('/public', Express.static(path.join(__dirname, '../../public')));
 app.use('/api/bluffer', api(dataStore));
 app.use('/target', targetApi(dataStore, config.proxy));
 app.use('/api', proxy(dataStore, config.proxy, io));
