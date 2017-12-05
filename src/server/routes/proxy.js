@@ -18,7 +18,7 @@ export default ({ dataStore, proxyConfig, socketIo }) => {
     proxyRes.on('end', () => {
       setTimeout(() => {
         if (proxyRes.statusCode > 200) {
-          winston.warn(`Error received from target API: ${proxyRes.statusCode} ${String(responseBody)}`);
+          winston.warn(`Error received from target API from target ${proxyConfig.target}: ${proxyRes.statusCode} ${String(responseBody)}`);
           return;
         }
 
@@ -29,7 +29,7 @@ export default ({ dataStore, proxyConfig, socketIo }) => {
   });
 
   proxy.on('error', (err) => {
-    winston.error('Proxy Error', err);
+    winston.error(`Proxy Error from target ${proxyConfig.target}`, err);
   });
 
   proxy.on('proxyReq', (proxyReq, req, /* res, options */) => {
@@ -41,7 +41,7 @@ export default ({ dataStore, proxyConfig, socketIo }) => {
     const url = req.originalUrl;
     const mock = dataStore.getMock(url);
     if (!mock) {
-      winston.debug(`Proxying request for url ${url}`);
+      winston.debug(`Proxying request for url ${url} to target ${proxyConfig.target}`);
       return proxy.web(req, res, { target: proxyConfig.target });
     }
 
