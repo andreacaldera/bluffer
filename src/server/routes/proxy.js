@@ -4,7 +4,7 @@ import winston from 'winston';
 
 const proxy = httpProxy.createProxyServer({ secure: false });
 
-export default (dataStore, proxyConfig, io) => {
+export default ({ dataStore, proxyConfig, socketIo }) => {
   const router = express.Router();
 
   proxy.on('proxyRes', (proxyRes, req, res) => {
@@ -23,7 +23,7 @@ export default (dataStore, proxyConfig, io) => {
         }
 
         const loggedResponse = dataStore.logResponse(req.originalUrl, String(responseBody), req.headers.host);
-        io.emit('request_proxied', loggedResponse);
+        socketIo.emit('request_proxied', loggedResponse);
       }, 500);
     });
   });
@@ -51,7 +51,7 @@ export default (dataStore, proxyConfig, io) => {
     } catch (err) {
       res.send(mock.responseBody);
     }
-    io.emit('mock_served', { url });
+    socketIo.emit('mock_served', { url });
   });
 
   return router;
