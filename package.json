@@ -10,20 +10,15 @@
     "jest": "jest test/component",
     "jest-watch": "jest --watch test/component",
     "test-watch": "mocha test -w",
-    "build": "NODE_ENV=production webpack -p && babel src/server -d dist/server && babel src/common -d dist/common",
-    "watch": "NODE_ENV=production webpack -p --watch",
+    "build":
+      "NODE_ENV=production webpack -p && babel src/server -d dist/server && babel src/common -d dist/common",
+    "watch": "webpack --watch",
     "npm-check": "npm-check -u",
     "precommit": "npm run lint",
     "prepush": "npm run test"
   },
   "nodemonConfig": {
-    "ignore": [
-      "dist/*",
-      "test/*",
-      "data/*",
-      "style/*",
-      "src/client/*"
-    ]
+    "ignore": ["dist/*", "test/*", "data/*", "style/*", "src/client/*"]
   },
   "repository": {
     "type": "git",
@@ -98,6 +93,7 @@
     "node-sass": "^4.5.2",
     "nodemon": "^1.12.1",
     "npm-check": "^5.4.5",
+    "prettier": "1.9.0",
     "react-dom": "^15.6.1",
     "react-hot-loader": "^1.3.0",
     "react-test-renderer": "^15.6.1",
