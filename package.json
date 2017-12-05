@@ -10,8 +10,7 @@
     "jest": "jest test/component",
     "e2e": "jest test/e2e",
     "test-watch": "mocha test -w",
-    "build":
-      "NODE_ENV=production webpack -p && babel src/server -d dist/server && babel src/common -d dist/common",
+    "build": "NODE_ENV=production webpack -p && babel src/server -d dist/server && babel src/common -d dist/common",
     "watch": "webpack --watch",
     "npm-check": "npm-check -u",
     "precommit": "npm run lint",
@@ -19,10 +18,18 @@
     "cuke": "cucumberjs --compiler js:babel-core/register"
   },
   "nodemonConfig": {
-    "ignore": ["dist/*", "test/*", "data/*", "style/*", "src/client/*"]
+    "ignore": [
+      "dist/*",
+      "test/*",
+      "data/*",
+      "style/*",
+      "src/client/*"
+    ]
   },
   "jest": {
-    "watchPathIgnorePatterns": ["data/*"]
+    "watchPathIgnorePatterns": [
+      "data/*"
+    ]
   },
   "repository": {
     "type": "git",
@@ -95,6 +102,7 @@
     "eslint-plugin-mocha": "^4.11.0",
     "eslint-plugin-react": "^6.9.0",
     "extract-text-webpack-plugin": "^2.1.2",
+    "faker": "^4.1.0",
     "husky": "^0.14.3",
     "jest": "^21.1.0",
     "jsx-loader": "^0.13.2",

@@ -1,7 +1,9 @@
-import { Given, When, Then, And, defineSupportCode } from 'cucumber';
+import { Given as step, defineSupportCode } from 'cucumber';
 
 import puppeteer from 'puppeteer';
 import request from 'superagent';
+import { lorem } from 'faker';
+import assert from 'assert';
 
 const baseUrl = 'http://localhost:5001';
 
@@ -14,7 +16,11 @@ const mockBtnSelector = '.test-mockBtn';
 
 const textareaSelector = '.test-textarea';
 
-let browser;
+const randomPath = (...args) =>
+  lorem
+    .words(...args)
+    .split(' ')
+    .join('/');
 
 defineSupportCode(({ After, Before }) => {
   Before(async function() {
@@ -36,21 +42,48 @@ defineSupportCode(({ After, Before }) => {
   });
 });
 
-Given('I visit the proxy ui', async function() {
+step('I visit the proxy ui', async function() {
   const { page } = this;
   await page.goto(`${baseUrl}`);
 });
 
-Given('I have no logged requests', async function() {
+step('I have no logged requests', async function() {
   const { page } = this;
 
   const clearLogBtn = await page.$(clearLogBtnSelector);
   if (clearLogBtn) await clearLogBtn.click();
 });
 
-Given('I have no mocked responses', async function() {
+step('I have no mocked responses', async function() {
   const { page } = this;
 
   const clearMocksBtn = await page.$(clearMocksBtnSelector);
   if (clearMocksBtn) await clearMocksBtn.click();
+});
+
+step('I make multiple requests to via the proxy', async function() {
+  // Write code here that turns the phrase above into concrete actions
+  const requestCount = Math.round(Math.random() * 10);
+  this.proxyRequests = await Promise.all(
+    Array(requestCount)
+      .fill('')
+      .map(() =>
+        request.get(`${baseUrl}/api/${randomPath()}`).then(response => {
+          assert(response.status === 200);
+          return response;
+        }),
+      ),
+  );
+});
+
+step('I expect to see all the requests made', async function() {
+  const { page, proxyRequests } = this;
+
+  await page.waitForSelector(responseSelector);
+
+  const loggedResponse = await page.evaluate(
+    selector => document.querySelectorAll(selector).length,
+    responseSelector,
+  );
+  assert(loggedResponse === proxyRequests.length);
 });
