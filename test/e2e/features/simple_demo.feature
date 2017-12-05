@@ -9,8 +9,9 @@ Feature: Simple Demo
     Given I make multiple requests to via the proxy
     Then I expect to see all the requests made
 
+  @wip
   Scenario: Mock a request
-    Given I have several logged requests
+    Given I make multiple requests to via the proxy
     And I click to select any one
     Then I should see the response body in a textarea
     When I update the textarea with JSON
