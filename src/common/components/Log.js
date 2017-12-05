@@ -95,12 +95,10 @@ class Log extends Component {
     );
 
     return (
-      <div
-        className={`mt-1 ${testClass('response')}`}
-        onClick={this.toggleMockForm}
-      >
+      <div className={`mt-1 ${testClass('response')}`}>
         <li
-          className="list-group-item response-header t-response-header"
+          onClick={this.toggleMockForm}
+          className="list-group-item response-header"
           key={`${url}-header`}
         >
           <div className="row w-100">

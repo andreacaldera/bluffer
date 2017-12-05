@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import moment from 'moment';
 import { string, func, instanceOf, oneOfType, bool } from 'prop-types';
 import { deleteMock, saveMockResponse } from '../actions/mocks';
-import { MOCK_RESPONSE, DELETE_MOCK } from '../modules/proxy/constants';
+import testClass from '../testClass';
 
 class Mock extends Component {
   static propTypes = {
@@ -106,7 +106,7 @@ class Mock extends Component {
     );
 
     return (
-      <div className="mt-1">
+      <div className={`mt-1 ${testClass('response')}`}>
         <li
           className={`list-group-item response-header ${recentlyServedClass}`}
           key={`${url}-header`}

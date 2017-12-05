@@ -1,6 +1,5 @@
 import puppeteer from 'puppeteer';
 import request from 'superagent';
-import { find } from '../util/async';
 
 const baseUrl = 'http://localhost:5001';
 
@@ -17,17 +16,23 @@ describe('dev proxy', () => {
   beforeEach(async () => {
     browser = await puppeteer.launch({
       headless: false,
-      slowMo: 100,
+      // slowMo: 250,
     });
+  });
+
+  afterEach(async () => {
+    await browser.close();
   });
 
   describe('using fake upstream server', () => {
     let page;
-    let logCount;
 
     beforeEach(async () => {
       // load the Page
       page = await browser.newPage();
+      // page.on('console', msg =>
+      //   console.log('PAGE LOG:', ...msg.args.map(m => m.toString())),
+      // );
       await page.goto(`${baseUrl}`);
 
       // clear logged responses
@@ -66,7 +71,7 @@ describe('dev proxy', () => {
           await response.click();
 
           const mockBtn = await response.$(mockBtnSelector);
-          mockBtn.click();
+          await mockBtn.click();
         });
 
         fit('should persist the mock', async () => {
@@ -112,10 +117,5 @@ describe('dev proxy', () => {
     //
     //   it('should mock a response', async () => {});
     // });
-  });
-
-  afterEach(async () => {
-    console.log('closing browser');
-    await browser.close();
   });
 });
