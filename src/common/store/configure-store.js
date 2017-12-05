@@ -2,24 +2,36 @@ import { createStore, compose, applyMiddleware } from 'redux';
 import { routerMiddleware } from 'react-router-redux';
 import createLogger from 'redux-logger';
 import createSagaMiddleware from 'redux-saga';
+import thunk from 'redux-thunk';
 
 import reducer from '../modules';
 import sagas from '../modules/sagas';
 
-const configureStore = (history, initialState, isClient, socketIoClient, apiClient) => {
+const configureStore = (
+  history,
+  initialState,
+  isClient,
+  socketIoClient,
+  apiClient,
+) => {
   const sagaMiddleware = createSagaMiddleware();
   const router = routerMiddleware(history);
 
-  const commonMiddlewares = [router, sagaMiddleware];
+  const commonMiddlewares = [thunk, router, sagaMiddleware];
 
-  const middlewares = isClient ? commonMiddlewares.concat(createLogger) : commonMiddlewares;
+  const middlewares = isClient
+    ? commonMiddlewares.concat(createLogger)
+    : commonMiddlewares;
 
-  const composeEnhancers = isClient && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ : compose;
+  const composeEnhancers =
+    isClient && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+      ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+      : compose;
 
   const store = createStore(
     reducer,
     initialState,
-    composeEnhancers(applyMiddleware(...middlewares))
+    composeEnhancers(applyMiddleware(...middlewares)),
   );
 
   sagaMiddleware.run(sagas);
@@ -32,6 +44,5 @@ const configureStore = (history, initialState, isClient, socketIoClient, apiClie
 
   return store;
 };
-
 
 export default configureStore;

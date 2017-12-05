@@ -20,7 +20,7 @@ const dataStore = mockDataFactory();
 const app = Express();
 const { port } = config;
 
-winston.level = config.logLevel;
+winston.level = 'debug';
 
 const server = http.createServer(app);
 
@@ -29,12 +29,12 @@ const io = new socketIo(server, { path: '/api/bluffer-socket' });
 app.use(cookieParser());
 app.use('/dist', Express.static(path.join(__dirname, '../../dist')));
 app.use('/public', Express.static(path.join(__dirname, '../../public')));
-app.use('/api/bluffer', api(dataStore, io));
+app.use('/api/bluffer', api(dataStore));
 app.use('/target', targetApi(dataStore, config.proxy));
 app.use('/api', proxy(dataStore, config.proxy, io));
 app.use(ui(port, dataStore));
 
-server.listen(port, (error) => {
+server.listen(port, error => {
   if (error) {
     winston.error(error);
   } else {

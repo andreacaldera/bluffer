@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { string, func, instanceOf, oneOfType, bool } from 'prop-types';
-
+import { deleteMock, saveMockResponse } from '../actions/mocks';
 import { MOCK_RESPONSE, DELETE_MOCK } from '../modules/proxy/constants';
 
 class Mock extends Component {
@@ -24,66 +24,101 @@ class Mock extends Component {
     isEditMode: false,
   };
 
-  toggleMockForm = (e) => {
+  toggleMockForm = e => {
     e.preventDefault();
     this.setState({ isEditMode: !this.state.isEditMode });
-  }
+  };
 
-  cancelEdit = (e) => {
+  cancelEdit = e => {
     e.preventDefault();
     this.setState({ isEditMode: false });
     this.textarea.value = this.props.responseBody;
-  }
+  };
 
-  mockResponse = (e) => {
+  mockResponse = e => {
     e.preventDefault();
     const { saveMockResponse, url } = this.props;
     saveMockResponse(url, this.textarea.value);
     this.setState({ isEditMode: false });
-  }
+  };
 
-  deleteMock = (e) => {
+  deleteMock = e => {
     e.preventDefault();
     const { deleteMock, url } = this.props;
     deleteMock(url);
-  }
+  };
 
   render() {
-    const { url, timestamp, responseBody, mockHasBeenServedRecently } = this.props;
+    const {
+      url,
+      timestamp,
+      responseBody,
+      mockHasBeenServedRecently,
+    } = this.props;
     const { isEditMode } = this.state;
     const dateTime = moment(timestamp).format('DD-MMM HH:mm:ss');
-    const recentlyServedClass = mockHasBeenServedRecently ? 'recentlyServed' : '';
+    const recentlyServedClass = mockHasBeenServedRecently
+      ? 'recentlyServed'
+      : '';
 
     const detailsPanel = isEditMode && (
       <li className="list-group-item" key={`${url}-details`}>
         <div className="w-100 form-group">
-          <label className="response-details--label" htmlFor="url">URL:</label>
+          <label className="response-details--label" htmlFor="url">
+            URL:
+          </label>
           <div id="url">{url}</div>
         </div>
         <div className="w-100  form-group">
-          <label className="response-details--label" htmlFor="responseBody">Response body:</label>
+          <label className="response-details--label" htmlFor="responseBody">
+            Response body:
+          </label>
           <textarea
             id="responseBody"
-            ref={(r) => { this.textarea = r; }}
+            ref={r => {
+              this.textarea = r;
+            }}
             rows="10"
             className="col form-control"
             defaultValue={responseBody}
           />
         </div>
         <div className="w-100">
-          <button className="btn btn-primary" onClick={this.mockResponse}>Save</button>
-          <button onClick={this.cancelEdit} className="ml-1 btn btn-primary" alt="cancel">Cancel</button>
-          <button onClick={this.deleteMock} className="btn btn-primary btn-danger float-right" alt="delete">Remove</button>
+          <button className="btn btn-primary" onClick={this.mockResponse}>
+            Save
+          </button>
+          <button
+            onClick={this.cancelEdit}
+            className="ml-1 btn btn-primary"
+            alt="cancel"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={this.deleteMock}
+            className="btn btn-primary btn-danger float-right"
+            alt="delete"
+          >
+            Remove
+          </button>
         </div>
       </li>
     );
 
     return (
       <div className="mt-1">
-        <li className={`list-group-item response-header ${recentlyServedClass}`} key={`${url}-header`} onClick={this.toggleMockForm}>
+        <li
+          className={`list-group-item response-header ${recentlyServedClass}`}
+          key={`${url}-header`}
+          onClick={this.toggleMockForm}
+        >
           <div className="row w-100">
-            <div className="col-9 url" title={url}>{url}</div>
-            <div className="col-3"><div className="float-right">{dateTime}</div></div>
+            <div className="col-9 url" title={url}>
+              {url}
+            </div>
+            <div className="col-3">
+              <div className="float-right">{dateTime}</div>
+            </div>
           </div>
         </li>
         {detailsPanel}
@@ -92,19 +127,4 @@ class Mock extends Component {
   }
 }
 
-const mapDispatchToProps = (dispatch) => ({
-  saveMockResponse: (url, responseBody) => {
-    dispatch({
-      type: MOCK_RESPONSE,
-      payload: { url, responseBody },
-    });
-  },
-  deleteMock: (url) => {
-    dispatch({
-      type: DELETE_MOCK,
-      payload: url,
-    });
-  },
-});
-
-export default connect(null, mapDispatchToProps)(Mock);
+export default connect(null, { deleteMock, saveMockResponse })(Mock);
