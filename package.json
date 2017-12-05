@@ -16,7 +16,7 @@
     "npm-check": "npm-check -u",
     "precommit": "npm run lint",
     "prepush": "npm run test",
-    "cuke": "cucumberjs test/e2e/features"
+    "cuke": "cucumberjs --compiler js:babel-core/register"
   },
   "nodemonConfig": {
     "ignore": ["dist/*", "test/*", "data/*", "style/*", "src/client/*"]

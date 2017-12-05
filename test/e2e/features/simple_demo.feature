@@ -1,7 +1,8 @@
 Feature: Simple Demo
 
   Background:
-    Given I have no logged requests
+    Given I visit the proxy ui
+    And I have no logged requests
     And I have no mocked responses
 
   Scenario: Log requests

@@ -1,0 +1,8 @@
+{
+  "parser": "babel-eslint",
+  "extends": "../../../../.eslintrc",
+  "rules": {
+    "space-before-function-paren": 0,
+    "func-names": 0,
+  }
+}
