@@ -72,7 +72,7 @@ class Log extends Component {
               this.textarea = r;
             }}
             rows="10"
-            className="col form-control"
+            className={`col form-control ${testClass('textarea')}`}
             defaultValue={prettyResponseBody || responseBody}
           />
         </div>

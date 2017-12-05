@@ -79,7 +79,7 @@ class Mock extends Component {
               this.textarea = r;
             }}
             rows="10"
-            className="col form-control"
+            className={`col form-control ${testClass('textarea')}`}
             defaultValue={responseBody}
           />
         </div>
