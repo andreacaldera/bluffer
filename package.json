@@ -15,7 +15,8 @@
     "watch": "webpack --watch",
     "npm-check": "npm-check -u",
     "precommit": "npm run lint",
-    "prepush": "npm run test"
+    "prepush": "npm run test",
+    "cuke": "cucumberjs test/e2e/features"
   },
   "nodemonConfig": {
     "ignore": ["dist/*", "test/*", "data/*", "style/*", "src/client/*"]

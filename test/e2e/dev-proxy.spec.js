@@ -103,38 +103,5 @@ describe('dev proxy', () => {
         });
       });
     });
-
-    // beforeEach(async () => {
-    //   logCount = (await page.$$(responseSelector)).length;
-    //
-    //   const res = await request.get(`${baseUrl}/api`);
-    //   expect(res.status).toEqual(200);
-    // });
-    //
-    // it('should log responses', async () => {
-    //   await page.waitForFunction(
-    //     expectedCount =>
-    //       document.querySelectorAll('.list-group > .mt-1').length ===
-    //       expectedCount,
-    //     {},
-    //     logCount + 1,
-    //   );
-    // });
-
-    // fdescribe('when a mock is created', async () => {
-    //
-    //
-    //   beforeEach(async () => {
-    //     const responses = await page.$$(responseSelector);
-    //     const log = await find(responses, async e => {
-    //       const innerText = await e.getProperty('innerText');
-    //       return /\/api/.test(innerText.toString());
-    //     });
-    //
-    //     expect(log).toBeTruthy();
-    //   });
-    //
-    //   it('should mock a response', async () => {});
-    // });
   });
 });
