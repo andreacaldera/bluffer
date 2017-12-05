@@ -2,7 +2,7 @@ import express from 'express';
 import httpProxy from 'http-proxy';
 import winston from 'winston';
 
-const proxy = httpProxy.createProxyServer({ secure: false });
+const proxy = httpProxy.createProxyServer({ secure: false, changeOrigin: true });
 
 export default (dataStore, proxyConfig, io) => {
   const router = express.Router();
@@ -34,7 +34,10 @@ export default (dataStore, proxyConfig, io) => {
 
   proxy.on('proxyReq', (proxyReq, req, /* res, options */) => {
     winston.debug(`Processing request ${req.originalUrl}`);
+    winston.debug(`Setting Host Header to ${proxyConfig.host}`);
     proxyReq.setHeader('Host', proxyConfig.host);
+    //Monty CMS complains about a bad cookie.
+    proxyReq.setHeader('cookie', '');
   });
 
   router.get('*', (req, res) => {
@@ -42,6 +45,7 @@ export default (dataStore, proxyConfig, io) => {
     const mock = dataStore.getMock(url);
     if (!mock) {
       winston.debug(`Proxying request for url ${url}`);
+      winston.debug(`Targetting proxy to ${proxyConfig.target}`);
       return proxy.web(req, res, { target: proxyConfig.target });
     }
 

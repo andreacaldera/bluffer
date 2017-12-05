@@ -31,8 +31,8 @@ app.use('/dist', Express.static(path.join(__dirname, '../../dist')));
 app.use('/public', Express.static(path.join(__dirname, '../../public')));
 app.use('/api/bluffer', api(dataStore, io));
 app.use('/target', targetApi(dataStore, config.proxy));
-app.use('/api', proxy(dataStore, config.proxy, io));
-app.use(ui(port, dataStore));
+app.use('/ui', ui(port, dataStore));
+app.use(proxy(dataStore, config.proxy, io));
 
 server.listen(port, (error) => {
   if (error) {
