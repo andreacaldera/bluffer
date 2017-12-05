@@ -2,10 +2,12 @@
   "parser": "babel-eslint",
   "extends": "airbnb",
   "plugins": [
-    "flowtype"
+    "flowtype",
+    "jest"
   ],
   "env": {
     "node": true,
+    "jest/globals": true
   },
   "globals": {
     "window": true,
@@ -20,7 +22,7 @@
     "consistent-return": 0,
     "no-underscore-dangle": 0,
     "new-cap": 0,
-    "arrow-parens": ["error", "always"],
+    "arrow-parens": 0,
     "comma-dangle": ["error", {
       "arrays": "always-multiline",
       "objects": "always-multiline",

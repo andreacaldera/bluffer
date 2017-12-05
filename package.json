@@ -8,17 +8,22 @@
     "lint": "eslint .",
     "test": "mocha test/unit && jest test/component",
     "jest": "jest test/component",
-    "jest-watch": "jest --watch test/component",
+    "e2e": "jest test/e2e",
     "test-watch": "mocha test -w",
-    "build":
-      "NODE_ENV=production webpack -p && babel src/server -d dist/server && babel src/common -d dist/common",
+    "build": "NODE_ENV=production webpack -p && babel src/server -d dist/server && babel src/common -d dist/common",
     "watch": "webpack --watch",
     "npm-check": "npm-check -u",
     "precommit": "npm run lint",
     "prepush": "npm run test"
   },
   "nodemonConfig": {
-    "ignore": ["dist/*", "test/*", "data/*", "style/*", "src/client/*"]
+    "ignore": [
+      "dist/*",
+      "test/*",
+      "data/*",
+      "style/*",
+      "src/client/*"
+    ]
   },
   "repository": {
     "type": "git",
@@ -35,6 +40,7 @@
     "babel-plugin-transform-class-properties": "6.24.1",
     "babel-polyfill": "^6.26.0",
     "babel-register": "^6.26.0",
+    "bluebird": "^3.5.1",
     "body-parser": "^1.18.2",
     "cookie-parser": "^1.4.3",
     "es6-promise": "^4.1.1",
@@ -45,6 +51,7 @@
     "moment": "^2.19.2",
     "nock": "^9.1.4",
     "prop-types": "^15.5.6",
+    "puppeteer": "^0.13.0",
     "qs": "^6.5.1",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
@@ -76,11 +83,12 @@
     "chai": "^4.1.2",
     "css-loader": "^0.28.0",
     "enzyme": "^2.9.1",
-    "eslint": "^3.15.0",
+    "eslint": "^4.12.1",
     "eslint-config-airbnb": "^14.1.0",
     "eslint-config-airbnb-base": "^11.1.0",
     "eslint-plugin-flowtype": "^2.35.1",
     "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-jest": "^21.4.1",
     "eslint-plugin-jsx-a11y": "^4.0.0",
     "eslint-plugin-mocha": "^4.11.0",
     "eslint-plugin-react": "^6.9.0",
