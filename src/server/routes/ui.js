@@ -21,7 +21,7 @@ const getActiveFeatureToggles = (req) => {
   return activeFeatureToggles || [];
 };
 
-export default (port, dataStore) => {
+export default (dataStore) => {
   function renderFullPage(content, store) {
     return `
       <!doctype html>
