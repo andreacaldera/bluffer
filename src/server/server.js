@@ -20,7 +20,7 @@ const dataStore = mockDataFactory();
 const app = Express();
 const { port } = config;
 
-winston.level = 'debug';
+winston.level = config.logLevel;
 
 const server = http.createServer(app);
 
