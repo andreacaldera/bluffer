@@ -33,13 +33,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/andreacaldera/template/redux-template"
+    "url": "git+https://github.com/andreacaldera/bluffer"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/andreacaldera/template/issues"
+    "url": "https://github.com/andreacaldera/bluffer/issues"
   },
-  "homepage": "http://acal-software.com/",
+  "homepage": "https://github.com/andreacaldera/bluffer",
   "dependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
