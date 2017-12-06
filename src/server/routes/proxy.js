@@ -2,7 +2,7 @@ import express from 'express';
 import httpProxy from 'http-proxy';
 import winston from 'winston';
 
-const proxy = httpProxy.createProxyServer({ secure: false });
+const proxy = httpProxy.createProxyServer({ secure: false, changeOrigin: true });
 
 export default ({ dataStore, proxyConfig, socketIo }) => {
   const router = express.Router();
@@ -34,7 +34,10 @@ export default ({ dataStore, proxyConfig, socketIo }) => {
 
   proxy.on('proxyReq', (proxyReq, req, /* res, options */) => {
     winston.debug(`Processing request ${req.originalUrl}`);
+    winston.debug(`Setting Host Header to ${proxyConfig.host}`);
     proxyReq.setHeader('Host', proxyConfig.host);
+    proxyReq.setHeader('cookie', '');
+    proxyReq.setHeader('accept-encoding', '');
   });
 
   router.get('*', (req, res) => {

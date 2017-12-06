@@ -13,15 +13,15 @@ const App = ({ route, activePage, setActivePage, info, error, closeInfo, closeEr
       <button className="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
         <span className="navbar-toggler-icon" />
       </button>
-      <Link className="navbar-brand" to="/">Bluffer</Link>
+      <Link className="navbar-brand" to="/ui">Bluffer</Link>
 
       <div className="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul className="navbar-nav mr-auto">
           <li className={`nav-item ${activePage === 'home' ? 'active' : ''}`}>
-            <Link className="nav-link" to="/" onClick={() => setActivePage('home')}>Home</Link>
+            <Link className="nav-link" to="/ui" onClick={() => setActivePage('home')}>Home</Link>
           </li>
           <li className={`nav-item ${activePage === 'about' ? 'active' : ''}`}>
-            <Link className="nav-link" to="/about" onClick={() => setActivePage('about')}>About</Link>
+            <Link className="nav-link" to="/ui/about" onClick={() => setActivePage('about')}>About</Link>
           </li>
         </ul>
         <form className="form-inline my-2 my-lg-0">
