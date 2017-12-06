@@ -17,7 +17,13 @@ class Home extends Component {
     deleteAllLogs: PropTypes.func.isRequired,
     hasMocks: PropTypes.bool,
     deleteAllMocks: PropTypes.func.isRequired,
+    config: PropTypes.arrayOf(PropTypes.shape().isRequired).isRequired,
+    changeSelectedProxy: PropTypes.func.isRequired,
   };
+
+  changeSelectedProxy(newPort) {
+    this.props.changeSelectedProxy(newPort);
+  }
 
   renderDeleteAllMocks() {
     const { hasMocks, mockList, deleteAllMocks } = this.props;
@@ -38,7 +44,7 @@ class Home extends Component {
   }
 
   render() {
-    const { logList, mockList } = this.props;
+    const { logList, mockList, config } = this.props;
 
     const deleteAllLogsButton = !isEmpty(logList) && (
       <button
@@ -54,6 +60,13 @@ class Home extends Component {
 
     return (
       <div>
+        <ul>
+          { config.map((proxyConfig) =>
+            (
+              <li key={proxyConfig.port} onClick={() => { this.changeSelectedProxy(proxyConfig.port); }}>{proxyConfig.name}</li>
+            ))
+          }
+        </ul>
         {!isEmpty(mockList) && [
           <h2 key="mockTitle">Mocks {this.renderDeleteAllMocks()}</h2>,
           <ul key="mockList" className={`list-group ${testClass('mockList')}`}>
@@ -95,6 +108,7 @@ const mapStateToProps = state => ({
   hasMocks: proxyModule.hasMocks(state),
   logList: proxyModule.getLogList(state),
   mockList: proxyModule.getMockList(state),
+  config: proxyModule.getConfig(state),
 });
 
 export default connect(mapStateToProps, proxyActions)(

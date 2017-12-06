@@ -9,12 +9,12 @@ import mockDataFactory from '../data-store';
 
 winston.level = config.logLevel;
 
-const dataStore = mockDataFactory();
+const dataStore = mockDataFactory(config.proxy);
 const { appPort, fakeTargetApiPort } = config;
 
 Promise.resolve()
   .then(() =>
-    appServer({ port: appPort, dataStore }))
+    appServer({ port: appPort, dataStore, config }))
   .then(({ socketIo }) =>
     Promise.all(config.proxy.map((proxyConfig) => proxyServer({ proxyConfig, dataStore, socketIo })
     )))

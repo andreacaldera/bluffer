@@ -21,7 +21,7 @@ const getActiveFeatureToggles = (req) => {
   return activeFeatureToggles || [];
 };
 
-export default (dataStore) => {
+export default (dataStore, config) => {
   function renderFullPage(content, store) {
     return `
       <!doctype html>
@@ -62,10 +62,13 @@ export default (dataStore) => {
     const activePage = _.get(urlPattern.match(req.url), 'activePage', 'home');
     const activeFeatureToggles = getActiveFeatureToggles(req);
     res.cookie('featureToggles', activeFeatureToggles);
+
     const preloadedState = { [NAMESPACE]: {
       meta: { activePage, featureToggles: activeFeatureToggles },
       proxy: {
-        logList: dataStore.getLogList(),
+        selectedProxy: config.proxy[0].port, // TODO
+        config: config.proxy,
+        logs: dataStore.getLogs(),
         mockList: dataStore.getMockList(),
       },
     } };

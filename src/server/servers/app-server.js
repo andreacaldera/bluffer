@@ -8,7 +8,7 @@ import socketIo from 'socket.io';
 import ui from '../routes/ui';
 import api from '../routes/api';
 
-export default ({ port, dataStore }) => {
+export default ({ port, dataStore, config }) => {
   const app = Express();
   const server = http.createServer(app);
 
@@ -19,7 +19,7 @@ export default ({ port, dataStore }) => {
   const io = new socketIo(server, { path: '/api/bluffer-socket' });
 
   app.use('/api/bluffer', api(dataStore, io));
-  app.use(ui(dataStore));
+  app.use(ui(dataStore, config));
 
   return new Promise((resolve, reject) => {
     server.listen(port, (err) => {

@@ -1,14 +1,23 @@
 import { combineReducers } from 'redux';
 
-import { RESPONSE_LOGGED, MOCK_DELETED, MOCK_SERVED_RECENTLY, MOCK_SERVED_RECENTLY_CANCEL, PROXY_RESPONSE_DELETED, RESPONSE_MOCKED, ALL_LOGS_DELETED, ALL_MOCKS_DELETED } from './constants';
+import { CHANGE_SELECTED_PROXY, RESPONSE_LOGGED, MOCK_DELETED, MOCK_SERVED_RECENTLY, MOCK_SERVED_RECENTLY_CANCEL, PROXY_RESPONSE_DELETED, RESPONSE_MOCKED, ALL_LOGS_DELETED, ALL_MOCKS_DELETED } from './constants';
 
-const logList = (state = [], action) => {
+const logs = (state = {}, action) => {
   switch (action.type) {
     case RESPONSE_LOGGED: {
       return [action.payload].concat(state);
     }
     case ALL_LOGS_DELETED: {
       return [];
+    }
+    default: return state;
+  }
+};
+
+const selectedProxy = (state = null, action) => {
+  switch (action.type) {
+    case CHANGE_SELECTED_PROXY: {
+      return action.payload;
     }
     default: return state;
   }
@@ -47,6 +56,8 @@ const mockList = (state = [], action) => {
 };
 
 module.exports = combineReducers({
-  logList,
+  config: (state = {}) => state,
+  logs,
   mockList,
+  selectedProxy,
 });

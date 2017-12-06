@@ -2,18 +2,10 @@ import express from 'express';
 import winston from 'winston';
 import bodyParser from 'body-parser';
 
-export default (dataStore, io) => {
+export default (dataStore) => {
   const router = express.Router();
 
   router.use('*', bodyParser.json({ limit: '5mb' }));
-
-  router.post('/log-nock-response', (req, res) => {
-    const { url, responseBody } = req.body;
-    winston.debug(`Logging nock response ${url}`);
-    const loggedResponse = dataStore.logResponse(req.originalUrl, String(responseBody), req.headers.host);
-    io.emit('request_proxied', loggedResponse);
-    res.sendStatus(201);
-  });
 
   router.get('/get-mock-response', (req, res) => {
     winston.debug(`Getting mock response ${req.query.url}`);
@@ -41,9 +33,10 @@ export default (dataStore, io) => {
   });
 
   router.post('/delete-all-logs', (req, res) => {
-    winston.debug('Deleting all logged responses');
+    const { selectedProxy } = req.body;
+    winston.debug(`Deleting all logged responses for proxy ${selectedProxy}`);
 
-    dataStore.deleteAllLogs();
+    dataStore.deleteAllLogs(selectedProxy);
     res.sendStatus(202);
   });
 

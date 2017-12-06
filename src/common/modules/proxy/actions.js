@@ -1,4 +1,9 @@
-import { DELETE_MOCK, MOCK_RESPONSE, DELETE_ALL_LOGS, DELETE_ALL_MOCKS } from './constants';
+import { CHANGE_SELECTED_PROXY, DELETE_MOCK, MOCK_RESPONSE, DELETE_ALL_LOGS, DELETE_ALL_MOCKS } from './constants';
+
+const changeSelectedProxy = newProxy => ({
+  type: CHANGE_SELECTED_PROXY,
+  payload: newProxy,
+});
 
 const deleteMock = url => ({
   type: DELETE_MOCK,
@@ -19,6 +24,7 @@ const deleteAllLogs = () => ({
 });
 
 export default Object.freeze({
+  changeSelectedProxy,
   deleteMock,
   deleteAllMocks,
   saveMockResponse,

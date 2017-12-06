@@ -2,10 +2,10 @@ import express from 'express';
 import httpProxy from 'http-proxy';
 import winston from 'winston';
 
-const proxy = httpProxy.createProxyServer({ secure: false, changeOrigin: true });
-
 export default ({ dataStore, proxyConfig, socketIo }) => {
   const router = express.Router();
+
+  const proxy = httpProxy.createProxyServer({ secure: false, changeOrigin: true });
 
   proxy.on('proxyRes', (proxyRes, req, res) => {
     res.setHeader('X-Bluffer-Proxy', 'bluffer-proxy');
@@ -21,8 +21,7 @@ export default ({ dataStore, proxyConfig, socketIo }) => {
           winston.warn(`Error received from target API from target ${proxyConfig.target}: ${proxyRes.statusCode} ${String(responseBody)}`);
           return;
         }
-
-        const loggedResponse = dataStore.logResponse(req.originalUrl, String(responseBody), req.headers.host);
+        const loggedResponse = dataStore.logResponse(proxyConfig.port, req.originalUrl, String(responseBody), req.headers.host);
         socketIo.emit('request_proxied', loggedResponse);
       }, 500);
     });

@@ -1,4 +1,4 @@
-import { put, call, takeEvery, takeLatest } from 'redux-saga/effects';
+import { put, call, takeEvery, takeLatest, select } from 'redux-saga/effects';
 
 import superagent from 'superagent';
 
@@ -12,6 +12,7 @@ import {
   ALL_MOCKS_DELETED,
 } from '../common/modules/proxy/constants';
 import { DISPLAY_ERROR, DISPLAY_INFO } from '../common/modules/meta/constants';
+import { getSelectedProxy } from '../common/modules/proxy/selectors';
 
 const callApi = (path, payload) => () =>
   superagent.post(`/api/bluffer/${path}`)
@@ -41,7 +42,8 @@ function* deleteResponse({ payload }) {
 
 function* deleteAllLogs() {
   try {
-    yield call(callApi('delete-all-logs'));
+    const selectedProxy = yield select(getSelectedProxy);
+    yield call(callApi('delete-all-logs', { selectedProxy }));
     yield put({ type: ALL_LOGS_DELETED });
     yield put({ type: DISPLAY_INFO, payload: 'All logs cleared' });
   } catch (err) {

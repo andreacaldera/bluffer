@@ -4,13 +4,13 @@ import fs from 'fs';
 
 const dataDir = 'data';
 
-export default () => {
+export default (proxyConfigs) => {
   if (!fs.existsSync(dataDir)) {
     fs.mkdirSync(dataDir);
   }
 
   const mockStore = new FileStore(`${dataDir}/mock-store.json`);
-  let logStore = [];
+  const logStore = proxyConfigs.reduce((logStoreAccumulator, proxyConfig) => ({ ...logStoreAccumulator, [proxyConfig.port]: [] }), {});
 
   const prettyResponseBody = (responseBody) => {
     try {
@@ -21,15 +21,15 @@ export default () => {
     }
   };
 
-  const logResponse = (url, responseBody, client) => {
-    const loggedResponse = Object.assign({}, logStore[url], {
+  const logResponse = (port, url, responseBody, client) => {
+    const loggedResponse = Object.assign({}, logStore[port][url], {
       url,
       prettyResponseBody: prettyResponseBody(responseBody),
       responseBody,
       client,
       timestamp: new Date(),
     });
-    logStore.unshift(loggedResponse);
+    logStore[port].unshift(loggedResponse);
     return loggedResponse;
   };
 
@@ -60,11 +60,11 @@ export default () => {
 
   const getMock = (url) => mockStore.get(url);
 
-  const deleteAllLogs = () => {
-    logStore = [];
+  const deleteAllLogs = (port) => {
+    logStore[port] = [];
   };
 
-  const getLogList = () => logStore;
+  const getLogs = () => logStore;
 
   const getMockList = () => Object.values(mockStore.getStore());
 
@@ -72,7 +72,7 @@ export default () => {
     logResponse,
     deleteMock,
     mockResponse,
-    getLogList,
+    getLogs,
     getMockList,
     getMock,
     deleteAllLogs,
