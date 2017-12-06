@@ -16,11 +16,11 @@ export default ({ proxyConfig, dataStore, socketIo }) => {
         reject(err);
       } else {
         resolve(server);
-        winston.info(`Proxy server listening: http://localhost:${proxyConfig.port}/`);
+        winston.info(`Proxy server listening to ${proxyConfig.name} on : http://localhost:${proxyConfig.port}/`);
       }
     });
   })
     .catch((err) => {
-      winston.error('Unable to start proxy server', err);
+      winston.error(`Unable to start proxy server ${proxyConfig.name} with error`, err);
     });
 };
