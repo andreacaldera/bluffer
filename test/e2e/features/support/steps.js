@@ -7,6 +7,7 @@ import assert from 'assert';
 import { URL } from 'url';
 
 const baseUrl = 'http://localhost:5001';
+const baseApiUrl = 'http://localhost:5002';
 
 const clearLogBtnSelector = '.test-clearLog';
 const responseSelector = '.test-responseList > .test-response li';
@@ -30,9 +31,9 @@ defineSupportCode(({ After, Before }) => {
       // slowMo: 250,
     });
     this.page = await this.browser.newPage();
-    this.page.on('console', msg =>
-      console.log('PAGE LOG:', ...msg.args.map(a => a.toString())),
-    );
+    // this.page.on('console', msg =>
+    //   console.log('PAGE LOG:', ...msg.args.map(a => a.toString())),
+    // );
   });
 
   After(async function() {
@@ -72,7 +73,7 @@ step('I make multiple requests to via the proxy', async function() {
     Array(requestCount)
       .fill('')
       .map(() =>
-        request.get(`${baseUrl}/api/${randomPath()}`).then(response => {
+        request.get(`${baseApiUrl}/api/${randomPath()}`).then(response => {
           assert(response.status === 200);
           return response;
         }),
@@ -98,10 +99,10 @@ step('I click to select any one', async function() {
   const url = new URL(response.request.url);
 
   const $log = await page.evaluateHandle(
-    (selector, idx, pathname) => {
-      const $log = document.querySelectorAll(selector)[idx];
-      if ($log.innerText.indexOf(pathname)) {
-        $log.click();
+    (selector, i, pathname) => {
+      const $l = document.querySelectorAll(selector)[i];
+      if ($l.innerText.indexOf(pathname)) {
+        $l.click();
         return $log;
       }
     },
@@ -119,10 +120,8 @@ step('I click to select any one', async function() {
 step('I should see the response body in a textarea', async function() {
   const { page, selectedResponse, $log } = this;
   const pathname = new URL(selectedResponse.request.url).pathname;
-  const text = await page.evaluate($log => {
-    return $log.innerText;
-  }, $log);
+  const text = await page.evaluate($l => $l.innerText, $log);
 
-  console.log({ text, pathname });
+  // console.log({ text, pathname });
   assert(text.indexOf(pathname) > -1);
 });
