@@ -5,16 +5,16 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import socketIo from 'socket.io';
 
-import ui from './routes/ui';
-import api from './routes/api';
+import ui from '../routes/ui';
+import api from '../routes/api';
 
 export default ({ port, dataStore }) => {
   const app = Express();
   const server = http.createServer(app);
 
   app.use(cookieParser());
-  app.use('/dist', Express.static(path.join(__dirname, '../../dist')));
-  app.use('/public', Express.static(path.join(__dirname, '../../public')));
+  app.use('/dist', Express.static(path.join(__dirname, '../../../dist')));
+  app.use('/public', Express.static(path.join(__dirname, '../../../public')));
 
   const io = new socketIo(server, { path: '/api/bluffer-socket' });
 

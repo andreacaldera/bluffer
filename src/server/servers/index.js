@@ -4,8 +4,8 @@ import fakeTargetApiServer from './fake-target-api-server';
 import appServer from './app-server';
 import proxyServer from './proxy-server';
 
-import config from './config';
-import mockDataFactory from './data-store';
+import config from '../config';
+import mockDataFactory from '../data-store';
 
 winston.level = config.logLevel;
 

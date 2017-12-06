@@ -2,25 +2,25 @@ import Express from 'express';
 import http from 'http';
 import winston from 'winston';
 
-import targetApi from './routes/target-api';
+import proxy from '../routes/proxy';
 
-export default ({ port }) => {
+export default ({ port, proxyConfig, dataStore, socketIo }) => {
   const app = Express();
   const server = http.createServer(app);
 
-  app.use('/target', targetApi());
+  app.use('/api', proxy({ dataStore, proxyConfig, socketIo }));
 
   return new Promise((resolve, reject) => {
     server.listen(port, (err) => {
       if (err) {
         reject(err);
       } else {
-        resolve();
-        winston.info(`Fake target API Server listening: http://localhost:${port}/`);
+        resolve(server);
+        winston.info(`Proxy server listening: http://localhost:${port}/`);
       }
     });
   })
     .catch((err) => {
-      winston.error('Unable to start fake target API server', err);
+      winston.error('Unable to start proxy server', err);
     });
 };
