@@ -41,7 +41,7 @@ export default ({ dataStore, proxyConfig, socketIo }) => {
 
   router.get('*', (req, res) => {
     const url = req.originalUrl;
-    const mock = dataStore.getMock(url);
+    const mock = dataStore.getMock(proxyConfig.port, url);
     if (!mock) {
       winston.debug(`Proxying request for url ${url} to target ${proxyConfig.target}`);
       return proxy.web(req, res, { target: proxyConfig.target });

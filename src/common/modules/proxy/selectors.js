@@ -23,9 +23,14 @@ const getLogList = createSelector(
   (logs, selectedProxy) => logs[selectedProxy]
 );
 
-const getMockList = createSelector(
+const getMocks = createSelector(
   getProxySelector,
-  ({ mockList }) => mockList
+  ({ mocks }) => mocks
+);
+
+const getMockList = createSelector(
+  [getMocks, getSelectedProxy],
+  (mocks, selectedProxy) => Object.values(mocks[selectedProxy] || {})
 );
 
 const hasMocks = createSelector(
@@ -38,6 +43,7 @@ module.exports = {
   getConfig,
   getLogList,
   getLogs,
+  getMocks,
   getMockList,
   hasMocks,
 };

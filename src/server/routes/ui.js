@@ -69,7 +69,7 @@ export default (dataStore, config) => {
         selectedProxy: _.get(config, 'proxy[0].port'),
         config: config.proxy,
         logs: dataStore.getLogs(),
-        mockList: dataStore.getMockList(),
+        mocks: dataStore.getMocks(),
       },
     } };
     const store = configureStore(preloadedState);

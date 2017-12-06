@@ -23,8 +23,9 @@ const callApi = (path, payload) => () =>
 
 function* mockResponse({ payload }) {
   try {
-    const mockedResponse = yield call(callApi('set-proxy-response', payload));
-    yield put({ type: RESPONSE_MOCKED, payload: mockedResponse });
+    const proxyId = yield select(getSelectedProxy);
+    const mockedResponse = yield call(callApi('set-proxy-response', { ...payload, proxyId }));
+    yield put({ type: RESPONSE_MOCKED, payload: { mockedResponse, proxyId } });
   } catch (err) {
     yield put({ type: DISPLAY_ERROR, payload: `Unable to mock response: ${err.message}` });
   }
@@ -32,8 +33,9 @@ function* mockResponse({ payload }) {
 
 function* deleteResponse({ payload }) {
   try {
-    yield call(callApi('delete-proxy-response', { url: payload }));
-    yield put({ type: MOCK_DELETED, payload });
+    const proxyId = yield select(getSelectedProxy);
+    yield call(callApi('delete-mock', { url: payload, proxyId }));
+    yield put({ type: MOCK_DELETED, payload: { url: payload, proxyId } });
     yield put({ type: DISPLAY_INFO, payload: 'Response deleted successfully' });
   } catch (err) {
     yield put({ type: DISPLAY_ERROR, payload: `Unable to delete response: ${err.message}` });
@@ -42,9 +44,9 @@ function* deleteResponse({ payload }) {
 
 function* deleteAllLogs() {
   try {
-    const selectedProxy = yield select(getSelectedProxy);
-    yield call(callApi('delete-all-logs', { selectedProxy }));
-    yield put({ type: ALL_LOGS_DELETED, payload: { proxy: selectedProxy } });
+    const proxyId = yield select(getSelectedProxy);
+    yield call(callApi('delete-all-logs', { proxyId }));
+    yield put({ type: ALL_LOGS_DELETED, payload: { proxyId } });
     yield put({ type: DISPLAY_INFO, payload: 'All logs cleared' });
   } catch (err) {
     yield put({ type: DISPLAY_ERROR, payload: `Unable to clear logs: ${err.message}` });
@@ -53,8 +55,9 @@ function* deleteAllLogs() {
 
 function* deleteAllMocks() {
   try {
-    yield call(callApi('delete-all-mocks'));
-    yield put({ type: ALL_MOCKS_DELETED });
+    const proxyId = yield select(getSelectedProxy);
+    yield call(callApi('delete-all-mocks', { proxyId }));
+    yield put({ type: ALL_MOCKS_DELETED, payload: { proxyId } });
     yield put({ type: DISPLAY_INFO, payload: 'All mocks cleared' });
   } catch (err) {
     yield put({ type: DISPLAY_ERROR, payload: `Unable to clear mocks: ${err.message}` });
