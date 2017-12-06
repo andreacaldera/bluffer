@@ -38,6 +38,7 @@ export default (dataStore, proxyConfig, io) => {
     proxyReq.setHeader('Host', proxyConfig.host);
     //Monty CMS complains about a bad cookie.
     proxyReq.setHeader('cookie', '');
+    proxyReq.setHeader('accept-encoding', '');
   });
 
   router.get('*', (req, res) => {
