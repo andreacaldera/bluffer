@@ -14,7 +14,8 @@
     "watch": "webpack --watch",
     "npm-check": "npm-check -u",
     "precommit": "npm run lint",
-    "prepush": "npm run test"
+    "prepush": "npm run test",
+    "cuke": "cucumberjs test/e2e/features --tags @dev --compiler js:babel-core/register"
   },
   "nodemonConfig": {
     "ignore": [
@@ -23,6 +24,11 @@
       "data/*",
       "style/*",
       "src/client/*"
+    ]
+  },
+  "jest": {
+    "watchPathIgnorePatterns": [
+      "data/*"
     ]
   },
   "repository": {
@@ -69,6 +75,7 @@
     "winston": "^2.4.0"
   },
   "devDependencies": {
+    "cucumber": "^3.1.0",
     "arrow-mocha": "^1.0.1",
     "babel-cli": "^6.26.0",
     "babel-eslint": "^7.1.1",
@@ -93,6 +100,7 @@
     "eslint-plugin-mocha": "^4.11.0",
     "eslint-plugin-react": "^6.9.0",
     "extract-text-webpack-plugin": "^2.1.2",
+    "faker": "^4.1.0",
     "husky": "^0.14.3",
     "jest": "^21.1.0",
     "jsx-loader": "^0.13.2",
