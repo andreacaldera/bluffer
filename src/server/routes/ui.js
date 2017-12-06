@@ -66,7 +66,7 @@ export default (dataStore, config) => {
     const preloadedState = { [NAMESPACE]: {
       meta: { activePage, featureToggles: activeFeatureToggles },
       proxy: {
-        selectedProxy: config.proxy[0].port, // TODO
+        selectedProxy: _.get(config, 'proxy[0].port'),
         config: config.proxy,
         logs: dataStore.getLogs(),
         mockList: dataStore.getMockList(),

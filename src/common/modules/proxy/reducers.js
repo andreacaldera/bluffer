@@ -5,10 +5,12 @@ import { CHANGE_SELECTED_PROXY, RESPONSE_LOGGED, MOCK_DELETED, MOCK_SERVED_RECEN
 const logs = (state = {}, action) => {
   switch (action.type) {
     case RESPONSE_LOGGED: {
-      return [action.payload].concat(state);
+      const { proxy, loggedResponse } = action.payload;
+      const proxyLogs = [loggedResponse].concat(state[proxy]);
+      return { ...state, [proxy]: proxyLogs };
     }
     case ALL_LOGS_DELETED: {
-      return [];
+      return { ...state, [action.payload.proxy]: [] };
     }
     default: return state;
   }

@@ -44,7 +44,7 @@ function* deleteAllLogs() {
   try {
     const selectedProxy = yield select(getSelectedProxy);
     yield call(callApi('delete-all-logs', { selectedProxy }));
-    yield put({ type: ALL_LOGS_DELETED });
+    yield put({ type: ALL_LOGS_DELETED, payload: { proxy: selectedProxy } });
     yield put({ type: DISPLAY_INFO, payload: 'All logs cleared' });
   } catch (err) {
     yield put({ type: DISPLAY_ERROR, payload: `Unable to clear logs: ${err.message}` });

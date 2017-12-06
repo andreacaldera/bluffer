@@ -16,7 +16,7 @@ class Log extends Component {
     saveMockResponse: func.isRequired,
   };
 
-  defaultProps = {
+  static defaultProps = {
     prettyResponseBody: null,
   };
 
