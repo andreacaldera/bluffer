@@ -27,7 +27,7 @@ class Home extends Component {
     return (
       <button
         onClick={() => deleteAllMocks(mockList)}
-        className={`btn btn-primary btn-danger float-right ${testClass(
+        className={`btn btn-primary btn-danger float-right delete-all-button ${testClass(
           'clearMocks',
         )}`}
         alt="delete"
@@ -43,7 +43,7 @@ class Home extends Component {
     const deleteAllLogsButton = !isEmpty(logList) && (
       <button
         onClick={this.props.deleteAllLogs}
-        className={`btn btn-primary btn-danger float-right ${testClass(
+        className={`btn btn-primary btn-danger delete-all-button float-right ${testClass(
           'clearLog',
         )}`}
         alt="delete"
