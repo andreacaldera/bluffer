@@ -7,3 +7,5 @@ config/private.json
 data/**
 
 yarn.lock
+
+example.png

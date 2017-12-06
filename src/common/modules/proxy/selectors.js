@@ -1,4 +1,5 @@
 import { createSelector } from 'reselect';
+import { isEmpty } from 'lodash';
 
 import { getProxySelector } from '../selectors';
 
@@ -12,7 +13,13 @@ const getMockList = createSelector(
   ({ mockList }) => mockList
 );
 
+const hasMocks = createSelector(
+  getMockList,
+  (mockList) => !isEmpty(mockList)
+);
+
 module.exports = {
   getLogList,
   getMockList,
+  hasMocks,
 };

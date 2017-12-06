@@ -1,11 +1,10 @@
 {
-  "port": 5001,
+  "appPort": 5001,
+  "proxyPort": 5002,
+  "fakeTargetApiPort": 5003,
   "proxy": {
-    "target": "http://localhost:5001/target",
+    "target": "http://localhost:5003/target",
     "host": "localhost"
-  },
-  "agent": {
-    "target": "http://google.com"
   },
   "logLevel": "debug"
 }

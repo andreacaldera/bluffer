@@ -7,7 +7,7 @@ import About from './components/About';
 import NotFound from './components/NotFound';
 
 const routes = (
-  <Route path="/ui" component={App}>
+  <Route path="/" component={App}>
     <IndexRoute component={Home} />
     <Route path="about" component={About} />
     <Route path="*" component={NotFound} />

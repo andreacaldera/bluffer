@@ -4,7 +4,7 @@ import winston from 'winston';
 
 const proxy = httpProxy.createProxyServer({ secure: false, changeOrigin: true });
 
-export default (dataStore, proxyConfig, io) => {
+export default ({ dataStore, proxyConfig, socketIo }) => {
   const router = express.Router();
 
   proxy.on('proxyRes', (proxyRes, req, res) => {
@@ -18,18 +18,18 @@ export default (dataStore, proxyConfig, io) => {
     proxyRes.on('end', () => {
       setTimeout(() => {
         if (proxyRes.statusCode > 200) {
-          winston.warn(`Error received from target API: ${proxyRes.statusCode} ${String(responseBody)}`);
+          winston.warn(`Error received from target API from target ${proxyConfig.target}: ${proxyRes.statusCode} ${String(responseBody)}`);
           return;
         }
 
         const loggedResponse = dataStore.logResponse(req.originalUrl, String(responseBody), req.headers.host);
-        io.emit('request_proxied', loggedResponse);
+        socketIo.emit('request_proxied', loggedResponse);
       }, 500);
     });
   });
 
   proxy.on('error', (err) => {
-    winston.error('Proxy Error', err);
+    winston.error(`Proxy Error from target ${proxyConfig.target}`, err);
   });
 
   proxy.on('proxyReq', (proxyReq, req, /* res, options */) => {
@@ -45,8 +45,7 @@ export default (dataStore, proxyConfig, io) => {
     const url = req.originalUrl;
     const mock = dataStore.getMock(url);
     if (!mock) {
-      winston.debug(`Proxying request for url ${url}`);
-      winston.debug(`Targetting proxy to ${proxyConfig.target}`);
+      winston.debug(`Proxying request for url ${url} to target ${proxyConfig.target}`);
       return proxy.web(req, res, { target: proxyConfig.target });
     }
 
@@ -56,7 +55,7 @@ export default (dataStore, proxyConfig, io) => {
     } catch (err) {
       res.send(mock.responseBody);
     }
-    io.emit('mock_served', { url });
+    socketIo.emit('mock_served', { url });
   });
 
   return router;
