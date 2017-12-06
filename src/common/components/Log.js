@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { string, func, instanceOf } from 'prop-types';
+import { string, func, instanceOf, oneOfType } from 'prop-types';
 import testClass from '../testClass';
 
-import { MOCK_RESPONSE } from '../modules/proxy/constants';
+import proxyActions from '../modules/proxy/actions';
 
 class Log extends Component {
   static propTypes = {
@@ -12,7 +12,7 @@ class Log extends Component {
     responseBody: string.isRequired,
     client: string.isRequired,
     prettyResponseBody: string,
-    timestamp: instanceOf(Date).isRequired,
+    timestamp: oneOfType([instanceOf(Date), string]).isRequired,
     saveMockResponse: func.isRequired,
   };
 
@@ -115,13 +115,4 @@ class Log extends Component {
   }
 }
 
-const mapDispatchToProps = dispatch => ({
-  saveMockResponse: (url, responseBody) => {
-    dispatch({
-      type: MOCK_RESPONSE,
-      payload: { url, responseBody },
-    });
-  },
-});
-
-export default connect(null, mapDispatchToProps)(Log);
+export default connect(null, proxyActions)(Log);

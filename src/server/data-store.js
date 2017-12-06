@@ -39,6 +39,14 @@ export default () => {
     mockStore.save();
   };
 
+  const deleteAllMocks = () => {
+    const store = mockStore.getStore();
+    Object.keys(store).forEach((key) => {
+      delete store[key];
+    });
+    mockStore.save();
+  };
+
   const mockResponse = (url, responseBody) => {
     const mockedResponse = {
       url,
@@ -68,5 +76,6 @@ export default () => {
     getMockList,
     getMock,
     deleteAllLogs,
+    deleteAllMocks,
   });
 };

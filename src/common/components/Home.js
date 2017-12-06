@@ -8,22 +8,21 @@ import Mock from './Mock';
 import testClass from '../testClass';
 import proxyModule from '../modules/proxy';
 
-import { deleteAllLogs } from '../actions/logs';
-import { deleteAllMocks } from '../actions/mocks';
+import proxyActions from '../modules/proxy/actions';
 
 class Home extends Component {
   static propTypes = {
     logList: PropTypes.arrayOf(PropTypes.shape().isRequired).isRequired,
     mockList: PropTypes.arrayOf(PropTypes.shape().isRequired).isRequired,
     deleteAllLogs: PropTypes.func.isRequired,
-    isMockListEmpty: PropTypes.bool,
+    hasMocks: PropTypes.bool,
     deleteAllMocks: PropTypes.func.isRequired,
   };
 
   renderDeleteAllMocks() {
-    const { isMockListEmpty, deleteAllMocks, mockList } = this.props;
+    const { hasMocks, mockList, deleteAllMocks } = this.props;
 
-    if (isMockListEmpty) return null;
+    if (!hasMocks) return null;
 
     return (
       <button
@@ -92,15 +91,12 @@ class Home extends Component {
   }
 }
 
-const mapStateToProps = state => {
-  const mockList = proxyModule.getMockList(state);
-  return {
-    isMockListEmpty: isEmpty(mockList),
-    logList: proxyModule.getLogList(state),
-    mockList,
-  };
-};
+const mapStateToProps = state => ({
+  hasMocks: proxyModule.hasMocks(state),
+  logList: proxyModule.getLogList(state),
+  mockList: proxyModule.getMockList(state),
+});
 
-export default connect(mapStateToProps, { deleteAllLogs, deleteAllMocks })(
+export default connect(mapStateToProps, proxyActions)(
   Home,
 );

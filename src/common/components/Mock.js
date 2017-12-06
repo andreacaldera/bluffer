@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { string, func, instanceOf, oneOfType, bool } from 'prop-types';
-import { deleteMock, saveMockResponse } from '../actions/mocks';
+import { deleteMock, saveMockResponse } from '../modules/proxy/actions';
 import testClass from '../testClass';
 
 class Mock extends Component {
@@ -37,15 +37,13 @@ class Mock extends Component {
 
   mockResponse = e => {
     e.preventDefault();
-    const { saveMockResponse, url } = this.props;
-    saveMockResponse(url, this.textarea.value);
+    this.props.saveMockResponse(this.props.url, this.textarea.value);
     this.setState({ isEditMode: false });
   };
 
   deleteMock = e => {
     e.preventDefault();
-    const { deleteMock, url } = this.props;
-    deleteMock(url);
+    this.props.deleteMock(this.props.url);
   };
 
   render() {

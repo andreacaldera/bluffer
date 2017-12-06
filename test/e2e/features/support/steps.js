@@ -11,10 +11,10 @@ const clearLogBtnSelector = '.test-clearLog';
 const responseSelector = '.test-responseList > .test-response li';
 
 const clearMocksBtnSelector = '.test-clearMocks';
-const mocksSelector = '.test-mockList > .test-response';
-const mockBtnSelector = '.test-mockBtn';
+// const mocksSelector = '.test-mockList > .test-response';
+// const mockBtnSelector = '.test-mockBtn';
 
-const textareaSelector = '.test-textarea';
+// const textareaSelector = '.test-textarea';
 
 const randomPath = (...args) =>
   lorem

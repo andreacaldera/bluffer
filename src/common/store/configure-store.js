@@ -2,7 +2,6 @@ import { createStore, compose, applyMiddleware } from 'redux';
 import { routerMiddleware } from 'react-router-redux';
 import createLogger from 'redux-logger';
 import createSagaMiddleware from 'redux-saga';
-import thunk from 'redux-thunk';
 
 import reducer from '../modules';
 import sagas from '../modules/sagas';
@@ -17,7 +16,7 @@ const configureStore = (
   const sagaMiddleware = createSagaMiddleware();
   const router = routerMiddleware(history);
 
-  const commonMiddlewares = [thunk, router, sagaMiddleware];
+  const commonMiddlewares = [router, sagaMiddleware];
 
   const middlewares = isClient
     ? commonMiddlewares.concat(createLogger)

@@ -47,5 +47,12 @@ export default (dataStore, io) => {
     res.sendStatus(202);
   });
 
+  router.post('/delete-all-mocks', (req, res) => {
+    winston.debug('Deleting all mocked responses');
+
+    dataStore.deleteAllMocks();
+    res.sendStatus(202);
+  });
+
   return router;
 };
