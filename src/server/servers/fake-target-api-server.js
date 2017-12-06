@@ -5,6 +5,10 @@ import winston from 'winston';
 import targetApi from '../routes/target-api';
 
 export default ({ port }) => {
+  if (!port) {
+    return;
+  }
+
   const app = Express();
   const server = http.createServer(app);
 
