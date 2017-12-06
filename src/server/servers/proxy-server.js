@@ -4,19 +4,19 @@ import winston from 'winston';
 
 import proxy from '../routes/proxy';
 
-export default ({ port, proxyConfig, dataStore, socketIo }) => {
+export default ({ proxyConfig, dataStore, socketIo }) => {
   const app = Express();
   const server = http.createServer(app);
 
-  app.use('/api', proxy({ dataStore, proxyConfig, socketIo }));
+  app.use(proxy({ dataStore, proxyConfig, socketIo }));
 
   return new Promise((resolve, reject) => {
-    server.listen(port, (err) => {
+    server.listen(proxyConfig.port, (err) => {
       if (err) {
         reject(err);
       } else {
         resolve(server);
-        winston.info(`Proxy server listening: http://localhost:${port}/`);
+        winston.info(`Proxy server listening: http://localhost:${proxyConfig.port}/`);
       }
     });
   })
