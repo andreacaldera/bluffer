@@ -10,6 +10,7 @@ const configureStore = (
   isClient,
   socketIoClient,
   apiClient,
+  historySaga,
 ) => {
   const sagaMiddleware = createSagaMiddleware();
 
@@ -36,6 +37,9 @@ const configureStore = (
   }
   if (apiClient) {
     sagaMiddleware.run(apiClient);
+  }
+  if (historySaga) {
+    sagaMiddleware.run(historySaga);
   }
 
   return store;

@@ -8,6 +8,7 @@ const routes = [
     component: App,
     routes: [
       { path: '/', exact: true, component: Home },
+      { path: '/proxy*', exact: true, component: Home },
       { path: '/about', component: About },
       { path: '/*', component: NotFound },
     ],

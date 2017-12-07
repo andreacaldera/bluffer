@@ -11,7 +11,7 @@ import configureStore from '../../common/store/configure-store';
 import routes from '../../common/routes';
 import { NAMESPACE } from '../../common/modules/constants';
 
-const urlPattern = new UrlPatter('/:activePage');
+const urlPattern = new UrlPatter('/:activePage/:proxyId');
 
 const getActiveFeatureToggles = (req) => {
   const params = qs.parse(req.query);
@@ -60,6 +60,13 @@ export default (dataStore, config) => {
 
   return (req, res) => {
     const activePage = _.get(urlPattern.match(req.url), 'activePage', 'home');
+
+    const defaultProxy = _.get(config, 'proxy[0].port');
+    const selectedProxy = activePage === 'proxy' ?
+      Number(_.get(urlPattern.match(req.url), 'proxyId', defaultProxy)) :
+      defaultProxy;
+      // TODO selectedProxy from url must be one of defined proxies
+
     const activeFeatureToggles = getActiveFeatureToggles(req);
     res.cookie('featureToggles', activeFeatureToggles);
 
@@ -67,7 +74,7 @@ export default (dataStore, config) => {
       [NAMESPACE]: {
         meta: { activePage, featureToggles: activeFeatureToggles },
         proxy: {
-          selectedProxy: _.get(config, 'proxy[0].port'),
+          selectedProxy,
           config: config.proxy,
           logs: dataStore.getLogs(),
           mocks: dataStore.getMocks(),
