@@ -1,14 +1,16 @@
-import { takeLatest, put } from 'redux-saga/effects';
+import { takeLatest } from 'redux-saga/effects';
+
+import { CHANGE_ROUTE } from '../common/modules/meta/constants';
 
 import history from './history';
 
 function* changeRoute({ payload }) {
   history.push(payload);
-  yield put({ type: 'ROUTE_CHANGED' });
+  yield;
 }
 
 function* watchRoute() {
-  yield takeLatest('CHANGE_ROUTE', changeRoute);
+  yield takeLatest(CHANGE_ROUTE, changeRoute);
 }
 
 export default function* sagas() {
