@@ -18,7 +18,7 @@ const randomQuote = () => {
 export default () => {
   const router = express.Router();
 
-  router.use('*', bodyParser.json());
+  router.use(bodyParser.json());
 
   router.get('/google', (req, res) => {
     superagent('http://google.com')

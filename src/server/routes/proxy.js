@@ -17,6 +17,11 @@ export default ({ dataStore, proxyConfig, socketIo }) => {
 
     proxyRes.on('end', () => {
       setTimeout(() => {
+        if (proxyRes.statusCode === 404) {
+          const loggedResponse = dataStore.logResponse(proxyConfig.port, req.originalUrl, String('Not found'), req.headers.host);
+          socketIo.emit('request_proxied', { loggedResponse, proxyId: proxyConfig.port });
+          return;
+        }
         if (proxyRes.statusCode > 200) {
           winston.warn(`Error received from target API from target ${proxyConfig.target}: ${proxyRes.statusCode} ${String(responseBody)}`);
           return;
