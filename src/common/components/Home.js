@@ -39,8 +39,6 @@ class Home extends Component {
 
     return (
       <div className="card">
-        <div className="card-block">
-        </div>
         <ProxySelector />
         <div className="card-block">
           {!isEmpty(mockList) && [
