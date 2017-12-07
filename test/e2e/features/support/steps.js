@@ -68,18 +68,15 @@ step('I have no mocked responses', async function() {
 step('I make multiple requests via the proxy', async function() {
   const { page } = this;
   const requestCount = Math.round(Math.random() * 10);
-  this.proxyRequests = await Promise.all(
-    Array(requestCount)
-      .fill('')
-      .map(() =>
-        request
-          .get(`${BASE_URL_PROXY}/target/${randomPath()}`)
-          .then(response => {
-            assert(response.status === 200);
-            return response;
-          })
-      )
-  );
+  this.proxyRequests = await Promise.all(Array(requestCount)
+    .fill('')
+    .map(() =>
+      request
+        .get(`${BASE_URL_PROXY}/target/${randomPath()}`)
+        .then(response => {
+          assert(response.status === 200);
+          return response;
+        })));
 
   await page.waitForSelector(responseSelector);
 });
@@ -139,8 +136,8 @@ step('I update the textarea with JSON', async function() {
 step('click mock', async function() {
   const { page, $log } = this;
   await page.evaluate(
-    ($l, mockBtnSelector) => {
-      $l.parentNode.querySelector(mockBtnSelector).click();
+    ($l, _mockBtnSelector) => {
+      $l.parentNode.querySelector(_mockBtnSelector).click();
     },
     $log,
     mockBtnSelector
@@ -169,6 +166,4 @@ step('I should see the mocked response above', async function () {
   expect(mock).to.eql('{"mudi": "was here"}');
 });
 
-step('I wait a moment', () => {
-  return delay(0.5 * 1000)
-})
+step('I wait a moment', () => delay(0.5 * 1000));

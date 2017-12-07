@@ -21,9 +21,7 @@ class DeleteAllLogsButton extends Component {
     return !disabled && (
       <button
         onClick={deleteAllLogs}
-        className={`btn btn-primary btn-danger delete-all-button float-right ${testClass(
-          'clearLog',
-        )}`}
+        className={`btn btn-primary btn-danger delete-all-button float-right ${testClass('clearLog')}`}
         alt="delete"
       >
         Clear log

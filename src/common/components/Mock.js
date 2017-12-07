@@ -62,15 +62,15 @@ class Mock extends Component {
     const detailsPanel = isEditMode && (
       <li className="list-group-item" key={`${url}-details`}>
         <div className="w-100 form-group">
-          <label className="response-details--label" htmlFor="url">
+          <div className="response-details--label">
             URL:
-          </label>
+          </div>
           <div id="url">{url}</div>
         </div>
         <div className="w-100  form-group">
-          <label className="response-details--label" htmlFor="responseBody">
+          <div className="response-details--label">
             Response body:
-          </label>
+          </div>
           <textarea
             id="responseBody"
             ref={r => {
@@ -106,9 +106,11 @@ class Mock extends Component {
     return (
       <div className={`mt-1 ${testClass('response')}`}>
         <li
+          role="presentation"
           className={`list-group-item response-header ${recentlyServedClass}`}
           key={`${url}-header`}
           onClick={this.toggleMockForm}
+          onKeyPress={this.toggleMockForm}
         >
           <div className="row w-100">
             <div className="col-9 url" title={url}>

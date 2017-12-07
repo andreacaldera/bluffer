@@ -12,7 +12,7 @@ export default ({ port }) => {
   const app = Express();
   const server = http.createServer(app);
 
-  app.use('/target', targetApi());
+  app.use(targetApi());
 
   return new Promise((resolve, reject) => {
     server.listen(port, (err) => {

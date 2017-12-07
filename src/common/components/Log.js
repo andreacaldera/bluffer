@@ -57,15 +57,15 @@ class Log extends Component {
     const detailsPanel = isEditMode && (
       <li className="list-group-item response-details" key={`${url}-details`}>
         <div className="w-100 form-group">
-          <label className="response-details--label" htmlFor="url">
+          <div className="response-details--label">
             URL:
-          </label>
+          </div>
           <div id="url">{url}</div>
         </div>
         <div className="w-100 form-group">
-          <label className="response-details--label" htmlFor="responseBody">
+          <div className="response-details--label">
             Response body:
-          </label>
+          </div>
           <textarea
             id="responseBody"
             ref={r => {
@@ -97,7 +97,9 @@ class Log extends Component {
     return (
       <div className={`mt-1 ${testClass('response')}`}>
         <li
+          role="presentation"
           onClick={this.toggleMockForm}
+          onKeyPress={this.toggleMockForm}
           className="list-group-item response-header"
           key={`${url}-header`}
         >

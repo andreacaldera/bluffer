@@ -36,6 +36,7 @@
     "react/no-unused-prop-types": 0,
     "import/prefer-default-export": 0,
     "react/require-default-props": 0,
+    "react/jsx-closing-tag-location": 0,
     "react/prefer-stateless-function": [0, { "ignorePureComponents": true }],
     "jsx-a11y/no-static-element-interactions": 0
   }

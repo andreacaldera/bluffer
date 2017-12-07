@@ -16,7 +16,6 @@ Promise.resolve()
   .then(() =>
     appServer({ port: appPort, dataStore, config }))
   .then(({ socketIo }) =>
-    Promise.all(config.proxy.map((proxyConfig) => proxyServer({ proxyConfig, dataStore, socketIo })
-    )))
+    Promise.all(config.proxy.map((proxyConfig) => proxyServer({ proxyConfig, dataStore, socketIo }))))
   .then(() =>
     fakeTargetApiServer({ port: fakeTargetApiPort }));

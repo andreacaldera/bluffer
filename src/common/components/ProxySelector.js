@@ -31,8 +31,10 @@ class Home extends Component {
           {config.map((proxyConfig) =>
             (
               <li
+                role="presentation"
                 className="nav-item"
                 key={proxyConfig.port}
+                onKeyPress={this.changeSelectedProxy(proxyConfig.port)}
                 onClick={this.changeSelectedProxy(proxyConfig.port)}
               >
                 <a className={`nav-link ${selectedProxy === proxyConfig.port ? 'active' : ''}`} href={`/proxy/${proxyConfig.port}`}>{proxyConfig.name}</a>
@@ -50,6 +52,4 @@ const mapStateToProps = state => ({
   selectedProxy: proxyModule.getSelectedProxy(state),
 });
 
-export default connect(mapStateToProps, proxyActions)(
-  Home,
-);
+export default connect(mapStateToProps, proxyActions)(Home);

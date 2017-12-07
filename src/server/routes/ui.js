@@ -63,26 +63,26 @@ export default (dataStore, config) => {
     const activeFeatureToggles = getActiveFeatureToggles(req);
     res.cookie('featureToggles', activeFeatureToggles);
 
-    const preloadedState = { [NAMESPACE]: {
-      meta: { activePage, featureToggles: activeFeatureToggles },
-      proxy: {
-        selectedProxy: _.get(config, 'proxy[0].port'),
-        config: config.proxy,
-        logs: dataStore.getLogs(),
-        mocks: dataStore.getMocks(),
+    const preloadedState = {
+      [NAMESPACE]: {
+        meta: { activePage, featureToggles: activeFeatureToggles },
+        proxy: {
+          selectedProxy: _.get(config, 'proxy[0].port'),
+          config: config.proxy,
+          logs: dataStore.getLogs(),
+          mocks: dataStore.getMocks(),
+        },
       },
-    } };
+    };
     const store = configureStore(preloadedState);
     const context = {};
 
 
-    const content = renderToString(
-      <Provider store={store}>
-        <StaticRouter location={req.url} context={context}>
-          {renderRoutes(routes)}
-        </StaticRouter>
-      </Provider>
-    );
+    const content = renderToString(<Provider store={store}>
+      <StaticRouter location={req.url} context={context}>
+        {renderRoutes(routes)}
+      </StaticRouter>
+    </Provider>);
     res.send(renderFullPage(content, store));
   };
 };

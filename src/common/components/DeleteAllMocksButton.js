@@ -21,9 +21,7 @@ class DeleteAllMocksButton extends Component {
     return !disabled && (
       <button
         onClick={() => deleteAllMocks()}
-        className={`btn btn-primary btn-danger float-right delete-all-button ${testClass(
-          'clearMocks',
-        )}`}
+        className={`btn btn-primary btn-danger float-right delete-all-button ${testClass('clearMocks')}`}
         alt="delete"
       >
         Clear mocks

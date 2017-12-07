@@ -4,7 +4,8 @@ import About from './components/About';
 import NotFound from './components/NotFound';
 
 const routes = [
-  { component: App,
+  {
+    component: App,
     routes: [
       { path: '/', exact: true, component: Home },
       { path: '/about', component: About },

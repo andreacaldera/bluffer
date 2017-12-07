@@ -26,7 +26,6 @@ class Home extends Component {
 
   static defaultProps = {
     logList: null,
-    selectedProxy: null,
   }
 
   changeSelectedProxy = (newPort) => (e) => {
@@ -87,6 +86,4 @@ const mapStateToProps = state => ({
   mockList: proxyModule.getMockList(state),
 });
 
-export default connect(mapStateToProps, proxyActions)(
-  Home,
-);
+export default connect(mapStateToProps, proxyActions)(Home);
