@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from 'react-dom';
+import { hydrate } from 'react-dom';
 
 import { Provider } from 'react-redux';
 import Router from 'react-router-dom/Router';
@@ -16,7 +16,7 @@ import historySaga from './history-saga';
 
 const store = configureStore(window.__initialState__, true, socketIoClient, apiClient, historySaga);
 
-render(
+hydrate(
   <Provider store={store}>
     <Router history={history}>
       {renderRoutes(routes)}
