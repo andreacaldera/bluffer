@@ -5,9 +5,9 @@ import { CHANGE_SELECTED_PROXY, RESPONSE_LOGGED, MOCK_DELETED, MOCK_SERVED_RECEN
 const logs = (state = {}, action) => {
   switch (action.type) {
     case RESPONSE_LOGGED: {
-      const { proxy, loggedResponse } = action.payload;
-      const proxyLogs = [loggedResponse].concat(state[proxy]);
-      return { ...state, [proxy]: proxyLogs };
+      const { proxyId, loggedResponse } = action.payload;
+      const proxyLogs = [loggedResponse].concat(state[proxyId]);
+      return { ...state, [proxyId]: proxyLogs };
     }
     case ALL_LOGS_DELETED: {
       return { ...state, [action.payload.proxyId]: [] };
@@ -28,7 +28,7 @@ const selectedProxy = (state = null, action) => {
 const mocks = (state = {}, action) => {
   switch (action.type) {
     case RESPONSE_MOCKED: {
-      const proxyMocks = { ...state[action.payload.proxyId], [action.payload.url]: action.payload.mockedResponse };
+      const proxyMocks = { ...state[action.payload.proxyId], [action.payload.mockedResponse.url]: action.payload.mockedResponse };
       return { ...state, [action.payload.proxyId]: proxyMocks };
     }
     case MOCK_SERVED_RECENTLY: {

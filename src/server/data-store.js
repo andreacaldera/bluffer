@@ -4,8 +4,6 @@ import fs from 'fs';
 
 const dataDir = 'data';
 
-// TODO remema all proxy / proxyPort to proxyId
-
 export default (proxyConfigs) => {
   if (!fs.existsSync(dataDir)) {
     fs.mkdirSync(dataDir);

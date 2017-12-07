@@ -22,7 +22,7 @@ export default ({ dataStore, proxyConfig, socketIo }) => {
           return;
         }
         const loggedResponse = dataStore.logResponse(proxyConfig.port, req.originalUrl, String(responseBody), req.headers.host);
-        socketIo.emit('request_proxied', { loggedResponse, proxy: proxyConfig.port });
+        socketIo.emit('request_proxied', { loggedResponse, proxyId: proxyConfig.port });
       }, 500);
     });
   });
@@ -57,7 +57,7 @@ export default ({ dataStore, proxyConfig, socketIo }) => {
     } catch (err) {
       res.send(mock.responseBody);
     }
-    socketIo.emit('mock_served', { url, proxy: proxyConfig.port });
+    socketIo.emit('mock_served', { url, proxyId: proxyConfig.port });
   });
 
   return router;
