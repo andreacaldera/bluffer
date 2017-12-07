@@ -1,27 +1,24 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { isEmpty } from 'lodash';
 import PropTypes from 'prop-types';
 import testClass from '../testClass';
-import proxyModule from '../modules/proxy';
 
 import proxyActions from '../modules/proxy/actions';
 
 class DeleteAllLogsButton extends Component {
   static propTypes = {
-    logList: PropTypes.arrayOf(PropTypes.shape().isRequired),
+    disabled: PropTypes.bool,
     deleteAllLogs: PropTypes.func.isRequired,
   };
 
+  static defaultProps = {
+    disabled: false,
+  }
+
   render() {
-    const { logList, deleteAllLogs } = this.props;
+    const { disabled, deleteAllLogs } = this.props;
 
-    if (isEmpty(logList)) {
-      return null;
-    }
-
-
-    return (
+    return !disabled && (
       <button
         onClick={deleteAllLogs}
         className={`btn btn-primary btn-danger delete-all-button float-right ${testClass(
@@ -35,8 +32,4 @@ class DeleteAllLogsButton extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  hasMocks: proxyModule.hasMocks(state),
-});
-
-export default connect(mapStateToProps, proxyActions)(DeleteAllLogsButton);
+export default connect(null, proxyActions)(DeleteAllLogsButton);

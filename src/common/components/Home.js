@@ -39,12 +39,14 @@ class Home extends Component {
 
     return (
       <div className="card">
+        <div className="card-block">
+        </div>
         <ProxySelector />
         <div className="card-block">
           {!isEmpty(mockList) && [
             <h2 key="mockTitle">
               Mocks
-              <DeleteAllMocksButton />
+              <DeleteAllMocksButton disabled={isEmpty(mockList)} />
             </h2>,
             <ul key="mockList" className={`list-group ${testClass('mockList')}`}>
               {mockList.map(mock => (
@@ -58,7 +60,7 @@ class Home extends Component {
 
           <h2 className="mt-2">
             Response log
-            <DeleteAllLogsButton />
+            <DeleteAllLogsButton disabled={isEmpty(logList)} />
           </h2>
           {isEmpty(logList) && <p>No responses caught yet.</p>}
 

@@ -2,24 +2,23 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import testClass from '../testClass';
-import proxyModule from '../modules/proxy';
 
 import proxyActions from '../modules/proxy/actions';
 
 class DeleteAllMocksButton extends Component {
   static propTypes = {
-    hasMocks: PropTypes.bool.isRequired,
+    disabled: PropTypes.bool,
     deleteAllMocks: PropTypes.func.isRequired,
   };
 
+  static defaultProps = {
+    disabled: false,
+  }
+
   render() {
-    const { hasMocks, deleteAllMocks } = this.props;
+    const { disabled, deleteAllMocks } = this.props;
 
-    if (!hasMocks) {
-      return null;
-    }
-
-    return (
+    return !disabled && (
       <button
         onClick={() => deleteAllMocks()}
         className={`btn btn-primary btn-danger float-right delete-all-button ${testClass(
@@ -33,8 +32,4 @@ class DeleteAllMocksButton extends Component {
   }
 }
 
-const mapStateToProps = state => ({
-  hasMocks: proxyModule.hasMocks(state),
-});
-
-export default connect(mapStateToProps, proxyActions)(DeleteAllMocksButton);
+export default connect(null, proxyActions)(DeleteAllMocksButton);

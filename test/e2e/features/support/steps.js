@@ -4,10 +4,11 @@ import puppeteer from 'puppeteer';
 import request from 'superagent';
 import { lorem } from 'faker';
 import assert from 'assert';
+import { expect } from 'chai';
 import { URL } from 'url';
 
-const baseUrl = 'http://localhost:5001';
-const baseApiUrl = 'http://localhost:5002';
+const BASE_URL_UI = 'http://localhost:5001';
+const BASE_URL_PROXY = 'http://localhost:7001';
 
 const clearLogBtnSelector = '.test-clearLog';
 const responseSelector = '.test-responseList > .test-response li';
@@ -31,9 +32,9 @@ defineSupportCode(({ After, Before }) => {
       // slowMo: 250,
     });
     this.page = await this.browser.newPage();
-    // this.page.on('console', msg =>
-    //   console.log('PAGE LOG:', ...msg.args.map(a => a.toString())),
-    // );
+    this.page.on('console', msg =>
+      console.log('PAGE LOG:', ...msg.args.map(a => a.toString())),
+    );
   });
 
   After(async function() {
@@ -49,7 +50,7 @@ defineSupportCode(({ After, Before }) => {
 
 step('I visit the proxy ui', async function() {
   const { page } = this;
-  await page.goto(`${baseUrl}`);
+  await page.goto(`${BASE_URL_UI}`);
 });
 
 step('I have no logged requests', async function() {
@@ -73,11 +74,13 @@ step('I make multiple requests to via the proxy', async function() {
     Array(requestCount)
       .fill('')
       .map(() =>
-        request.get(`${baseApiUrl}/api/${randomPath()}`).then(response => {
-          assert(response.status === 200);
-          return response;
-        }),
-      ),
+        request
+          .get(`${BASE_URL_PROXY}/target/${randomPath()}`)
+          .then(response => {
+            assert(response.status === 200);
+            return response;
+          })
+      )
   );
 
   await page.waitForSelector(responseSelector);
@@ -85,43 +88,38 @@ step('I make multiple requests to via the proxy', async function() {
 
 step('I expect to see all the requests made', async function() {
   const { page, proxyRequests } = this;
-  const loggedResponse = await page.evaluate(
+  const loggedResponses = await page.evaluate(
     selector => document.querySelectorAll(selector).length,
-    responseSelector,
+    responseSelector
   );
-  assert(loggedResponse === proxyRequests.length);
+  expect(loggedResponses).to.eql(proxyRequests.length);
 });
 
 step('I click to select any one', async function() {
   const { page, proxyRequests } = this;
-  const idx = Math.round(Math.random() * proxyRequests.length);
+  const idx = Math.round(Math.random() * (proxyRequests.length - 1));
   const response = proxyRequests[idx];
   const url = new URL(response.request.url);
 
-  const $log = await page.evaluateHandle(
+  this.$log = await page.evaluateHandle(
     (selector, i, pathname) => {
-      const $l = document.querySelectorAll(selector)[i];
-      if ($l.innerText.indexOf(pathname)) {
-        $l.click();
-        return $log;
-      }
+      const $log = [].slice.call(document.querySelectorAll(selector))
+        .find($l => $l.innerText.indexOf(pathname) > -1);
+      $log.click();
+      return $log;
     },
     responseSelector,
     idx,
-    url.pathname,
+    url.pathname
   );
 
-  assert(!!$log);
+  assert(!!this.$log);
 
-  this.$log = $log;
   this.selectedResponse = response;
 });
 
 step('I should see the response body in a textarea', async function() {
   const { page, selectedResponse, $log } = this;
-  const pathname = new URL(selectedResponse.request.url).pathname;
-  const text = await page.evaluate($l => $l.innerText, $log);
-
-  // console.log({ text, pathname });
-  assert(text.indexOf(pathname) > -1);
+  const response = await page.evaluate($l => $l.parentNode.querySelector('textarea').value, $log);
+  expect(JSON.parse(response)).to.eql(JSON.parse(selectedResponse.text));
 });

@@ -5,7 +5,6 @@ Feature: Simple Demo
     And I have no logged requests
     And I have no mocked responses
 
-  @dev
   Scenario: Log requests
     Given I make multiple requests to via the proxy
     Then I expect to see all the requests made
@@ -19,7 +18,6 @@ Feature: Simple Demo
     And click mock
     Then I should see the mocked response above
 
-  @wip
   Scenario: Verify the mock
     Given I have several mocked requests
     And I click to select any one
