@@ -39,6 +39,10 @@ export default ({ dataStore, proxyConfig, socketIo }) => {
     proxyReq.setHeader('accept-encoding', '');
   });
 
+  router.get('/favicon.ico', (req, res) => {
+    res.sendStatus(200);
+  });
+
   router.get('*', (req, res) => {
     const url = req.originalUrl;
     const mock = dataStore.getMock(proxyConfig.port, url);

@@ -77,7 +77,6 @@ export default (dataStore, config) => {
     const store = configureStore(preloadedState);
     const context = {};
 
-
     const content = renderToString(<Provider store={store}>
       <StaticRouter location={req.url} context={context}>
         {renderRoutes(routes)}
