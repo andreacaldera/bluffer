@@ -5,21 +5,24 @@ import PropTypes from 'prop-types';
 import proxyModule from '../modules/proxy';
 
 import proxyActions from '../modules/proxy/actions';
+import metaActions from '../modules/meta/actions';
 
 class Home extends Component {
   static propTypes = {
     config: PropTypes.arrayOf(PropTypes.shape().isRequired).isRequired,
     selectedProxy: PropTypes.number,
     changeSelectedProxy: PropTypes.func.isRequired,
+    changeRoute: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
     selectedProxy: null,
   }
 
-  changeSelectedProxy = (newPort) => (e) => {
+  changeSelectedProxy = (proxyId) => (e) => {
     e.preventDefault();
-    this.props.changeSelectedProxy(newPort);
+    this.props.changeSelectedProxy(proxyId);
+    this.props.changeRoute(`/proxy/${proxyId}`);
   }
 
   render() {
@@ -52,4 +55,4 @@ const mapStateToProps = state => ({
   selectedProxy: proxyModule.getSelectedProxy(state),
 });
 
-export default connect(mapStateToProps, proxyActions)(Home);
+export default connect(mapStateToProps, { ...proxyActions, changeRoute: metaActions.changeRoute })(Home);

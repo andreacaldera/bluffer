@@ -21,16 +21,10 @@ class Home extends Component {
     mockList: PropTypes.arrayOf(PropTypes.shape().isRequired).isRequired,
     deleteAllLogs: PropTypes.func.isRequired,
     deleteAllMocks: PropTypes.func.isRequired,
-    changeSelectedProxy: PropTypes.func.isRequired,
   };
 
   static defaultProps = {
     logList: null,
-  }
-
-  changeSelectedProxy = (newPort) => (e) => {
-    e.preventDefault();
-    this.props.changeSelectedProxy(newPort);
   }
 
   render() {
