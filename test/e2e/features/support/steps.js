@@ -14,10 +14,8 @@ const clearLogBtnSelector = '.test-clearLog';
 const responseSelector = '.test-responseList > .test-response li';
 
 const clearMocksBtnSelector = '.test-clearMocks';
-// const mocksSelector = '.test-mockList > .test-response';
-// const mockBtnSelector = '.test-mockBtn';
-
-// const textareaSelector = '.test-textarea';
+const mocksSelector = '.test-mockList > .test-response li';
+const mockBtnSelector = '.test-mockBtn';
 
 const randomPath = (...args) =>
   lorem
@@ -28,13 +26,13 @@ const randomPath = (...args) =>
 defineSupportCode(({ After, Before }) => {
   Before(async function() {
     this.browser = await puppeteer.launch({
-      headless: true,
+      // headless: true,
       // slowMo: 250,
     });
     this.page = await this.browser.newPage();
-    this.page.on('console', msg =>
-      console.log('PAGE LOG:', ...msg.args.map(a => a.toString())),
-    );
+    // this.page.on('console', msg =>
+    //   console.log('PAGE LOG:', ...msg.args.map(a => a.toString()))
+    // );
   });
 
   After(async function() {
@@ -103,7 +101,8 @@ step('I click to select any one', async function() {
 
   this.$log = await page.evaluateHandle(
     (selector, i, pathname) => {
-      const $log = [].slice.call(document.querySelectorAll(selector))
+      const $log = [].slice
+        .call(document.querySelectorAll(selector))
         .find($l => $l.innerText.indexOf(pathname) > -1);
       $log.click();
       return $log;
@@ -120,6 +119,52 @@ step('I click to select any one', async function() {
 
 step('I should see the response body in a textarea', async function() {
   const { page, selectedResponse, $log } = this;
-  const response = await page.evaluate($l => $l.parentNode.querySelector('textarea').value, $log);
+  const response = await page.evaluate(
+    $l => $l.parentNode.querySelector('textarea').value,
+    $log
+  );
   expect(JSON.parse(response)).to.eql(JSON.parse(selectedResponse.text));
+});
+
+step('I update the textarea with JSON', async function() {
+  const { page, $log } = this;
+  await page.evaluate(
+    ($l) => {
+      $l.parentNode.querySelector('textarea').value = '{"mudi": "was here"}';
+    },
+    $log
+  );
+});
+
+step('click mock', async function() {
+  const { page, $log } = this;
+  await page.evaluate(
+    ($l, mockBtnSelector) => {
+      $l.parentNode.querySelector(mockBtnSelector).click();
+    },
+    $log,
+    mockBtnSelector
+  );
+});
+
+
+step('I should see the mocked response above', async function () {
+  const { page, proxyRequests } = this;
+  const idx = Math.round(Math.random() * (proxyRequests.length - 1));
+  const response = proxyRequests[idx];
+  const url = new URL(response.request.url);
+
+  const mock = await page.evaluate(
+    (selector, pathname) => {
+      const $log = [].slice
+        .call(document.querySelectorAll(selector))
+        .find($l => $l.innerText.indexOf(pathname) > -1);
+      $log.click();
+      return $log.parentNode.querySelector('textarea').value;
+    },
+    mocksSelector,
+    url.pathname
+  );
+
+  expect(mock).to.eql('{"mudi": "was here"}');
 });
