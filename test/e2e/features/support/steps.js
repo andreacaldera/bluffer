@@ -1,5 +1,5 @@
 import { Given as step, defineSupportCode } from 'cucumber';
-
+import { delay } from 'bluebird';
 import puppeteer from 'puppeteer';
 import request from 'superagent';
 import { lorem } from 'faker';
@@ -65,7 +65,7 @@ step('I have no mocked responses', async function() {
   if (clearMocksBtn) await clearMocksBtn.click();
 });
 
-step('I make multiple requests to via the proxy', async function() {
+step('I make multiple requests via the proxy', async function() {
   const { page } = this;
   const requestCount = Math.round(Math.random() * 10);
   this.proxyRequests = await Promise.all(
@@ -168,3 +168,7 @@ step('I should see the mocked response above', async function () {
 
   expect(mock).to.eql('{"mudi": "was here"}');
 });
+
+step('I wait a moment', () => {
+  return delay(0.5 * 1000)
+})
