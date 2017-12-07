@@ -11,7 +11,7 @@ Feature: Simple Demo
     And I wait a moment
     Then I expect to see all the requests made
 
-
+  @mudi
   Scenario: Mock a request
     Given I make multiple requests via the proxy
     And I wait a moment
