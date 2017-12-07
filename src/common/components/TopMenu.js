@@ -7,7 +7,6 @@ import meta from '../modules/meta';
 
 import metaActions from '../modules/meta/actions';
 
-
 class App extends Component {
   static propTypes = {
     activePage: PropTypes.string.isRequired,
@@ -62,7 +61,7 @@ class App extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  activePage: meta.getActivePage(state), // TODO should just be in component state!
+  activePage: meta.getActivePage(state),
 });
 
 export default connect(mapStateToProps, metaActions)(App);
