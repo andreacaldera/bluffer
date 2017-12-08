@@ -24,8 +24,16 @@ const callApi = (path, payload) => () =>
 function* mockResponse({ payload }) {
   try {
     const proxyId = yield select(getSelectedProxy);
-    const mockedResponse = yield call(callApi('set-proxy-response', { ...payload, proxyId }));
-    yield put({ type: RESPONSE_MOCKED, payload: { mockedResponse, proxyId } });
+    const { responseBody, timestamp, url } = yield call(callApi('set-mock', { ...payload, proxyId }));
+    yield put({
+      type: RESPONSE_MOCKED,
+      payload: {
+        responseBody,
+        timestamp,
+        proxyId,
+        url,
+      },
+    });
   } catch (err) {
     yield put({ type: DISPLAY_ERROR, payload: `Unable to mock response: ${err.message}` });
   }

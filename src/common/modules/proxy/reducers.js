@@ -28,8 +28,19 @@ const selectedProxy = (state = null, action) => {
 const mocks = (state = {}, action) => {
   switch (action.type) {
     case RESPONSE_MOCKED: {
-      const proxyMocks = { ...state[action.payload.proxyId], [action.payload.mockedResponse.url]: action.payload.mockedResponse };
-      return { ...state, [action.payload.proxyId]: proxyMocks };
+      const {
+        proxyId,
+        url,
+        responseBody,
+        timestamp,
+      } = action.payload;
+      return {
+        ...state,
+        [proxyId]: {
+          ...state[proxyId],
+          [url]: { responseBody, timestamp, url },
+        },
+      };
     }
     case MOCK_SERVED_RECENTLY: {
       const updatedMock = { ...state[action.payload.proxyId][action.payload.url], mockHasBeenServedRecently: true };

@@ -16,7 +16,7 @@ export default (dataStore) => {
     res.json(mockResponse.responseBody);
   });
 
-  router.post('/set-proxy-response', (req, res) => {
+  router.post('/set-mock', (req, res) => {
     const { proxyId, url, responseBody } = req.body;
     winston.debug(`Setting proxy response ${proxyId} ${url}`);
 
