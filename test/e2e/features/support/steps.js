@@ -30,9 +30,10 @@ defineSupportCode(({ After, Before }) => {
       // slowMo: 250,
     });
     this.page = await this.browser.newPage();
-    // this.page.on('console', msg =>
-    //   console.log('PAGE LOG:', ...msg.args.map(a => a.toString()))
-    // );
+    // this.page.on('console', msg => {
+    //   const text = msg.args.map(a => a.toString()).join(',')
+    //   text.indexOf('mudi') > -1 && console.log(text)
+    // });
   });
 
   After(async function() {
@@ -146,10 +147,8 @@ step('click mock', async function() {
 
 
 step('I should see the mocked response above', async function () {
-  const { page, proxyRequests } = this;
-  const idx = Math.round(Math.random() * (proxyRequests.length - 1));
-  const response = proxyRequests[idx];
-  const url = new URL(response.request.url);
+  const { page, selectedResponse } = this;
+  const url = new URL(selectedResponse.request.url);
 
   const mock = await page.evaluate(
     (selector, pathname) => {
