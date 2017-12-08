@@ -3,14 +3,17 @@ import { put, call, takeEvery, takeLatest, select } from 'redux-saga/effects';
 import superagent from 'superagent';
 
 import {
-  RESPONSE_MOCKED,
-  DELETE_MOCK, MOCK_RESPONSE,
-  MOCK_DELETED,
   DELETE_ALL_LOGS,
   ALL_LOGS_DELETED,
+} from '../common/modules/proxy/constants';
+import {
+  RESPONSE_MOCKED,
+  DELETE_MOCK,
+  MOCK_RESPONSE,
+  MOCK_DELETED,
   DELETE_ALL_MOCKS,
   ALL_MOCKS_DELETED,
-} from '../common/modules/proxy/constants';
+} from '../common/modules/mocks/constants';
 import { DISPLAY_ERROR, DISPLAY_INFO } from '../common/modules/meta/constants';
 import { getSelectedProxy } from '../common/modules/proxy/selectors';
 

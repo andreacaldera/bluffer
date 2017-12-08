@@ -1,5 +1,4 @@
 import { createSelector } from 'reselect';
-import { isEmpty } from 'lodash';
 
 import { getProxySelector } from '../selectors';
 
@@ -23,38 +22,9 @@ const getLogList = createSelector(
   (logs, selectedProxy) => logs[selectedProxy]
 );
 
-const getMocks = createSelector(
-  getProxySelector,
-  ({ mocks }) => mocks
-);
-
-const getMockList = createSelector(
-  [getMocks, getSelectedProxy],
-  (mocks, selectedProxy) => Object.values(mocks[selectedProxy] || {})
-);
-
-const getActiveMocks = createSelector(
-  getProxySelector,
-  ({ activeMocks }) => activeMocks
-);
-
-const getSelectedProxyActiveMocks = createSelector(
-  [getActiveMocks, getSelectedProxy],
-  (activeMocks, selectedProxy) => activeMocks[selectedProxy] || []
-);
-
-const hasMocks = createSelector(
-  getMockList,
-  (mockList) => !isEmpty(mockList)
-);
-
 module.exports = {
   getSelectedProxy,
   getConfig,
   getLogList,
   getLogs,
-  getMocks,
-  getMockList,
-  hasMocks,
-  getSelectedProxyActiveMocks,
 };

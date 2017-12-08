@@ -13,14 +13,14 @@ const getProxySelector = createSelector(
   ({ proxy }) => proxy
 );
 
-const getUiSelector = createSelector(
+const getMocksSelector = createSelector(
   getRootSelector,
-  ({ ui }) => ui
+  ({ mocks }) => mocks
 );
 
 module.exports = {
   getRootSelector,
   getMetaSelector,
   getProxySelector,
-  getUiSelector,
+  getMocksSelector,
 };

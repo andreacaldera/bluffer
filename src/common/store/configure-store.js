@@ -3,7 +3,6 @@ import createLogger from 'redux-logger';
 import createSagaMiddleware from 'redux-saga';
 
 import reducer from '../modules';
-import sagas from '../modules/sagas';
 
 const configureStore = (
   initialState,
@@ -31,7 +30,6 @@ const configureStore = (
     composeEnhancers(applyMiddleware(...middlewares)),
   );
 
-  sagaMiddleware.run(sagas);
   if (socketIoClient) {
     sagaMiddleware.run(socketIoClient);
   }

@@ -12,8 +12,10 @@ import ProxySelector from './ProxySelector';
 
 import testClass from '../testClass';
 import proxyModule from '../modules/proxy';
+import mocksModule from '../modules/mocks';
 
 import proxyActions from '../modules/proxy/actions';
+import mocksActions from '../modules/mocks/actions';
 
 class Home extends Component {
   static propTypes = {
@@ -77,7 +79,7 @@ class Home extends Component {
 
 const mapStateToProps = state => ({
   logList: proxyModule.getLogList(state),
-  mockList: proxyModule.getMockList(state),
+  mockList: mocksModule.getMockList(state),
 });
 
-export default connect(mapStateToProps, proxyActions)(Home);
+export default connect(mapStateToProps, { ...proxyActions, ...mocksActions })(Home);

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import testClass from '../testClass';
 
-import proxyActions from '../modules/proxy/actions';
+import mocksActions from '../modules/mocks/actions';
 
 class DeleteAllMocksButton extends Component {
   static propTypes = {
@@ -30,4 +30,4 @@ class DeleteAllMocksButton extends Component {
   }
 }
 
-export default connect(null, proxyActions)(DeleteAllMocksButton);
+export default connect(null, mocksActions)(DeleteAllMocksButton);

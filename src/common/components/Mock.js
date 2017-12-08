@@ -2,10 +2,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 import { string, func, instanceOf, oneOfType, arrayOf } from 'prop-types';
-import { deleteMock, saveMockResponse } from '../modules/proxy/actions';
+
 import testClass from '../testClass';
 
-import proxyModule from '../modules/proxy';
+import { deleteMock, saveMockResponse } from '../modules/mocks/actions';
+import mocksModule from '../modules/mocks';
 
 class Mock extends Component {
   static propTypes = {
@@ -126,7 +127,7 @@ class Mock extends Component {
 }
 
 const mapStateToPros = (state) => ({
-  activeMocks: proxyModule.getSelectedProxyActiveMocks(state),
+  activeMocks: mocksModule.getSelectedProxyActiveMocks(state),
 });
 
 export default connect(mapStateToPros, { deleteMock, saveMockResponse })(Mock);

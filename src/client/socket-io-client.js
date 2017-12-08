@@ -2,7 +2,8 @@ import { eventChannel, delay } from 'redux-saga';
 import { put, call, cancelled, take, takeEvery } from 'redux-saga/effects';
 import io from 'socket.io-client';
 
-import { RESPONSE_LOGGED, MOCK_SERVED_RECENTLY, MOCK_SERVED_RECENTLY_CANCEL } from '../common/modules/proxy/constants';
+import { RESPONSE_LOGGED } from '../common/modules/proxy/constants';
+import { MOCK_SERVED_RECENTLY, MOCK_SERVED_RECENTLY_CANCEL } from '../common/modules/mocks/constants';
 import { DISPLAY_ERROR } from '../common/modules/meta/constants';
 
 const socket = io('', { path: '/api/bluffer-socket' });

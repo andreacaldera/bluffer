@@ -5,6 +5,7 @@ import { string, func, instanceOf, oneOfType } from 'prop-types';
 import testClass from '../testClass';
 
 import proxyActions from '../modules/proxy/actions';
+import mocksActions from '../modules/mocks/actions';
 
 class Log extends Component {
   static propTypes = {
@@ -117,4 +118,4 @@ class Log extends Component {
   }
 }
 
-export default connect(null, proxyActions)(Log);
+export default connect(null, { ...proxyActions, saveMockResponse: mocksActions.saveMockResponse })(Log);

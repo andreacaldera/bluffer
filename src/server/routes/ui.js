@@ -77,6 +77,8 @@ export default (dataStore, config) => {
           selectedProxy,
           config: config.proxy,
           logs: dataStore.getLogs(),
+        },
+        mocks: {
           mocks: dataStore.getMocks(),
         },
       },
