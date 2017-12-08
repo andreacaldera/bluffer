@@ -28,3 +28,6 @@ npm i
 ```less /var/log/supervisor/bluffer.err.log```
 
 ```less /var/log/supervisor/bluffer.out.log```
+
+
+# CI
