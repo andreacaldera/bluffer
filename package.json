@@ -6,7 +6,7 @@
     "start": "NODE_ENV=production node dist/server/index.js",
     "dev": "NODE_ENV=local nodemon src/server/index.js --exec babel-node",
     "lint": "eslint .",
-    "test": "mocha test/unit && jest test/component",
+    "test": "jest test/unit && jest test/component",
     "jest": "jest test/component",
     "e2e": "npm run cuke -- test/e2e/features --compiler js:babel-core/register",
     "test-watch": "mocha test -w",

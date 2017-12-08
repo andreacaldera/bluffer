@@ -6,7 +6,7 @@ const logs = (state = {}, action) => {
   switch (action.type) {
     case RESPONSE_LOGGED: {
       const { proxyId, loggedResponse } = action.payload;
-      const proxyLogs = [loggedResponse].concat(state[proxyId]);
+      const proxyLogs = [loggedResponse].concat(state[proxyId] || []);
       return { ...state, [proxyId]: proxyLogs };
     }
     case ALL_LOGS_DELETED: {
