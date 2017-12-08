@@ -1,5 +1,5 @@
 import reducers from '../../src/common/modules/proxy/reducers';
-import { RESPONSE_LOGGED, ALL_LOGS_DELETED, RESPONSE_MOCKED } from '../../src/common/modules/proxy/constants';
+import { RESPONSE_LOGGED, ALL_LOGS_DELETED, RESPONSE_MOCKED, MOCK_DELETED, ALL_MOCKS_DELETED } from '../../src/common/modules/proxy/constants';
 
 describe('Proxy reducers', () => {
   describe('logs reducer', () => {
@@ -114,6 +114,58 @@ describe('Proxy reducers', () => {
             responseBody,
           },
         },
+      });
+    });
+
+    it('deletes a mock', () => {
+      const proxyId = 'some proxy id';
+      const url = '/some-url';
+
+      const anotherUrl = '/another url';
+      const anotherMock = 'another mock';
+
+      const initialState = {
+        mocks: {
+          [proxyId]: {
+            [url]: 'i am going to be deleted :(',
+            [anotherUrl]: anotherMock,
+          },
+        },
+      };
+
+      const state = reducers(initialState, {
+        type: MOCK_DELETED,
+        payload: { proxyId, url },
+      });
+      expect(state.mocks).toEqual({
+        [proxyId]: {
+          [anotherUrl]: anotherMock,
+        },
+      });
+    });
+
+    it('deletes all mocks for a proxy', () => {
+      const proxyId = 'some proxy id';
+      const url = '/some-url';
+
+      const anotherUrl = '/another url';
+      const anotherMock = 'another mock';
+
+      const initialState = {
+        mocks: {
+          [proxyId]: {
+            [url]: 'i am going to be deleted :(',
+            [anotherUrl]: anotherMock,
+          },
+        },
+      };
+
+      const state = reducers(initialState, {
+        type: ALL_MOCKS_DELETED,
+        payload: { proxyId, url },
+      });
+      expect(state.mocks).toEqual({
+        [proxyId]: {},
       });
     });
   });

@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import { omit, without } from 'lodash';
 
 import { CHANGE_SELECTED_PROXY, RESPONSE_LOGGED, MOCK_DELETED, MOCK_SERVED_RECENTLY, MOCK_SERVED_RECENTLY_CANCEL, RESPONSE_MOCKED, ALL_LOGS_DELETED, ALL_MOCKS_DELETED } from './constants';
 
@@ -42,23 +43,46 @@ const mocks = (state = {}, action) => {
         },
       };
     }
-    case MOCK_SERVED_RECENTLY: {
-      const updatedMock = { ...state[action.payload.proxyId][action.payload.url], mockHasBeenServedRecently: true };
-      const proxyMocks = { ...state[action.payload.proxyId], [action.payload.url]: updatedMock };
-      return { ...state, [action.payload.proxyId]: proxyMocks };
-    }
-    case MOCK_SERVED_RECENTLY_CANCEL: {
-      const updatedMock = { ...state[action.payload.proxyId][action.payload.url], mockHasBeenServedRecently: false };
-      const proxyMocks = { ...state[action.payload.proxyId], [action.payload.url]: updatedMock };
-      return { ...state, [action.payload.proxyId]: proxyMocks };
-    }
     case MOCK_DELETED: {
-      const proxyMocks = state[action.payload.proxyId];
-      delete proxyMocks[action.payload.url];
-      return { ...state, [action.payload.proxyId]: proxyMocks };
+      const { proxyId, url } = action.payload;
+      return { ...state, [proxyId]: omit(state[proxyId], url) };
     }
     case ALL_MOCKS_DELETED: {
-      return {};
+      return { ...state, [action.payload.proxyId]: {} };
+    }
+    default: return state;
+  }
+};
+
+const activeMocks = (state = {}, action) => {
+  switch (action.type) {
+    case MOCK_SERVED_RECENTLY: {
+      const { proxyId, url } = action.payload;
+      return {
+        ...state,
+        [proxyId]: (state[proxyId] || []).concat(url),
+      };
+    }
+    case MOCK_SERVED_RECENTLY_CANCEL: {
+      const { proxyId, url } = action.payload;
+      return {
+        ...state,
+        [proxyId]: without(state[proxyId], url),
+      };
+    }
+    case MOCK_DELETED: {
+      const { proxyId, url } = action.payload;
+      return {
+        ...state,
+        [proxyId]: without(state[proxyId], url),
+      };
+    }
+    case ALL_MOCKS_DELETED: {
+      const { proxyId } = action.payload;
+      return {
+        ...state,
+        [proxyId]: [],
+      };
     }
     default: return state;
   }
@@ -69,4 +93,5 @@ module.exports = combineReducers({
   logs,
   mocks,
   selectedProxy,
+  activeMocks,
 });

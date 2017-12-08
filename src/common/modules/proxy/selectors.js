@@ -33,6 +33,16 @@ const getMockList = createSelector(
   (mocks, selectedProxy) => Object.values(mocks[selectedProxy] || {})
 );
 
+const getActiveMocks = createSelector(
+  getProxySelector,
+  ({ activeMocks }) => activeMocks
+);
+
+const getSelectedProxyActiveMocks = createSelector(
+  [getActiveMocks, getSelectedProxy],
+  (activeMocks, selectedProxy) => activeMocks[selectedProxy] || []
+);
+
 const hasMocks = createSelector(
   getMockList,
   (mockList) => !isEmpty(mockList)
@@ -46,4 +56,5 @@ module.exports = {
   getMocks,
   getMockList,
   hasMocks,
+  getSelectedProxyActiveMocks,
 };

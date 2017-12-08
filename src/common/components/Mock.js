@@ -1,23 +1,21 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
-import { string, func, instanceOf, oneOfType, bool } from 'prop-types';
+import { string, func, instanceOf, oneOfType, arrayOf } from 'prop-types';
 import { deleteMock, saveMockResponse } from '../modules/proxy/actions';
 import testClass from '../testClass';
+
+import proxyModule from '../modules/proxy';
 
 class Mock extends Component {
   static propTypes = {
     url: string.isRequired,
     responseBody: string.isRequired,
+    activeMocks: arrayOf(string.isRequired).isRequired,
     timestamp: oneOfType([string, instanceOf(Date)]).isRequired,
     lastServed: oneOfType([string, instanceOf(Date)]),
     saveMockResponse: func.isRequired,
-    mockHasBeenServedRecently: bool,
     deleteMock: func.isRequired,
-  };
-
-  static defaultProps = {
-    mockHasBeenServedRecently: false,
   };
 
   state = {
@@ -51,12 +49,12 @@ class Mock extends Component {
       url,
       timestamp,
       responseBody,
-      mockHasBeenServedRecently,
+      activeMocks,
     } = this.props;
     const { isEditMode } = this.state;
     const dateTime = moment(timestamp).format('DD-MMM HH:mm:ss');
-    const recentlyServedClass = mockHasBeenServedRecently
-      ? 'recentlyServed'
+    const activeMockClass = activeMocks.includes(url)
+      ? 'active-mock'
       : '';
 
     const detailsPanel = isEditMode && (
@@ -107,7 +105,7 @@ class Mock extends Component {
       <div className={`mt-1 ${testClass('response')}`}>
         <li
           role="presentation"
-          className={`list-group-item response-header ${recentlyServedClass}`}
+          className={`list-group-item response-header ${activeMockClass}`}
           key={`${url}-header`}
           onClick={this.toggleMockForm}
           onKeyPress={this.toggleMockForm}
@@ -127,4 +125,8 @@ class Mock extends Component {
   }
 }
 
-export default connect(null, { deleteMock, saveMockResponse })(Mock);
+const mapStateToPros = (state) => ({
+  activeMocks: proxyModule.getSelectedProxyActiveMocks(state),
+});
+
+export default connect(mapStateToPros, { deleteMock, saveMockResponse })(Mock);
