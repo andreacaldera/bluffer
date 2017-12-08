@@ -1,7 +1,11 @@
 node_modules/
 dist/
 npm-debug.log*
-config/private.json
+config/*
+!config/local.json
+!config/production.json
+!config/test.json
+
 .DS_Store
 
 data/**
