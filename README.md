@@ -19,4 +19,12 @@ npm i
 
 ```docker build . -t local/bluffer```
 
-```docker run -p 6001:5001 local/bluffer```
+```docker run -p 7000-7010:7000-7010 local/bluffer```
+
+### Troubleshooting
+
+```docker exec -it IMAGE_ID bash```
+
+```less /var/log/supervisor/bluffer.err.log```
+
+```less /var/log/supervisor/bluffer.out.log```

@@ -5,7 +5,7 @@ MAINTAINER andrea.caldera@gmail.com
 ENV DEBIAN_FRONTEND noninteractive
 ARG CACHEBUST_MONTHLY=1
 RUN apt-get update
-RUN apt-get install -y curl git man
+RUN apt-get install -y curl git man less
 RUN ln -sf /bin/bash /bin/sh
 
 # Install supervisord
@@ -23,4 +23,4 @@ RUN npm install
 
 COPY ./ /root/app/
 
-EXPOSE 6001
+EXPOSE 7000-7010

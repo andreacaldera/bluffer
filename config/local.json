@@ -1,17 +1,17 @@
 {
-  "appPort": 5001,
-  "fakeTargetApiPort": 7000,
+  "appPort": 7000,
+  "fakeTargetApiPort": 7010,
   "proxy": [
     {
       "name": "CMS proxy",
       "port": 7001,
-      "target": "http://localhost:7000",
+      "target": "http://localhost:7010",
       "host": "localhost"
     },
     {
       "name": "API proxy",
       "port": 7002,
-      "target": "http://localhost:7000",
+      "target": "http://localhost:7010",
       "host": "localhost"
     }
   ],
