@@ -15,7 +15,7 @@ import {
   ALL_MOCKS_DELETED,
 } from '../common/modules/mocks/constants';
 import { DISPLAY_ERROR, DISPLAY_INFO } from '../common/modules/meta/constants';
-import { getSelectedProxy } from '../common/modules/proxy/selectors';
+import { getSelectedProxyId } from '../common/modules/proxy/selectors';
 
 const callApi = (path, payload) => () =>
   superagent.post(`/api/bluffer/${path}`)
@@ -26,7 +26,7 @@ const callApi = (path, payload) => () =>
 
 function* mockResponse({ payload }) {
   try {
-    const proxyId = yield select(getSelectedProxy);
+    const proxyId = yield select(getSelectedProxyId);
     const { responseBody, timestamp, url } = yield call(callApi('set-mock', { ...payload, proxyId }));
     yield put({
       type: RESPONSE_MOCKED,
@@ -44,7 +44,7 @@ function* mockResponse({ payload }) {
 
 function* deleteResponse({ payload }) {
   try {
-    const proxyId = yield select(getSelectedProxy);
+    const proxyId = yield select(getSelectedProxyId);
     yield call(callApi('delete-mock', { url: payload, proxyId }));
     yield put({ type: MOCK_DELETED, payload: { url: payload, proxyId } });
     yield put({ type: DISPLAY_INFO, payload: 'Response deleted successfully' });
@@ -55,7 +55,7 @@ function* deleteResponse({ payload }) {
 
 function* deleteAllLogs() {
   try {
-    const proxyId = yield select(getSelectedProxy);
+    const proxyId = yield select(getSelectedProxyId);
     yield call(callApi('delete-all-logs', { proxyId }));
     yield put({ type: ALL_LOGS_DELETED, payload: { proxyId } });
     yield put({ type: DISPLAY_INFO, payload: 'All logs cleared' });
@@ -66,7 +66,7 @@ function* deleteAllLogs() {
 
 function* deleteAllMocks() {
   try {
-    const proxyId = yield select(getSelectedProxy);
+    const proxyId = yield select(getSelectedProxyId);
     yield call(callApi('delete-all-mocks', { proxyId }));
     yield put({ type: ALL_MOCKS_DELETED, payload: { proxyId } });
     yield put({ type: DISPLAY_INFO, payload: 'All mocks cleared' });

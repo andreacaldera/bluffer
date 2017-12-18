@@ -1,12 +1,14 @@
-import { takeLatest } from 'redux-saga/effects';
+import { takeLatest, put } from 'redux-saga/effects';
 
-import { CHANGE_ROUTE } from '../common/modules/meta/constants';
+import { CHANGE_ROUTE, SET_ACTIVE_PAGE } from '../common/modules/meta/constants';
 
 import history from './history';
 
 function* changeRoute({ payload }) {
-  history.push(payload);
-  yield;
+  history.push(payload.url);
+  if (payload.activePage) {
+    yield put({ type: SET_ACTIVE_PAGE, activePage: payload.activePage });
+  }
 }
 
 function* watchRoute() {

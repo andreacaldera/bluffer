@@ -26,7 +26,7 @@ class App extends Component {
 
   navigate = (page) => (e) => {
     e.preventDefault();
-    this.props.changeRoute(`/${page}`);
+    this.props.changeRoute(`/${page}`, page);
     this.props.setActivePage(page);
     this.setState({ isMenuOpen: false });
   }
@@ -43,8 +43,8 @@ class App extends Component {
 
         <div className={`collapse navbar-collapse ${this.state.isMenuOpen ? 'show' : 'collapse'}`}>
           <ul className="navbar-nav mr-auto">
-            <li className={`nav-item ${activePage === 'home' ? 'active' : ''}`}>
-              <Link className="nav-link" to="/" href="/" onClick={this.navigate('home')}>Home</Link>
+            <li className={`nav-item ${!activePage || activePage === 'proxy' ? 'active' : ''}`}>
+              <Link className="nav-link" to="/" href="/" onClick={this.navigate('')}>Home</Link>
             </li>
             <li className={`nav-item ${activePage === 'about' ? 'active' : ''}`}>
               <Link className="nav-link" to="/about" href="/about" onClick={this.navigate('about')}>About</Link>

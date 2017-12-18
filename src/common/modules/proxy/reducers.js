@@ -16,7 +16,7 @@ const logs = (state = {}, action) => {
   }
 };
 
-const selectedProxy = (state = null, action) => {
+const selectedProxyId = (state = null, action) => {
   switch (action.type) {
     case CHANGE_SELECTED_PROXY: {
       return action.payload;
@@ -28,5 +28,5 @@ const selectedProxy = (state = null, action) => {
 module.exports = combineReducers({
   config: (state = {}) => state,
   logs,
-  selectedProxy,
+  selectedProxyId,
 });

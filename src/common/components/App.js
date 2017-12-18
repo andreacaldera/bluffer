@@ -40,13 +40,13 @@ class App extends Component {
           {info && (
             <div className="alert alert-info">
               {info}
-              <a href="/close-info" onClick={closeInfo} className="float-right"><i className="fa fa-close fa-lg" /></a>
+              <div role="presentation" onClick={closeInfo} onKeyPress={closeInfo} className="float-right"><i className="fa fa-close fa-lg" /></div>
             </div>
           )}
           {error && (
             <div className="alert alert-danger">
               {error}
-              <a href="/close-info" onClick={closeError} className="float-right"><i className="fa fa-close fa-lg" /></a>
+              <div role="presentation" onClick={closeError} onKeyPress={closeInfo} className="float-right"><i className="fa fa-close fa-lg" /></div>
             </div>
           )}
           {renderRoutes(route.routes)}

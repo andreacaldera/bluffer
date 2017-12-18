@@ -5,9 +5,12 @@ import {
   CHANGE_ROUTE,
 } from './constants';
 
-const changeRoute = url => ({
+const changeRoute = (url, activePage) => ({
   type: CHANGE_ROUTE,
-  payload: url,
+  payload: {
+    url,
+    activePage,
+  },
 });
 
 const setActivePage = (activePage) => ({

@@ -15,8 +15,7 @@ class About extends Component {
 
   navigateToProxy = (proxyId) => (e) => {
     e.preventDefault();
-    this.props.changeSelectedProxy(proxyId);
-    this.props.changeRoute(`/proxy/${proxyId}`);
+    this.props.changeRoute(`/proxy/${proxyId}`, 'proxy');
   }
 
   render() {

@@ -12,18 +12,18 @@ const getConfig = createSelector(
   ({ config }) => config
 );
 
-const getSelectedProxy = createSelector(
+const getSelectedProxyId = createSelector(
   getProxySelector,
-  ({ selectedProxy }) => selectedProxy
+  ({ selectedProxyId }) => selectedProxyId
 );
 
 const getLogList = createSelector(
-  [getLogs, getSelectedProxy],
+  [getLogs, getSelectedProxyId],
   (logs, selectedProxy) => logs[selectedProxy]
 );
 
 module.exports = {
-  getSelectedProxy,
+  getSelectedProxyId,
   getConfig,
   getLogList,
   getLogs,
