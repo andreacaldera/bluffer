@@ -1,6 +1,7 @@
 import express from 'express';
 import httpProxy from 'http-proxy';
 import winston from 'winston';
+import path from 'path';
 
 export default ({ dataStore, proxyConfig, socketIo }) => {
   const router = express.Router();
@@ -60,6 +61,19 @@ export default ({ dataStore, proxyConfig, socketIo }) => {
     try {
       res.json(JSON.parse(mock.responseBody));
     } catch (err) {
+      const extension = path.extname(url).substring(1);
+      let contentType;
+      switch (extension) {
+        case 'css':
+          contentType = 'text/css';
+          break;
+        case 'js':
+          contentType = 'text/javascript';
+          break;
+        default:
+          contentType = 'text/html';
+      }
+      res.type(contentType);
       res.send(mock.responseBody);
     }
     socketIo.emit('mock_served', { url, proxyId: proxyConfig.port });
