@@ -17,10 +17,15 @@ export default (dataStore) => {
   });
 
   router.post('/set-mock', (req, res) => {
-    const { proxyId, url, responseBody } = req.body;
+    const {
+      proxyId,
+      url,
+      responseBody,
+      httpMethod,
+    } = req.body;
     winston.debug(`Setting proxy response ${proxyId} ${url}`);
 
-    const mockedResponse = dataStore.mockResponse(proxyId, url, responseBody);
+    const mockedResponse = dataStore.mockResponse(proxyId, url, responseBody, httpMethod);
     res.json(mockedResponse);
   });
 

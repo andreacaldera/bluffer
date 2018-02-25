@@ -28,7 +28,7 @@ export default () => {
   });
 
   router.post('*', (req, res) => {
-    setTimeout(() => res.json({ message: randomQuote() }), 200);
+    setTimeout(() => res.json({ message: 'Thank you for posting!' }), 200);
   });
 
   router.get('*', (req, res) => {

@@ -13,6 +13,7 @@ class Log extends Component {
     responseBody: string.isRequired,
     client: string.isRequired,
     prettyResponseBody: string,
+    httpMethod: string.isRequired,
     timestamp: oneOfType([instanceOf(Date), string]).isRequired,
     saveMockResponse: func.isRequired,
   };
@@ -39,8 +40,8 @@ class Log extends Component {
 
   mockResponse = e => {
     e.preventDefault();
-    const { saveMockResponse, url } = this.props;
-    saveMockResponse(url, this.textarea.value);
+    const { saveMockResponse, url, httpMethod } = this.props;
+    saveMockResponse(url, this.textarea.value, httpMethod);
     this.setState({ isEditMode: false });
   };
 
@@ -51,17 +52,24 @@ class Log extends Component {
       responseBody,
       prettyResponseBody,
       client,
+      httpMethod,
     } = this.props;
     const { isEditMode } = this.state;
     const dateTime = moment(timestamp).format('DD-MMM HH:mm:ss');
 
     const detailsPanel = isEditMode && (
       <li className="list-group-item response-details" key={`${url}-details`}>
-        <div className="w-100 form-group">
+        <div className="w-50 form-group">
           <div className="response-details--label">
             URL:
           </div>
           <div id="url">{url}</div>
+        </div>
+        <div className="w-50 form-group">
+          <div className="response-details--label">
+            HTTP method:
+          </div>
+          <div>{httpMethod}</div>
         </div>
         <div className="w-100 form-group">
           <div className="response-details--label">
@@ -72,8 +80,7 @@ class Log extends Component {
             ref={r => {
               this.textarea = r;
             }}
-            rows="10"
-            className={`col form-control ${testClass('textarea')}`}
+            className={`col form-control ${testClass('textarea')} response-details--body`}
             defaultValue={prettyResponseBody || responseBody}
           />
         </div>
