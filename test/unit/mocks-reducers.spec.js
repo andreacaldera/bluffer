@@ -35,6 +35,7 @@ describe('Mocks reducers', () => {
           url,
           timestamp,
           responseBody,
+          proxyId,
         },
       },
     });
@@ -69,6 +70,7 @@ describe('Mocks reducers', () => {
           url,
           timestamp,
           responseBody,
+          proxyId,
         },
       },
     });

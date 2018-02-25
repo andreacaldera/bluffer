@@ -9,20 +9,12 @@ const mocks = (state = {}, action) => {
       const {
         proxyId,
         url,
-        responseBody,
-        timestamp,
-        httpMethod,
       } = action.payload;
       return {
         ...state,
         [proxyId]: {
           ...state[proxyId],
-          [url]: {
-            responseBody,
-            timestamp,
-            url,
-            httpMethod,
-          },
+          [url]: action.payload,
         },
       };
     }

@@ -22,10 +22,11 @@ export default (dataStore) => {
       url,
       responseBody,
       httpMethod,
+      contentType,
     } = req.body;
     winston.debug(`Setting proxy response ${proxyId} ${url}`);
 
-    const mockedResponse = dataStore.mockResponse(proxyId, url, responseBody, httpMethod);
+    const mockedResponse = dataStore.mockResponse(proxyId, url, responseBody, httpMethod, contentType);
     res.json(mockedResponse);
   });
 

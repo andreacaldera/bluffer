@@ -21,7 +21,14 @@ export default (proxyConfigs) => {
     }
   };
 
-  const logResponse = (proxyId, url, responseBody, client, httpMethod) => {
+  const logResponse = ({
+    proxyId,
+    url,
+    responseBody,
+    client,
+    httpMethod,
+    contentType,
+  }) => {
     const loggedResponse = {
       url,
       prettyResponseBody: prettyResponseBody(responseBody),
@@ -29,6 +36,7 @@ export default (proxyConfigs) => {
       client,
       timestamp: new Date(),
       httpMethod,
+      contentType,
     };
     logStore[proxyId].unshift(loggedResponse);
     return loggedResponse;
@@ -44,7 +52,7 @@ export default (proxyConfigs) => {
     mockStore.set(proxyId, {});
   };
 
-  const mockResponse = (proxyId, url, responseBody, httpMethod) => {
+  const mockResponse = (proxyId, url, responseBody, httpMethod, contentType) => {
     const proxyMocks = mockStore.get(proxyId) || {};
     const mockedResponse = {
       url,
@@ -52,6 +60,7 @@ export default (proxyConfigs) => {
       timestamp: new Date(),
       mockHasBeenServedRecently: false,
       httpMethod,
+      contentType,
     };
     proxyMocks[url] = mockedResponse;
     mockStore.set(proxyId, proxyMocks);

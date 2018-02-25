@@ -16,6 +16,7 @@ class Mock extends Component {
     timestamp: oneOfType([string, instanceOf(Date)]).isRequired,
     lastServed: oneOfType([string, instanceOf(Date)]),
     httpMethod: string.isRequired,
+    contentType: string.isRequired,
     saveMockResponse: func.isRequired,
     deleteMock: func.isRequired,
   };
@@ -37,7 +38,13 @@ class Mock extends Component {
 
   mockResponse = e => {
     e.preventDefault();
-    this.props.saveMockResponse(this.props.url, this.textarea.value, this.props.httpMethod);
+    const { url, httpMethod, contentType } = this.props;
+    this.props.saveMockResponse({
+      url,
+      responseBody: this.textarea.value,
+      httpMethod,
+      contentType,
+    });
     this.setState({ isEditMode: false });
   };
 
@@ -53,6 +60,7 @@ class Mock extends Component {
       responseBody,
       activeMocks,
       httpMethod,
+      contentType,
     } = this.props;
     const { isEditMode } = this.state;
     const dateTime = moment(timestamp).format('DD-MMM HH:mm:ss');
@@ -62,17 +70,23 @@ class Mock extends Component {
 
     const detailsPanel = isEditMode && (
       <li className="list-group-item" key={`${url}-details`}>
-        <div className="w-50 form-group">
+        <div className="w-25 form-group">
           <div className="response-details--label">
             URL:
           </div>
           <div id="url">{url}</div>
         </div>
-        <div className="w-50 form-group">
+        <div className="w-25 form-group">
           <div className="response-details--label">
             HTTP method:
           </div>
           <div>{httpMethod}</div>
+        </div>
+        <div className="w-25 form-group">
+          <div className="response-details--label">
+            Content type:
+          </div>
+          <div>{contentType}</div>
         </div>
         <div className="w-100  form-group">
           <div className="response-details--label">

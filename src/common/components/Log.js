@@ -14,6 +14,7 @@ class Log extends Component {
     client: string.isRequired,
     prettyResponseBody: string,
     httpMethod: string.isRequired,
+    contentType: string.isRequired,
     timestamp: oneOfType([instanceOf(Date), string]).isRequired,
     saveMockResponse: func.isRequired,
   };
@@ -40,8 +41,18 @@ class Log extends Component {
 
   mockResponse = e => {
     e.preventDefault();
-    const { saveMockResponse, url, httpMethod } = this.props;
-    saveMockResponse(url, this.textarea.value, httpMethod);
+    const {
+      saveMockResponse,
+      url,
+      httpMethod,
+      contentType,
+    } = this.props;
+    saveMockResponse({
+      url,
+      responseBody: this.textarea.value,
+      httpMethod,
+      contentType,
+    });
     this.setState({ isEditMode: false });
   };
 
@@ -53,23 +64,30 @@ class Log extends Component {
       prettyResponseBody,
       client,
       httpMethod,
+      contentType,
     } = this.props;
     const { isEditMode } = this.state;
     const dateTime = moment(timestamp).format('DD-MMM HH:mm:ss');
 
     const detailsPanel = isEditMode && (
       <li className="list-group-item response-details" key={`${url}-details`}>
-        <div className="w-50 form-group">
+        <div className="w-25 form-group">
           <div className="response-details--label">
             URL:
           </div>
           <div id="url">{url}</div>
         </div>
-        <div className="w-50 form-group">
+        <div className="w-25 form-group">
           <div className="response-details--label">
             HTTP method:
           </div>
           <div>{httpMethod}</div>
+        </div>
+        <div className="w-25 form-group">
+          <div className="response-details--label">
+            Content type:
+          </div>
+          <div>{contentType}</div>
         </div>
         <div className="w-100 form-group">
           <div className="response-details--label">

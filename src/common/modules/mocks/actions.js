@@ -9,9 +9,9 @@ const deleteAllMocks = () => ({
   type: DELETE_ALL_MOCKS,
 });
 
-const saveMockResponse = (url, responseBody, httpMethod) => ({
+const saveMockResponse = (payload) => ({
   type: MOCK_RESPONSE,
-  payload: { url, responseBody, httpMethod },
+  payload,
 });
 
 export default Object.freeze({

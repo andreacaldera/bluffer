@@ -32,6 +32,7 @@ function* mockResponse({ payload }) {
       timestamp,
       url,
       httpMethod,
+      contentType,
     } = yield call(callApi('set-mock', { ...payload, proxyId }));
     yield put({
       type: RESPONSE_MOCKED,
@@ -41,6 +42,7 @@ function* mockResponse({ payload }) {
         proxyId,
         url,
         httpMethod,
+        contentType,
       },
     });
   } catch (err) {

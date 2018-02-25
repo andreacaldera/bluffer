@@ -1,7 +1,6 @@
 import express from 'express';
 import httpProxy from 'http-proxy';
 import winston from 'winston';
-import path from 'path';
 import { get } from 'lodash';
 
 export default ({ dataStore, proxyConfig, socketIo }) => {
@@ -9,22 +8,15 @@ export default ({ dataStore, proxyConfig, socketIo }) => {
 
   const proxy = httpProxy.createProxyServer({ secure: false, changeOrigin: true });
 
-  const getContentType = (url) => {
-    // TODO replace with with HTTP header (i.e. contentType or accept)
-    const extension = path.extname(url).substring(1);
-    switch (extension) {
-      case 'css': return 'text/css';
-      case 'js': return 'text/javascript';
-      default: return 'text/html';
-    }
-  };
-
   const sendMockResponse = (url, res, mock) => {
+    res.type(mock.contentType);
+    if (mock.contentType !== 'application/json') {
+      return res.send(mock.responseBody);
+    }
     try {
-      // TODO replace with with HTTP header (i.e. contentType or accept)
       res.json(JSON.parse(mock.responseBody));
     } catch (err) {
-      res.type(getContentType(url));
+      winston.warn('Unable parse JSON response, sending as plain text instead', err);
       res.send(mock.responseBody);
     }
   };
@@ -36,20 +28,23 @@ export default ({ dataStore, proxyConfig, socketIo }) => {
     proxyRes.on('data', (data) => {
       responseBody += data.toString('utf-8');
     });
+    const httpMethod = get(proxyRes, 'client._httpMessage.method');
+    const contentType = get(req, 'headers.accept', 'application/json');
 
     proxyRes.on('end', () => {
       setTimeout(() => {
-        const httpMethod = get(proxyRes, 'client._httpMessage.method');
-        if (proxyRes.statusCode === 404) {
-          const loggedResponse = dataStore.logResponse(proxyConfig.port, req.originalUrl, String('Not found'), req.headers.host, httpMethod);
-          socketIo.emit('request_proxied', { loggedResponse, proxyId: proxyConfig.port });
-          return;
-        }
-        if (proxyRes.statusCode > 200) {
+        if (proxyRes.statusCode > 200 && !proxyRes.statusCode === 404) {
           winston.warn(`Error received from target API from target ${proxyConfig.target}: ${proxyRes.statusCode} ${String(responseBody)}`);
           return;
         }
-        const loggedResponse = dataStore.logResponse(proxyConfig.port, req.originalUrl, String(responseBody), req.headers.host, httpMethod);
+        const loggedResponse = dataStore.logResponse({
+          proxyId: proxyConfig.port,
+          url: req.originalUrl,
+          responseBody: proxyRes.statusCode !== 404 ? String(responseBody) : 'Not Found',
+          client: req.headers.host,
+          httpMethod,
+          contentType,
+        });
         socketIo.emit('request_proxied', { loggedResponse, proxyId: proxyConfig.port });
       }, 500);
     });
