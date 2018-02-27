@@ -1,5 +1,7 @@
 import winston from 'winston';
 
+import config from './config';
+
 const logger = new (winston.Logger)({
   levels: {
     debug: 5,
@@ -17,11 +19,13 @@ const logger = new (winston.Logger)({
 });
 
 logger.add(winston.transports.Console, {
-  level: 'debug', // TODO use config.logLevel
+  level: config.logLevel,
   prettyPrint: true,
   colorize: true,
   silent: false,
   timestamp: false,
 });
+
+logger[config.logLevel](`Logging level set to ${config.logLevel}`);
 
 export default logger;
