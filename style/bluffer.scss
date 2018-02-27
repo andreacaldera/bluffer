@@ -2,6 +2,12 @@ body {
   padding-top: 5rem;
 }
 
+.card-header {
+  & .nav {
+    flex-wrap: wrap;
+  }
+}
+
 .response-header {
   &.list-group-item {
     background: #33A5FF;
