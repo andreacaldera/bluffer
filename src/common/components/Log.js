@@ -71,19 +71,19 @@ class Log extends Component {
 
     const detailsPanel = isEditMode && (
       <li className="list-group-item response-details" key={`${url}-details`}>
-        <div className="w-25 form-group">
+        <div className="w-100 form-group">
           <div className="response-details--label">
             URL:
           </div>
-          <div id="url">{url}</div>
+          <div className="response-details--url">{url}</div>
         </div>
-        <div className="w-25 form-group">
+        <div className="w-50 form-group">
           <div className="response-details--label">
             HTTP method:
           </div>
           <div>{httpMethod}</div>
         </div>
-        <div className="w-25 form-group">
+        <div className="w-50 form-group">
           <div className="response-details--label">
             Content type:
           </div>

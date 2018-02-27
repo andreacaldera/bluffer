@@ -1,6 +1,7 @@
 import Express from 'express';
 import http from 'http';
-import winston from 'winston';
+
+import logger from '../logger';
 
 import targetApi from '../routes/target-api';
 
@@ -20,11 +21,11 @@ export default ({ port }) => {
         reject(err);
       } else {
         resolve();
-        winston.info(`Fake target API Server listening: http://localhost:${port}/`);
+        logger.info(`Fake target API Server listening: http://localhost:${port}/`);
       }
     });
   })
     .catch((err) => {
-      winston.error('Unable to start fake target API server', err);
+      logger.error('Unable to start fake target API server', err);
     });
 };

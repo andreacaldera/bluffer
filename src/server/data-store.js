@@ -1,5 +1,4 @@
 import { FileStore } from 'fs-store';
-import winston from 'winston';
 import fs from 'fs';
 
 const dataDir = 'data';
@@ -12,15 +11,6 @@ export default (proxyConfigs) => {
   const mockStore = new FileStore(`${dataDir}/mock-store.json`);
   const logStore = proxyConfigs.reduce((logStoreAcc, proxyConfig) => ({ ...logStoreAcc, [proxyConfig.port]: [] }), {});
 
-  const prettyResponseBody = (responseBody) => {
-    try {
-      return JSON.stringify(JSON.parse(responseBody), null, 2);
-    } catch (err) {
-      winston.warn('Unable to parse response body', err);
-      return responseBody;
-    }
-  };
-
   const logResponse = ({
     proxyId,
     url,
@@ -31,7 +21,7 @@ export default (proxyConfigs) => {
   }) => {
     const loggedResponse = {
       url,
-      prettyResponseBody: prettyResponseBody(responseBody),
+      prettyResponseBody: responseBody, // TODO cleanup
       responseBody,
       client,
       timestamp: new Date(),

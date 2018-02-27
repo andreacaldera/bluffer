@@ -1,6 +1,6 @@
 import Express from 'express';
 import http from 'http';
-import winston from 'winston';
+import logger from '../logger';
 
 import proxy from '../routes/proxy';
 
@@ -16,11 +16,11 @@ export default ({ proxyConfig, dataStore, socketIo }) => {
         reject(err);
       } else {
         resolve(server);
-        winston.info(`Proxy server listening to ${proxyConfig.name} on : http://localhost:${proxyConfig.port}/`);
+        logger.info(`Proxy server listening to ${proxyConfig.name} on : http://localhost:${proxyConfig.port}/`);
       }
     });
   })
     .catch((err) => {
-      winston.error(`Unable to start proxy server ${proxyConfig.name} with error`, err);
+      logger.error(`Unable to start proxy server ${proxyConfig.name} with error`, err);
     });
 };

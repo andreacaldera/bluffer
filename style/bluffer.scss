@@ -22,6 +22,10 @@ body {
   font-weight: 500;
 }
 
+.response-details--url {
+  overflow-wrap: break-word;
+}
+
 .response-details--body {
   height: 500px;
 }

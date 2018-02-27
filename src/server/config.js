@@ -1,9 +1,9 @@
 import fs from 'fs';
-import winston from 'winston';
+import logger from './logger';
 
 const blufferConfig = process.env.BLUFFER_CONFIG;
 if (!blufferConfig) {
-  winston.warn('You forgot to set BLUFFER_CONFIG, defaulting to local');
+  logger.warn('You forgot to set BLUFFER_CONFIG, defaulting to local');
 }
 
 const config = JSON.parse(fs.readFileSync(`./config/${blufferConfig || 'local'}.json`, 'utf8'));

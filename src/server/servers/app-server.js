@@ -1,9 +1,10 @@
 import Express from 'express';
 import http from 'http';
-import winston from 'winston';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import socketIo from 'socket.io';
+
+import logger from '../logger';
 
 import ui from '../routes/ui';
 import api from '../routes/api';
@@ -27,11 +28,11 @@ export default ({ port, dataStore, config }) => {
         reject(err);
       } else {
         resolve({ server, socketIo: io });
-        winston.info(`Bluffer server listening: http://localhost:${port}/`);
+        logger.info(`Bluffer server listening: http://localhost:${port}/`);
       }
     });
   })
     .catch((err) => {
-      winston.error('Unable to start bluffer server', err);
+      logger.error('Unable to start bluffer server', err);
     });
 };
