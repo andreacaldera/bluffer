@@ -3,17 +3,25 @@
   "fakeTargetApiPort": 7010,
   "proxy": [
     {
-      "name": "CMS proxy",
+      "name": "Proxy one",
       "port": 7001,
       "target": "http://localhost:7010",
-      "host": "localhost"
+      "host": "localhost",
+      "serveProxiedResponse": true
     },
     {
-      "name": "API proxy",
+      "name": "Proxy two",
       "port": 7002,
       "target": "http://localhost:7010",
       "host": "localhost"
     }
   ],
-  "logLevel": "debug"
+  "logLevel": "debug",
+  "mongodb": {
+    "hosts": "localhost:27017",
+    "database": "bluffer",
+    "ssl": false,
+    "proxyResponseCollection": "proxy-response",
+    "mockCollection": "mocks"
+  }
 }

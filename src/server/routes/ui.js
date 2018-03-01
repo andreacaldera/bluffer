@@ -21,7 +21,7 @@ const getActiveFeatureToggles = (req) => {
   return activeFeatureToggles || [];
 };
 
-export default (dataStore, config) => {
+export default ({ mockResonseStore, logResonseStore, config }) => {
   function renderFullPage(content, store) {
     return `
       <!doctype html>
@@ -65,27 +65,40 @@ export default (dataStore, config) => {
     const activeFeatureToggles = getActiveFeatureToggles(req);
     res.cookie('featureToggles', activeFeatureToggles);
 
-    const preloadedState = {
-      [NAMESPACE]: {
-        meta: { activePage, featureToggles: activeFeatureToggles },
-        proxy: {
-          selectedProxyId,
-          config: config.proxy,
-          logs: dataStore.getLogs(),
-        },
-        mocks: {
-          mocks: dataStore.getMocks(),
-        },
-      },
-    };
-    const store = configureStore(preloadedState);
-    const context = {};
+    return Promise.all([logResonseStore.find({}), mockResonseStore.find({})])
+      .then(([allLogs, allMocks]) => {
+        const logs = config.proxy.reduce(
+          (logsAccumulator, { port: proxyId }) => ({ ...logsAccumulator, [proxyId]: allLogs.filter((log) => log.proxyId === proxyId) }),
+          {}
+        );
 
-    const content = renderToString(<Provider store={store}>
-      <StaticRouter location={req.url} context={context}>
-        {renderRoutes(routes)}
-      </StaticRouter>
-    </Provider>);
-    res.send(renderFullPage(content, store));
+        const mocks = config.proxy.reduce(
+          (mocksAccumulator, { port: proxyId }) => ({ ...mocksAccumulator, [proxyId]: allMocks.filter((mock) => mock.proxyId === proxyId) }),
+          {}
+        );
+
+        const preloadedState = {
+          [NAMESPACE]: {
+            meta: { activePage, featureToggles: activeFeatureToggles },
+            proxy: {
+              selectedProxyId,
+              config: config.proxy,
+              logs,
+            },
+            mocks: {
+              mocks,
+            },
+          },
+        };
+        const store = configureStore(preloadedState);
+        const context = {};
+
+        const content = renderToString(<Provider store={store}>
+          <StaticRouter location={req.url} context={context}>
+            {renderRoutes(routes)}
+          </StaticRouter>
+        </Provider>);
+        res.send(renderFullPage(content, store));
+      });
   };
 };

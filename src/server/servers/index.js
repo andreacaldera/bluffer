@@ -3,15 +3,26 @@ import appServer from './app-server';
 import proxyServer from './proxy-server';
 
 import config from '../config';
-import mockDataFactory from '../data-store';
+import storesFactory from '../stores';
 
-const dataStore = mockDataFactory(config.proxy);
 const { appPort, fakeTargetApiPort } = config;
 
 Promise.resolve()
-  .then(() =>
-    appServer({ port: appPort, dataStore, config }))
-  .then(({ socketIo }) =>
-    Promise.all(config.proxy.map((proxyConfig) => proxyServer({ proxyConfig, dataStore, socketIo }))))
+  .then(() => storesFactory(config))
+  .then(({ logResonseStore, mockResonseStore }) =>
+    appServer({
+      port: appPort,
+      config,
+      logResonseStore,
+      mockResonseStore,
+    }).then(({ socketIo }) => ({ socketIo, logResonseStore, mockResonseStore })))
+  .then(({ socketIo, logResonseStore, mockResonseStore }) =>
+    Promise.all(config.proxy.map((proxyConfig) =>
+      proxyServer({
+        proxyConfig,
+        socketIo,
+        logResonseStore,
+        mockResonseStore,
+      }))))
   .then(() =>
     fakeTargetApiServer({ port: fakeTargetApiPort }));

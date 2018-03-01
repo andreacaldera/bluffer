@@ -1,12 +1,23 @@
 import express from 'express';
 import httpProxy from 'http-proxy';
-import { get } from 'lodash';
+import { get, split } from 'lodash';
 import superagent from 'superagent';
 import zlib from 'zlib';
+import winston from 'winston';
 
 import logger from '../logger';
 
-export default ({ dataStore, proxyConfig: { port: proxyId, target: proxyTarget, host: proxyHost }, socketIo }) => {
+export default ({
+  proxyConfig: {
+    port: proxyId,
+    target: proxyTarget,
+    host: proxyHost,
+    serveProxiedResponses,
+  },
+  socketIo,
+  logResonseStore,
+  mockResonseStore,
+}) => {
   const router = express.Router();
 
   const proxy = httpProxy.createProxyServer({ secure: false, changeOrigin: true });
@@ -78,16 +89,17 @@ export default ({ dataStore, proxyConfig: { port: proxyId, target: proxyTarget, 
         return responseBody;
       }
     };
-    const loggedResponse = dataStore.logResponse({
+    logResonseStore.save({
       proxyId,
       url: req.originalUrl,
       responseBody: formatResponse(),
       client: req.headers.host,
       httpMethod,
       contentType,
-    });
-    emitRequestProxiedEvent(loggedResponse);
+    }).then((emitRequestProxiedEvent));
   };
+
+  const getContentType = (req) => split(get(req, 'headers.accept', 'application/json'), ',', 1);
 
   proxy.on('proxyRes', (proxyRes, req, res) => {
     res.setHeader('X-Bluffer-Proxy', 'bluffer-proxy');
@@ -96,7 +108,7 @@ export default ({ dataStore, proxyConfig: { port: proxyId, target: proxyTarget, 
 
     const { originalUrl: url } = req;
     const httpMethod = get(proxyRes, 'client._httpMessage.method');
-    const contentType = get(req, 'headers.accept', 'application/json');
+    const contentType = getContentType(req);
 
     if (proxyRes.statusCode > 200 && !proxyRes.statusCode === 302 && proxyRes.statusCode === 304) {
       logger.warn(`Error received from target API from target ${proxyTarget}: ${proxyRes.statusCode}`);
@@ -160,18 +172,48 @@ export default ({ dataStore, proxyConfig: { port: proxyId, target: proxyTarget, 
     proxyReq.setHeader('Accept-encoding', 'gzip, deflate');
   });
 
+  const proxyRequest = (req, res) => {
+    logger.debug(`Proxying request for url ${req.originalUrl} to target ${proxyTarget} with HTTP method GET`);
+    return proxy.web(req, res, { target: proxyTarget });
+  };
+
+  const serveProxiedResponse = (req, res, httpMethod) => {
+    const url = req.originalUrl;
+    logger.debug(`Attempting to serve log for url ${url}`);
+    return logResonseStore.findOne({ proxyId, url })
+      .then((log) => {
+        if (log) {
+          logger.debug(`Using log response for url ${url} and HTTP method ${httpMethod}`);
+          sendMockResponse(url, res, log);
+        }
+        if (!log) {
+          logger.warn(`Unable to serve log for url ${url}, falling back on proxy`);
+          return proxyRequest(req, res);
+        }
+      });
+  };
+
   const handleRequest = (req, res, httpMethod) => {
     const url = req.originalUrl;
-    const mock = dataStore.getMock(proxyId, url);
-    if (!mock) {
-      logger.debug(`Proxying request for url ${url} to target ${proxyTarget} with HTTP method GET`);
-      return proxy.web(req, res, { target: proxyTarget });
-    }
+    return mockResonseStore.findOne({ proxyId, url })
+      .then((mock) => {
+        if (!mock) {
+          return serveProxiedResponses ? serveProxiedResponse(req, res, httpMethod) : proxyRequest(req, res);
+        }
 
-    logger.debug(`Using mock response for url ${url} and HTTP method GET`);
-    sendMockResponse(url, res, mock);
-    socketIo.emit('mock_served', { url, proxyId, httpMethod });
+        logger.debug(`Using mock response for url ${url} and HTTP method ${httpMethod}`);
+        sendMockResponse(url, res, mock);
+        socketIo.emit('mock_served', { url, proxyId, httpMethod });
+      })
+      .catch((err) => {
+        winston.error('Unable to handle proxy request', err);
+        res.send(err);
+      });
   };
+
+  router.get('/favicon.ico', (req, res) => {
+    res.sendStatus(200);
+  });
 
   router.get('*', (req, res) => {
     handleRequest(req, res, 'GET');

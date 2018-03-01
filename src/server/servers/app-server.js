@@ -9,7 +9,12 @@ import logger from '../logger';
 import ui from '../routes/ui';
 import api from '../routes/api';
 
-export default ({ port, dataStore, config }) => {
+export default ({
+  port,
+  config,
+  logResonseStore,
+  mockResonseStore,
+}) => {
   const app = Express();
   const server = http.createServer(app);
 
@@ -19,8 +24,8 @@ export default ({ port, dataStore, config }) => {
 
   const io = new socketIo(server, { path: '/api/bluffer-socket' });
 
-  app.use('/api/bluffer', api(dataStore, io));
-  app.use(ui(dataStore, config));
+  app.use('/api/bluffer', api({ mockResonseStore, logResonseStore }));
+  app.use(ui({ mockResonseStore, logResonseStore, config }));
 
   return new Promise((resolve, reject) => {
     server.listen(port, (err) => {

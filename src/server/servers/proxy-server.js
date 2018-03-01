@@ -4,11 +4,21 @@ import logger from '../logger';
 
 import proxy from '../routes/proxy';
 
-export default ({ proxyConfig, dataStore, socketIo }) => {
+export default ({
+  proxyConfig,
+  socketIo,
+  logResonseStore,
+  mockResonseStore,
+}) => {
   const app = Express();
   const server = http.createServer(app);
 
-  app.use(proxy({ dataStore, proxyConfig, socketIo }));
+  app.use(proxy({
+    proxyConfig,
+    socketIo,
+    logResonseStore,
+    mockResonseStore,
+  }));
 
   return new Promise((resolve, reject) => {
     server.listen(proxyConfig.port, (err) => {

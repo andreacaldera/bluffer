@@ -3,18 +3,20 @@ import bodyParser from 'body-parser';
 
 import logger from '../logger';
 
-export default (dataStore) => {
+export default ({ mockResonseStore }) => {
   const router = express.Router();
 
   router.use('*', bodyParser.json({ limit: '5mb' }));
 
   router.get('/get-mock-response', (req, res) => {
     logger.debug(`Getting mock response ${req.query.selectedProxy} ${req.query.url}`);
-    const mockResponse = dataStore.getMock(req.query.selectedProxy, req.query.url);
-    if (!mockResponse) {
-      return res.sendStatus(404);
-    }
-    res.json(mockResponse.responseBody);
+    mockResonseStore.findOne({ proxyId: req.query.selectedProxy, url: req.query.url })
+      .then((mock) => {
+        if (!mock) {
+          return res.sendStatus(404);
+        }
+        res.json(mock.responseBody);
+      });
   });
 
   router.post('/set-mock', (req, res) => {
@@ -27,15 +29,23 @@ export default (dataStore) => {
     } = req.body;
     logger.debug(`Setting proxy response ${proxyId} ${url}`);
 
-    const mockedResponse = dataStore.mockResponse(proxyId, url, responseBody, httpMethod, contentType);
-    res.json(mockedResponse);
+    mockResonseStore.save({
+      proxyId,
+      url,
+      responseBody,
+      httpMethod,
+      contentType,
+    })
+      .then((mock) => {
+        res.json(mock);
+      });
   });
 
   router.post('/delete-mock', (req, res) => {
     const { url, proxyId } = req.body;
     logger.debug(`Deleting proxy response ${proxyId} ${url}`);
 
-    dataStore.deleteMock(proxyId, url);
+    // TODO deleteMock(proxyId, url);
     res.sendStatus(202);
   });
 
@@ -43,7 +53,7 @@ export default (dataStore) => {
     const { proxyId } = req.body;
     logger.debug(`Deleting all logged responses for proxy ${proxyId}`);
 
-    dataStore.deleteAllLogs(proxyId);
+    // TODO deleteAllLogs(proxyId);
     res.sendStatus(202);
   });
 
@@ -51,7 +61,7 @@ export default (dataStore) => {
     const { proxyId } = req.body;
     logger.debug(`Deleting all mocked responses ${proxyId}`);
 
-    dataStore.deleteAllMocks(proxyId);
+    // TODO deleteAllMocks(proxyId);
     res.sendStatus(202);
   });
 

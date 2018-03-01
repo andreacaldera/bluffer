@@ -8,8 +8,8 @@ export default (proxyConfigs) => {
     fs.mkdirSync(dataDir);
   }
 
-  const mockStore = new FileStore(`${dataDir}/mock-store.json`);
-  const logStore = proxyConfigs.reduce((logStoreAcc, proxyConfig) => ({ ...logStoreAcc, [proxyConfig.port]: [] }), {});
+  const mockResonseStore = new FileStore(`${dataDir}/mock-store.json`);
+  const logResonseStore = proxyConfigs.reduce((logStoreAcc, proxyConfig) => ({ ...logStoreAcc, [proxyConfig.port]: [] }), {});
 
   const logResponse = ({
     proxyId,
@@ -28,22 +28,22 @@ export default (proxyConfigs) => {
       httpMethod,
       contentType,
     };
-    logStore[proxyId].unshift(loggedResponse);
+    logResonseStore[proxyId].unshift(loggedResponse);
     return loggedResponse;
   };
 
   const deleteMock = (proxyId, url) => {
-    const proxyMocks = mockStore.get(proxyId) || {};
+    const proxyMocks = mockResonseStore.get(proxyId) || {};
     delete proxyMocks[url];
-    mockStore.set(proxyId, proxyMocks);
+    mockResonseStore.set(proxyId, proxyMocks);
   };
 
   const deleteAllMocks = (proxyId) => {
-    mockStore.set(proxyId, {});
+    mockResonseStore.set(proxyId, {});
   };
 
   const mockResponse = (proxyId, url, responseBody, httpMethod, contentType) => {
-    const proxyMocks = mockStore.get(proxyId) || {};
+    const proxyMocks = mockResonseStore.get(proxyId) || {};
     const mockedResponse = {
       url,
       responseBody,
@@ -53,22 +53,22 @@ export default (proxyConfigs) => {
       contentType,
     };
     proxyMocks[url] = mockedResponse;
-    mockStore.set(proxyId, proxyMocks);
+    mockResonseStore.set(proxyId, proxyMocks);
     return mockedResponse;
   };
 
   const getMock = (proxyId, url) => {
-    const proxyMocks = mockStore.get(proxyId);
+    const proxyMocks = mockResonseStore.get(proxyId);
     return proxyMocks && proxyMocks[url];
   };
 
   const deleteAllLogs = (proxyId) => {
-    logStore[proxyId] = [];
+    logResonseStore[proxyId] = [];
   };
 
-  const getLogs = () => logStore;
+  const getLogs = () => logResonseStore;
 
-  const getMocks = () => mockStore.getStore();
+  const getMocks = () => mockResonseStore.getStore();
 
   return Object.freeze({
     logResponse,

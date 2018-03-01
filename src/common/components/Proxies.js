@@ -58,7 +58,7 @@ class Home extends Component {
         <div className="card-block">
           {!isEmpty(mockList) && [
             <h2 key="mockTitle">
-              Mocks
+              Mocked responses
               <DeleteAllMocksButton disabled={isEmpty(mockList)} />
             </h2>,
             <ul key="mockList" className={`list-group ${testClass('mockList')}`}>
@@ -72,7 +72,7 @@ class Home extends Component {
           ]}
 
           <h2 className="mt-2">
-            Response log
+            Proxied responses
             <DeleteAllLogsButton disabled={isEmpty(logList)} />
           </h2>
           {isEmpty(logList) && <p>No responses caught yet.</p>}
