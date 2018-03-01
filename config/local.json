@@ -7,7 +7,7 @@
       "port": 7001,
       "target": "http://localhost:7010",
       "host": "localhost",
-      "serveProxiedResponse": true
+      "offline": true
     },
     {
       "name": "Proxy two",

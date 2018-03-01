@@ -12,7 +12,7 @@ export default ({
     port: proxyId,
     target: proxyTarget,
     host: proxyHost,
-    serveProxiedResponses,
+    offline,
   },
   socketIo,
   logResonseStore,
@@ -198,7 +198,7 @@ export default ({
     return mockResonseStore.findOne({ proxyId, url })
       .then((mock) => {
         if (!mock) {
-          return serveProxiedResponses ? serveProxiedResponse(req, res, httpMethod) : proxyRequest(req, res);
+          return offline ? serveProxiedResponse(req, res, httpMethod) : proxyRequest(req, res);
         }
 
         logger.debug(`Using mock response for url ${url} and HTTP method ${httpMethod}`);
