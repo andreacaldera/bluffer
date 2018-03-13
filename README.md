@@ -5,7 +5,9 @@ npm i
 
 # Running locally
 
-## 
+```docker run -d -p 27017:27017 mongo```
+
+##
 
 ## Development
 ```BLUFFER_CONFIG=<YOUR_CONFIG> npm run dev```

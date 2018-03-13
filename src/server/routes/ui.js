@@ -21,7 +21,7 @@ const getActiveFeatureToggles = (req) => {
   return activeFeatureToggles || [];
 };
 
-export default ({ mockResonseStore, logResonseStore, config }) => {
+export default ({ stores: { mockedResponses, proxiedResponses }, config }) => {
   function renderFullPage(content, store) {
     return `
       <!doctype html>
@@ -65,7 +65,7 @@ export default ({ mockResonseStore, logResonseStore, config }) => {
     const activeFeatureToggles = getActiveFeatureToggles(req);
     res.cookie('featureToggles', activeFeatureToggles);
 
-    return Promise.all([logResonseStore.find({}), mockResonseStore.find({})])
+    return Promise.all([proxiedResponses.find({}), mockedResponses.find({})]) // TODO should find by proxy
       .then(([allLogs, allMocks]) => {
         const logs = config.proxy.reduce(
           (logsAccumulator, { port: proxyId }) => ({ ...logsAccumulator, [proxyId]: allLogs.filter((log) => log.proxyId === proxyId) }),

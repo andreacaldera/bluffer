@@ -3,14 +3,14 @@ import bodyParser from 'body-parser';
 
 import logger from '../logger';
 
-export default ({ mockResonseStore }) => {
+export default ({ stores: { proxiedResponses, mockedResponses } }) => {
   const router = express.Router();
 
   router.use('*', bodyParser.json({ limit: '5mb' }));
 
   router.get('/get-mock-response', (req, res) => {
     logger.debug(`Getting mock response ${req.query.selectedProxy} ${req.query.url}`);
-    mockResonseStore.findOne({ proxyId: req.query.selectedProxy, url: req.query.url })
+    mockedResponses.findOne({ proxyId: req.query.selectedProxy, url: req.query.url })
       .then((mock) => {
         if (!mock) {
           return res.sendStatus(404);
@@ -29,15 +29,17 @@ export default ({ mockResonseStore }) => {
     } = req.body;
     logger.debug(`Setting proxy response ${proxyId} ${url}`);
 
-    mockResonseStore.save({
+    mockedResponses.save({
       proxyId,
       url,
       responseBody,
       httpMethod,
       contentType,
     })
-      .then((mock) => {
-        res.json(mock);
+      .then((savedMockedResponse) => res.json(savedMockedResponse))
+      .catch((err) => {
+        logger.error('Unable to save mock', err);
+        res.sendStatus(500);
       });
   });
 
@@ -49,11 +51,11 @@ export default ({ mockResonseStore }) => {
     res.sendStatus(202);
   });
 
-  router.post('/delete-all-logs', (req, res) => {
+  router.post('/delete-all-proxies-response', (req, res) => {
     const { proxyId } = req.body;
     logger.debug(`Deleting all logged responses for proxy ${proxyId}`);
 
-    // TODO deleteAllLogs(proxyId);
+    proxiedResponses.removeAll(proxyId);
     res.sendStatus(202);
   });
 
@@ -61,7 +63,7 @@ export default ({ mockResonseStore }) => {
     const { proxyId } = req.body;
     logger.debug(`Deleting all mocked responses ${proxyId}`);
 
-    // TODO deleteAllMocks(proxyId);
+    mockedResponses.removeAll(proxyId);
     res.sendStatus(202);
   });
 

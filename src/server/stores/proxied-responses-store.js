@@ -33,10 +33,24 @@ export default ({ mongoose }) => {
       .then((proxiedResponses) => proxiedResponses.map((proxiedResponse) => proxiedResponse.toJSON()));
   }
 
+  function removeAll(proxyId) {
+    return new Promise((resolve, reject) => {
+      Model.remove({ proxyId }, (err) => {
+        if (err) return reject(err);
+        resolve();
+      });
+    });
+  }
+
+  function nuke() {
+    return Model.remove();
+  }
 
   return Object.freeze({
     save,
     findOne,
     find,
+    removeAll,
+    nuke: global.process.env.NODE_ENV === 'test' ? nuke : null,
   });
 };

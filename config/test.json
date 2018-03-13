@@ -1,11 +1,20 @@
 {
-  "port": 5001,
-  "proxy": {
-    "target": "http://localhost:5001/target",
-    "host": "localhost"
-  },
-  "agent": {
-    "target": "http://google.com"
-  },
-  "logLevel": "debug"
+  "appPort": 4001,
+  "fakeTargetApiPort": 3010,
+  "proxy": [
+    {
+      "name": "Test proxy",
+      "port": 3001,
+      "target": "http://localhost:3010",
+      "host": "localhost"
+    }
+  ],
+  "logLevel": "debug",
+  "mongodb": {
+    "hosts": "localhost:27017",
+    "database": "test-bluffer",
+    "ssl": false,
+    "proxyResponseCollection": "proxy-response",
+    "mockCollection": "test-mocks"
+  }
 }

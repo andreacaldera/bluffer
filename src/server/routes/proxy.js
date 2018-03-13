@@ -1,8 +1,6 @@
 import express from 'express';
-import httpProxy from 'http-proxy';
-import { get, split } from 'lodash';
+import { get, split, first } from 'lodash';
 import superagent from 'superagent';
-import zlib from 'zlib';
 import winston from 'winston';
 
 import logger from '../logger';
@@ -11,26 +9,25 @@ export default ({
   proxyConfig: {
     port: proxyId,
     target: proxyTarget,
-    host: proxyHost,
     offline,
   },
   socketIo,
-  logResonseStore,
-  mockResonseStore,
+  stores: {
+    mockedResponses,
+    proxiedResponses,
+  },
 }) => {
   const router = express.Router();
 
-  const proxy = httpProxy.createProxyServer({ secure: false, changeOrigin: true });
-
-  const followRedirect = (location, cookie) => {
-    logger.info(`Following redirect ${location} ${cookie}`);
+  const getAndFollowRedirect = (location, cookie = {}) => {
+    logger.info(`Following redirect ${location} ${JSON.stringify(cookie)}`);
     return superagent(location)
-      .set('monty', 'monty')
+      .set('monty', 'true')
       .set('Accept-encoding', 'gzip, deflate')
       .set('cookie', cookie)
       .then((res) => {
         if (res.statusCode === 302 || res.statusCode === 304) {
-          return followRedirect(res.headers.location, { ...cookie, ...res.headers.cookie });
+          return getAndFollowRedirect(res.headers.location, { ...cookie, ...res.headers.cookie });
         }
         return res;
       });
@@ -42,30 +39,12 @@ export default ({
       return res.send(mock.responseBody);
     }
     try {
-      res.json(JSON.parse(mock.responseBody));
+      res.setHeader('Content-Type', 'text/css');
+      res.send(mock.responseBody);
     } catch (err) {
       logger.warn('Unable parse JSON response, sending as plain text instead', err);
       res.send(mock.responseBody);
     }
-  };
-
-  const handleGzipResponse = (url, proxyRes) => {
-    logger.debug(`Handling GZIP response from URL ${url}`);
-    const gunzip = zlib.createGunzip();
-    proxyRes.pipe(gunzip);
-
-    const buffer = [];
-
-    return new Promise((resolve) => {
-      gunzip.on('data', (data) => {
-        buffer.push(data.toString());
-      }).on('end', () => {
-        resolve(String(buffer));
-      }).on('error', (err) => {
-        logger.error(`Unable to unzip response from URL ${url}`, err);
-        resolve('GZIP error');
-      });
-    });
   };
 
   const emitRequestProxiedEvent = (loggedResponse) => {
@@ -78,109 +57,67 @@ export default ({
     httpMethod,
     req,
   }) => {
-    const formatResponse = () => {
-      if (contentType !== 'application/json') {
-        return responseBody;
-      }
-      try {
-        return JSON.stringify(JSON.parse(responseBody), null, 2);
-      } catch (err) {
-        logger.warn(`Unable to parse response body for URL ${proxyTarget}${req.originalUrl}: ${responseBody.substring(0, 30)}`, err);
-        return responseBody;
-      }
-    };
-    logResonseStore.save({
+    proxiedResponses.save({
       proxyId,
       url: req.originalUrl,
-      responseBody: formatResponse(),
+      responseBody,
       client: req.headers.host,
       httpMethod,
       contentType,
     }).then((emitRequestProxiedEvent));
   };
 
-  const getContentType = (req) => split(get(req, 'headers.accept', 'application/json'), ',', 1);
+  const getContentType = (contentTypeHeader) => first(split(get(contentTypeHeader, 'headers.accept', 'application/json'), ',', 1));
 
-  proxy.on('proxyRes', (proxyRes, req, res) => {
-    res.setHeader('X-Bluffer-Proxy', 'bluffer-proxy');
-
-    logger.debug(`Proxy response ${proxyTarget}${req.originalUrl}`);
-
-    const { originalUrl: url } = req;
-    const httpMethod = get(proxyRes, 'client._httpMessage.method');
-    const contentType = getContentType(req);
-
-    if (proxyRes.statusCode > 200 && !proxyRes.statusCode === 302 && proxyRes.statusCode === 304) {
-      logger.warn(`Error received from target API from target ${proxyTarget}: ${proxyRes.statusCode}`);
-      return handleProxyResponse({
-        responseBody: `Error ${proxyRes.statusCode}`,
-        contentType: 'text/plain',
-        req,
-        httpMethod,
-      });
+  const formatResponse = (responseBody, contentType) => {
+    if (contentType === 'application/json') {
+      try {
+        return JSON.stringify(JSON.parse(responseBody), null, 2);
+      } catch (err) {
+        return responseBody;
+      }
     }
+    return responseBody;
+  };
 
-    if (proxyRes.headers['content-encoding'] === 'gzip') {
-      return handleGzipResponse(url, proxyRes)
-        .then((responseBody) =>
-          handleProxyResponse({
-            responseBody,
-            contentType,
-            req,
-            httpMethod,
-          }));
+  const sendProxyResponse = (res, responseBody, contentType) => {
+    if (contentType === 'application/json') {
+      try {
+        return res.json(JSON.parse(responseBody));
+      } catch (err) {
+        logger.warn(`Content type is ${contentType} but body is not valid JSON, falling back on empty body ${responseBody.substring(0, 20)}`, err);
+        return res.json({});
+      }
     }
+    return res.send(responseBody);
+  };
 
-    if (proxyRes.statusCode === 302) {
-      return followRedirect(proxyRes.headers.location, req.headers.cookie)
-        .then(({ body, headers }) => {
-          logger.debug(`Redirect returned ${body}`);
-          handleProxyResponse({
-            responseBody: res,
-            req,
-            httpMethod,
-            contentType: headers['content-type'],
-          });
-        });
-    }
+  const proxyRequest = (req, res, httpMethod) => {
+    logger.debug(`Proxying request for url ${req.originalUrl} to target ${proxyTarget} with HTTP method GET`, req.headers.cookie);
+    // TODO headers?
+    // proxyReq.setHeader('Host', proxyHost);
+    // proxyReq.setHeader('Cookie', 'monty=true');
+    // proxyReq.setHeader('accept-encoding', 'identity');
+    return getAndFollowRedirect(`${proxyTarget}${req.originalUrl}`)
+      .then((proxyRes) => {
+        const contentType = getContentType(proxyRes.headers['content-type']);
+        logger.debug(`Received proxy response with status code ${proxyRes.statusCode} and content type ${contentType}`);
 
-    let responseBody = '';
-    proxyRes.on('data', (data) => {
-      responseBody += data.toString('utf-8');
-    });
-    proxyRes.on('end', () => {
-      setTimeout(() => {
         handleProxyResponse({
-          responseBody: proxyRes.statusCode !== 404 ? responseBody : 'Not Found',
+          responseBody: formatResponse(proxyRes.text, contentType),
           req,
           httpMethod,
-          contentType: proxyRes.statusCode !== 404 ? contentType : 'text/plain',
+          contentType,
         });
-      }, 500);
-    });
-  });
 
-  proxy.on('error', (err) => {
-    logger.error(`Proxy Error from target ${proxyTarget}`, err);
-  });
-
-  proxy.on('proxyReq', (proxyReq, req, /* res, options */) => {
-    logger.debug(`Processing request ${req.originalUrl}`);
-    logger.debug(`Setting Host Header to ${proxyHost}`);
-    proxyReq.setHeader('Host', proxyHost);
-    proxyReq.setHeader('Cookie', 'monty=true');
-    proxyReq.setHeader('Accept-encoding', 'gzip, deflate');
-  });
-
-  const proxyRequest = (req, res) => {
-    logger.debug(`Proxying request for url ${req.originalUrl} to target ${proxyTarget} with HTTP method GET`);
-    return proxy.web(req, res, { target: proxyTarget });
+        return sendProxyResponse(res, proxyRes.text, contentType);
+      });
   };
 
   const serveProxiedResponse = (req, res, httpMethod) => {
     const url = req.originalUrl;
     logger.debug(`Attempting to serve log for url ${url}`);
-    return logResonseStore.findOne({ proxyId, url })
+    return proxiedResponses.findOne({ proxyId, url })
       .then((log) => {
         if (log) {
           logger.debug(`Using log response for url ${url} and HTTP method ${httpMethod}`);
@@ -188,17 +125,17 @@ export default ({
         }
         if (!log) {
           logger.warn(`Unable to serve log for url ${url}, falling back on proxy`);
-          return proxyRequest(req, res);
+          return proxyRequest(req, res, httpMethod);
         }
       });
   };
 
   const handleRequest = (req, res, httpMethod) => {
     const url = req.originalUrl;
-    return mockResonseStore.findOne({ proxyId, url })
+    return mockedResponses.findOne({ proxyId, url })
       .then((mock) => {
         if (!mock) {
-          return offline ? serveProxiedResponse(req, res, httpMethod) : proxyRequest(req, res);
+          return offline ? serveProxiedResponse(req, res, httpMethod) : proxyRequest(req, res, httpMethod);
         }
 
         logger.debug(`Using mock response for url ${url} and HTTP method ${httpMethod}`);

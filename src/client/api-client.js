@@ -61,10 +61,10 @@ function* deleteResponse({ payload }) {
   }
 }
 
-function* deleteAllLogs() {
+function* deleteAllLogs() { // TODO refactor
   try {
     const proxyId = yield select(getSelectedProxyId);
-    yield call(callApi('delete-all-logs', { proxyId }));
+    yield call(callApi('delete-all-proxies-response', { proxyId }));
     yield put({ type: ALL_LOGS_DELETED, payload: { proxyId } });
     yield put({ type: DISPLAY_INFO, payload: 'All logs cleared' });
   } catch (err) {

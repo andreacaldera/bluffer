@@ -7,8 +7,7 @@ import proxy from '../routes/proxy';
 export default ({
   proxyConfig,
   socketIo,
-  logResonseStore,
-  mockResonseStore,
+  stores,
 }) => {
   const app = Express();
   const server = http.createServer(app);
@@ -16,21 +15,18 @@ export default ({
   app.use(proxy({
     proxyConfig,
     socketIo,
-    logResonseStore,
-    mockResonseStore,
+    stores,
   }));
 
   return new Promise((resolve, reject) => {
     server.listen(proxyConfig.port, (err) => {
       if (err) {
+        logger.error(`Unable to start proxy server ${proxyConfig.name} with error`, err);
         reject(err);
       } else {
-        resolve(server);
-        logger.info(`Proxy server listening to ${proxyConfig.name} on : http://localhost:${proxyConfig.port}/`);
+        resolve({ server });
+        logger.info(`Proxy server listening to ${proxyConfig.name} on: http://localhost:${proxyConfig.port}/`);
       }
     });
-  })
-    .catch((err) => {
-      logger.error(`Unable to start proxy server ${proxyConfig.name} with error`, err);
-    });
+  });
 };

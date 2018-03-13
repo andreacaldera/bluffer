@@ -9,14 +9,11 @@ import logger from '../logger';
 import ui from '../routes/ui';
 import api from '../routes/api';
 
-export default ({
-  port,
-  config,
-  logResonseStore,
-  mockResonseStore,
-}) => {
+export default ({ config, stores }) => {
   const app = Express();
   const server = http.createServer(app);
+
+  const { appPort } = config;
 
   app.use(cookieParser());
   app.use('/dist', Express.static(path.join(__dirname, '../../../dist')));
@@ -24,20 +21,18 @@ export default ({
 
   const io = new socketIo(server, { path: '/api/bluffer-socket' });
 
-  app.use('/api/bluffer', api({ mockResonseStore, logResonseStore }));
-  app.use(ui({ mockResonseStore, logResonseStore, config }));
+  app.use('/api/bluffer', api({ stores }));
+  app.use(ui({ stores, config }));
 
   return new Promise((resolve, reject) => {
-    server.listen(port, (err) => {
+    server.listen(appPort, (err) => {
       if (err) {
+        logger.error('Unable to start bluffer server', err);
         reject(err);
       } else {
         resolve({ server, socketIo: io });
-        logger.info(`Bluffer server listening: http://localhost:${port}/`);
+        logger.info(`Bluffer server listening: http://localhost:${appPort}/`);
       }
     });
-  })
-    .catch((err) => {
-      logger.error('Unable to start bluffer server', err);
-    });
+  });
 };

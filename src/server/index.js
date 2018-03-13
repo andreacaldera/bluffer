@@ -1,1 +1,3 @@
-import './servers';
+import servers from './servers';
+
+servers();
