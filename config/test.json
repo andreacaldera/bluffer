@@ -9,12 +9,7 @@
       "host": "localhost"
     }
   ],
-  "logLevel": "debug",
   "mongodb": {
-    "hosts": "localhost:27017",
-    "database": "test-bluffer",
-    "ssl": false,
-    "proxyResponseCollection": "proxy-response",
-    "mockCollection": "test-mocks"
+    "database": "test-bluffer"
   }
 }
