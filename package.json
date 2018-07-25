@@ -1,7 +1,7 @@
 {
-  "name": "acal-redux-template",
-  "version": "0.0.0",
-  "description": "A redux template",
+  "name": "bluffer",
+  "version": "0.0.1",
+  "description": "Bluffer",
   "scripts": {
     "start": "NODE_ENV=production node dist/server/index.js",
     "dev": "NODE_ENV=local nodemon src/server/index.js --exec babel-node",
@@ -110,7 +110,7 @@
     "jsx-loader": "^0.13.2",
     "mocha": "^3.5.3",
     "node-libs-browser": "^2.0.0",
-    "node-sass": "^4.5.2",
+    "node-sass": "^4.9.2",
     "nodemon": "^1.12.1",
     "npm-check": "^5.4.5",
     "prettier": "^1.9.1",
