@@ -1,0 +1,10 @@
+{
+  "logLevel": "debug",
+  "mongodb": {
+    "hosts": "localhost:27017",
+    "database": "bluffer",
+    "ssl": false,
+    "proxyResponseCollection": "proxy-response",
+    "mockCollection": "mocks"
+  }
+}

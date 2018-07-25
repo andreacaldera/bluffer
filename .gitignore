@@ -5,7 +5,7 @@ config/*
 !config/local.json
 !config/production.json
 !config/test.json
-!config/config.json
+!config/default.json
 
 .DS_Store
 .idea/
